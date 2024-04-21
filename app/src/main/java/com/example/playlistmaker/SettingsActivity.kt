@@ -52,5 +52,14 @@ class SettingsActivity : AppCompatActivity() {
 
             startActivity(supportIntent)
         }
+
+        binding.tvUserAgreement.setOnClickListener {
+            val agreementIntent = Intent().apply {
+                action = Intent.ACTION_VIEW
+                data = Uri.parse(getString(R.string.offer_link))
+            }
+
+            startActivity(agreementIntent)
+        }
     }
 }
