@@ -18,6 +18,7 @@
         <item name="android:textColor">?attr/colorSecondary</item>
         <item name="android:gravity">center_vertical</item>
         <item name="drawableTint">?attr/settings_activity_ic_tint</item>
+        <item name="android:foreground">?attr/selectableItemBackground</item>
         <item name="android:textAppearance">@style/FontYSDisplayRegularSize16Weight400</item>
     </style>
 
