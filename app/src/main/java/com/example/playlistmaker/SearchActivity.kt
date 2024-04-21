@@ -1,8 +1,10 @@
 package com.example.playlistmaker
 
+import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.inputmethod.InputMethodManager
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -49,5 +51,13 @@ class SearchActivity : AppCompatActivity() {
             override fun afterTextChanged(s: Editable?) {}
         })
 
+        clearButton.setOnClickListener {
+            editTextSearch.setText("")
+            val inputMethodManager = getSystemService(
+                Context.INPUT_METHOD_SERVICE
+            ) as? InputMethodManager
+
+            inputMethodManager?.hideSoftInputFromWindow(editTextSearch.windowToken, 0)
+        }
     }
 }
