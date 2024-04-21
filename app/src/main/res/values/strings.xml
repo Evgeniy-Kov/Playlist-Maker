@@ -9,4 +9,5 @@
     <string name="support">Написать в поддержку</string>
     <string name="user_agreement">Пользовательское соглашение</string>
     <string name="clear_button_description">Очистить поле</string>
+    <string name="share_link">https://practicum.yandex.ru/android-developer</string>
 </resources>
