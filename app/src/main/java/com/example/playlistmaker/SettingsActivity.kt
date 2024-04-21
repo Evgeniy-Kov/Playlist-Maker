@@ -1,6 +1,7 @@
 package com.example.playlistmaker
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -38,6 +39,18 @@ class SettingsActivity : AppCompatActivity() {
             val shareIntent = Intent.createChooser(sendIntent, null)
 
             startActivity(shareIntent)
+        }
+
+        binding.tvSupport.setOnClickListener {
+            val supportIntent = Intent().apply {
+                action = Intent.ACTION_SENDTO
+                data = Uri.parse("mailto:")
+                putExtra(Intent.EXTRA_EMAIL, arrayOf(getString(R.string.support_email_address)))
+                putExtra(Intent.EXTRA_SUBJECT, getString(R.string.support_email_subject))
+                putExtra(Intent.EXTRA_TEXT, getString(R.string.support_email_body))
+            }
+
+            startActivity(supportIntent)
         }
     }
 }
