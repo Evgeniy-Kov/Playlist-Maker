@@ -4,7 +4,9 @@ import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.KeyEvent
 import android.view.inputmethod.InputMethodManager
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -58,6 +60,14 @@ class SearchActivity : AppCompatActivity() {
             ) as? InputMethodManager
 
             inputMethodManager?.hideSoftInputFromWindow(editTextSearch.windowToken, 0)
+        }
+
+        editTextSearch.setOnKeyListener { v, keyCode, event ->
+            if (event.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
+                Toast.makeText(this, "Поиск: $searchInput", Toast.LENGTH_SHORT).show()
+                return@setOnKeyListener true
+            }
+            false
         }
     }
 }
