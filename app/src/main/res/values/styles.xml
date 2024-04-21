@@ -15,9 +15,9 @@
     </style>
 
     <style name="SettingsScreenTextViewStyle">
-        <item name="android:textColor">@color/yp_black</item>
+        <item name="android:textColor">?attr/colorOnPrimary</item>
         <item name="android:gravity">center_vertical</item>
-        <item name="drawableTint">@color/yp_text_gray</item>
+        <item name="drawableTint">?attr/settings_activity_ic_tint</item>
         <item name="android:textAppearance">@style/FontYSDisplayRegularSize16Weight400</item>
     </style>
 

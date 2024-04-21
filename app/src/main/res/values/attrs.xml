@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <attr name="main_activity_background" format="reference|color"/>
+    <attr name="settings_activity_ic_tint" format="reference|color"/>
 </resources>
