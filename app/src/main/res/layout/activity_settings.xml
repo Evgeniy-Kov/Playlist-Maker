@@ -28,19 +28,19 @@
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/tv_share"
-        style="@style/settings_screen_text_view_style"
+        style="@style/SettingsScreenTextViewStyle"
         android:text="@string/share"
         app:drawableEndCompat="@drawable/ic_share" />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/tv_support"
-        style="@style/settings_screen_text_view_style"
+        style="@style/SettingsScreenTextViewStyle"
         android:text="@string/support"
         app:drawableEndCompat="@drawable/ic_support" />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/tv_user_agreement"
-        style="@style/settings_screen_text_view_style"
+        style="@style/SettingsScreenTextViewStyle"
         android:text="@string/user_agreement"
         app:drawableEndCompat="@drawable/ic_arrow_forward" />
 

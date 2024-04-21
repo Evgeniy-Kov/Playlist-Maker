@@ -30,19 +30,19 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/button_search"
-            style="@style/main_screen_button_style"
+            style="@style/MainScreenButtonStyle"
             android:text="@string/search"
             app:icon="@drawable/ic_search" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/button_library"
-            style="@style/main_screen_button_style"
+            style="@style/MainScreenButtonStyle"
             android:text="@string/library"
             app:icon="@drawable/ic_library" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/button_settings"
-            style="@style/main_screen_button_style"
+            style="@style/MainScreenButtonStyle"
             android:text="@string/settings"
             app:icon="@drawable/ic_settings" />
 
