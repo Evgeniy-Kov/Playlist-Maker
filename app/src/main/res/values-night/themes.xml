@@ -2,7 +2,7 @@
     <!-- Base application theme. -->
     <style name="Base.Theme.PlaylistMaker" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="colorPrimary">@color/yp_black</item>
-        <item name="colorOnPrimary">@color/yp_white</item>
+        <item name="colorSecondary">@color/yp_white</item>
         <item name="android:background">@color/yp_black</item>
         <item name="main_activity_background">@color/yp_black</item>
         <item name="settings_activity_ic_tint">@color/yp_white</item>
@@ -17,7 +17,7 @@
     </style>
 
     <style name="DarkThemeSwitchTheme" parent="Theme.PlaylistMaker">
-        <item name="android:textColor">?attr/colorOnPrimary</item>
+        <item name="android:textColor">?attr/colorSecondary</item>
         <item name="android:checked">true</item>
         <item name="colorControlActivated">@color/yp_blue</item>
         <item name="colorSwitchThumbNormal">@color/yp_text_gray</item>

@@ -15,7 +15,7 @@
     </style>
 
     <style name="SettingsScreenTextViewStyle">
-        <item name="android:textColor">?attr/colorOnPrimary</item>
+        <item name="android:textColor">?attr/colorSecondary</item>
         <item name="android:gravity">center_vertical</item>
         <item name="drawableTint">?attr/settings_activity_ic_tint</item>
         <item name="android:textAppearance">@style/FontYSDisplayRegularSize16Weight400</item>
@@ -23,8 +23,8 @@
 
     <style name="ToolbarStyle">
         <item name="navigationIcon">@drawable/ic_arrow_back</item>
-        <item name="titleTextColor">?attr/colorOnPrimary</item>
-        <item name="navigationIconTint">?attr/colorOnPrimary</item>
+        <item name="titleTextColor">?attr/colorSecondary</item>
+        <item name="navigationIconTint">?attr/colorSecondary</item>
         <item name="contentInsetStartWithNavigation">64dp</item>
         <item name="titleTextAppearance">@style/FontYSDisplayMediumSize22Weight500</item>
     </style>
