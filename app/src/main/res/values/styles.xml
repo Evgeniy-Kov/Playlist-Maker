@@ -5,20 +5,20 @@
         <item name="android:insetBottom">0dp</item>
         <item name="cornerRadius">@dimen/default_margin</item>
         <item name="android:backgroundTint">@color/white</item>
-        <item name="android:textSize">@dimen/large_text_size</item>
         <item name="android:textAllCaps">false</item>
         <item name="android:textColor">@color/yp_black</item>
         <item name="iconTint">@color/yp_black</item>
         <item name="iconGravity">textStart</item>
         <item name="iconPadding">10dp</item>
         <item name="android:foreground">?attr/selectableItemBackground</item>
+        <item name="android:textAppearance">@style/FontYSDisplayMediumSize22Weight500</item>
     </style>
 
     <style name="SettingsScreenTextViewStyle">
-        <item name="android:textSize">@dimen/medium_text_size</item>
         <item name="android:textColor">@color/yp_black</item>
         <item name="android:gravity">center_vertical</item>
         <item name="drawableTint">@color/yp_text_gray</item>
+        <item name="android:textAppearance">@style/FontYSDisplayRegularSize16Weight400</item>
     </style>
 
     <style name="FontYSDisplayMediumSize22Weight500">

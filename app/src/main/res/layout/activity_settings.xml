@@ -14,7 +14,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
         app:navigationIcon="@drawable/ic_arrow_back"
-        app:title="@string/settings" />
+        app:title="@string/settings"
+        app:titleTextAppearance="@style/FontYSDisplayMediumSize22Weight500"/>
 
     <androidx.appcompat.widget.SwitchCompat
         android:id="@+id/switch_theme"
@@ -24,7 +25,7 @@
         android:layout_marginEnd="@dimen/settings_screen_layout_marginEnd"
         android:text="@string/dark_theme"
         android:textColor="@color/yp_black"
-        android:textSize="@dimen/medium_text_size" />
+        android:textAppearance="@style/FontYSDisplayRegularSize16Weight400" />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/tv_share"
