@@ -23,8 +23,7 @@
         android:layout_marginStart="@dimen/default_margin"
         android:layout_marginEnd="@dimen/settings_screen_layout_marginEnd"
         android:text="@string/dark_theme"
-        android:textColor="@color/yp_black"
-        android:textAppearance="@style/FontYSDisplayRegularSize16Weight400" />
+        android:theme="@style/DarkThemeSwitchTheme" />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/tv_share"

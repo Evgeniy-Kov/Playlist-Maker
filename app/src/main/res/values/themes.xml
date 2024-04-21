@@ -5,12 +5,22 @@
         <item name="colorOnPrimary">@color/yp_black</item>
         <item name="android:background">@color/yp_white</item>
         <item name="main_activity_background">@color/yp_blue</item>
+        <item name="settings_activity_ic_tint">@color/yp_text_gray</item>
     </style>
 
     <style name="Theme.PlaylistMaker" parent="Base.Theme.PlaylistMaker" />
 
     <style name="MainActivityTheme" parent="Theme.PlaylistMaker">
         <item name="android:background">?attr/main_activity_background</item>
+    </style>
+
+    <style name="DarkThemeSwitchTheme" parent="Theme.PlaylistMaker">
+        <item name="android:textColor">?attr/colorOnPrimary</item>
+        <item name="android:checked">false</item>
+        <item name="colorControlActivated">@color/yp_blue</item>
+        <item name="colorSwitchThumbNormal">@color/yp_text_gray</item>
+        <item name="android:colorForeground">@color/yp_text_gray</item>
+        <item name="android:textAppearance">@style/FontYSDisplayRegularSize16Weight400</item>
     </style>
 
 </resources>
