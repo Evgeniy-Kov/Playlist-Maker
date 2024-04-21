@@ -1,8 +1,9 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
     <style name="Base.Theme.PlaylistMaker" parent="Theme.MaterialComponents.DayNight.NoActionBar">
-        <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <item name="colorPrimary">@color/yp_white</item>
+        <item name="colorOnPrimary">@color/yp_black</item>
+        <item name="android:background">@color/yp_white</item>
         <item name="main_activity_background">@color/yp_blue</item>
     </style>
 
