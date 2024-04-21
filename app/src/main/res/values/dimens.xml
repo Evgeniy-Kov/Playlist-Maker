@@ -4,4 +4,5 @@
     <dimen name="large_text_size">22sp</dimen>
     <dimen name="medium_text_size">16sp</dimen>
     <dimen name="settings_screen_item_height">61dp</dimen>
+    <dimen name="settings_screen_layout_marginEnd">12dp</dimen>
 </resources>

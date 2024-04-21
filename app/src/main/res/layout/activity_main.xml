@@ -30,18 +30,30 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/button_search"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:layout_marginTop="@dimen/default_margin"
             style="@style/MainScreenButtonStyle"
             android:text="@string/search"
             app:icon="@drawable/ic_search" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/button_library"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:layout_marginTop="@dimen/default_margin"
             style="@style/MainScreenButtonStyle"
             android:text="@string/library"
             app:icon="@drawable/ic_library" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/button_settings"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:layout_marginTop="@dimen/default_margin"
             style="@style/MainScreenButtonStyle"
             android:text="@string/settings"
             app:icon="@drawable/ic_settings" />
