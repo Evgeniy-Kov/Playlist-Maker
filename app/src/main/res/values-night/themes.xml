@@ -6,6 +6,8 @@
         <item name="android:background">@color/yp_black</item>
         <item name="main_activity_background">@color/yp_black</item>
         <item name="settings_activity_ic_tint">@color/yp_white</item>
+        <item name="search_string_background_color">@color/yp_white</item>
+        <item name="search_string_item_color">@color/yp_black</item>
     </style>
 
     <style name="Theme.PlaylistMaker" parent="Base.Theme.PlaylistMaker" />
