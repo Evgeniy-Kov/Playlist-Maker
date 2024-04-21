@@ -70,4 +70,19 @@ class SearchActivity : AppCompatActivity() {
             false
         }
     }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putString(SEARCH_INPUT, searchInput)
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        super.onRestoreInstanceState(savedInstanceState)
+        searchInput = savedInstanceState.getString(SEARCH_INPUT, "")
+        editTextSearch.setText(searchInput)
+    }
+
+    companion object {
+        private const val SEARCH_INPUT = "SEARCH_INPUT"
+    }
 }
