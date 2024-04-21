@@ -13,9 +13,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
-        app:navigationIcon="@drawable/ic_arrow_back"
         app:title="@string/settings"
-        app:titleTextAppearance="@style/FontYSDisplayMediumSize22Weight500"/>
+        style="@style/ToolbarStyle"/>
 
     <androidx.appcompat.widget.SwitchCompat
         android:id="@+id/switch_theme"
