@@ -8,39 +8,50 @@
     android:orientation="vertical"
     tools:context=".SettingsActivity">
 
-    <androidx.appcompat.widget.Toolbar
+    <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
-        app:navigationIcon="@drawable/ic_arrow_back"
-        app:title="@string/settings" />
+        app:title="@string/settings"
+        style="@style/ToolbarStyle"/>
 
     <androidx.appcompat.widget.SwitchCompat
         android:id="@+id/switch_theme"
         android:layout_width="match_parent"
         android:layout_height="@dimen/settings_screen_item_height"
         android:layout_marginStart="@dimen/default_margin"
-        android:layout_marginEnd="6dp"
+        android:layout_marginEnd="@dimen/settings_screen_layout_marginEnd"
         android:text="@string/dark_theme"
-        android:textColor="@color/bright_black"
-        android:textSize="@dimen/medium_text_size" />
+        android:theme="@style/DarkThemeSwitchTheme" />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/tv_share"
-        style="@style/settings_screen_text_view_style"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/settings_screen_item_height"
+        android:layout_marginStart="@dimen/default_margin"
+        android:layout_marginEnd="@dimen/settings_screen_layout_marginEnd"
+        style="@style/SettingsScreenTextViewStyle"
         android:text="@string/share"
         app:drawableEndCompat="@drawable/ic_share" />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/tv_support"
-        style="@style/settings_screen_text_view_style"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/settings_screen_item_height"
+        android:layout_marginStart="@dimen/default_margin"
+        android:layout_marginEnd="@dimen/settings_screen_layout_marginEnd"
+        style="@style/SettingsScreenTextViewStyle"
         android:text="@string/support"
         app:drawableEndCompat="@drawable/ic_support" />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/tv_user_agreement"
-        style="@style/settings_screen_text_view_style"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/settings_screen_item_height"
+        android:layout_marginStart="@dimen/default_margin"
+        android:layout_marginEnd="@dimen/settings_screen_layout_marginEnd"
+        style="@style/SettingsScreenTextViewStyle"
         android:text="@string/user_agreement"
         app:drawableEndCompat="@drawable/ic_arrow_forward" />
 
