@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="61dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:gravity="center_vertical"
+    android:paddingStart="12dp"
+    android:paddingEnd="12dp"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="horizontal">
+    
+    <ImageView
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:contentDescription="@string/song_cover_description"
+        tools:src="@drawable/placeholder"/>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_marginStart="8dp"
+        android:gravity="center_vertical|start"
+        android:orientation="horizontal">
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/track_name"
+            android:layout_width="match_parent"
+            android:layout_height="19dp"
+            android:textAppearance="@style/FontYSDisplayRegularSize16Weight400"
+            android:textColor="?attr/colorSecondary"
+            android:maxLines="1"
+            android:ellipsize="end"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/tv_performer"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:text="Yesterday (Remastered 2009)"/>
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/tv_performer"
+            android:layout_width="wrap_content"
+            android:layout_height="13dp"
+            android:textAppearance="@style/FontYSDisplayRegularSize11Weight400"
+            android:textColor="?attr/settings_activity_ic_tint"
+            android:maxLines="1"
+            android:ellipsize="end"
+            app:layout_constraintTop_toBottomOf="@id/track_name"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/iv_dot"
+            app:layout_constraintHorizontal_bias="0"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constrainedWidth="true"
+            tools:text="The Beatles"/>
+
+        <ImageView
+            android:id="@+id/iv_dot"
+            android:layout_width="13dp"
+            android:layout_height="13dp"
+            android:layout_toEndOf="@id/tv_performer"
+            app:tint="?attr/settings_activity_ic_tint"
+            app:layout_constraintTop_toBottomOf="@id/track_name"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/tv_performer"
+            app:layout_constraintEnd_toStartOf="@id/tv_duration"
+            android:contentDescription="@string/dot_delimiter_description"
+            android:src="@drawable/ic_dot" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/tv_duration"
+            android:layout_width="wrap_content"
+            android:layout_height="13dp"
+            android:textAppearance="@style/FontYSDisplayRegularSize11Weight400"
+            android:textColor="?attr/settings_activity_ic_tint"
+            app:layout_constraintTop_toBottomOf="@id/track_name"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/iv_dot"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:text="4:01"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <ImageView
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginStart="8dp"
+        android:src="@drawable/ic_arrow_forward"
+        app:tint="?attr/settings_activity_ic_tint"
+        android:contentDescription="@string/forward_arrow_description"/>
+
+</LinearLayout>
