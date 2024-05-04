@@ -28,7 +28,13 @@ class SearchActivity : AppCompatActivity() {
         binding.imageViewClearButton
     }
 
+    private val rvTracks by lazy {
+        binding.rvTracks
+    }
+
     private var searchInput = ""
+
+    private val trackAdapter = TrackAdapter()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -69,6 +75,9 @@ class SearchActivity : AppCompatActivity() {
             }
             false
         }
+
+        rvTracks.adapter = trackAdapter
+        trackAdapter.trackList = TrackListMockObject.trackList
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
