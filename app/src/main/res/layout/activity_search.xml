@@ -12,7 +12,7 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
+        android:layout_marginTop="@dimen/toolbar_margin_top"
         app:title="@string/search"
         style="@style/ToolbarStyle" />
 
@@ -20,26 +20,27 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="@dimen/search_activity_search_field_margin_top"
         android:layout_marginStart="@dimen/default_margin"
         android:layout_marginEnd="@dimen/default_margin">
 
-        <com.google.android.material.textfield.TextInputEditText
+        <EditText
             android:id="@+id/edit_text_search"
             android:layout_width="match_parent"
             android:layout_height="36dp"
-            app:cornerRadius="8dp"
+            app:cornerRadius="@dimen/search_activity_search_field_corner_radius"
             android:background="@drawable/shape"
             android:backgroundTint="?attr/search_string_background_color"
             android:inputType="text"
             android:hint="@string/search"
-            android:paddingStart="36dp"
-            android:paddingEnd="40dp"
+            android:paddingStart="@dimen/edit_text_search_padding_start"
+            android:paddingEnd="@dimen/edit_text_search_padding_end"
             android:lines="1"
             android:textAppearance="@style/FontYSDisplayRegularSize16Weight400"
             android:textColor="@color/yp_black"
             android:textColorHint="?attr/search_string_item_color"
-            android:textCursorDrawable="@drawable/text_cursor_shape" />
+            android:textCursorDrawable="@drawable/text_cursor_shape"
+            tools:ignore="Autofill" />
 
         <ImageView
             android:layout_width="wrap_content"
@@ -59,16 +60,17 @@
             app:tint="?attr/search_string_item_color"
             android:background="@android:color/transparent"
             android:contentDescription="@string/clear_button_description"
-            android:layout_marginEnd="12dp"
+            android:layout_marginEnd="@dimen/search_activity_search_clear_button_margin_end"
             android:layout_gravity="end|center_vertical"
             android:visibility="gone" />
 
     </FrameLayout>
 
     <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_tracks"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/default_margin"
+        android:layout_marginTop="@dimen/search_activity_recycler_view_margin_top"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         tools:listitem="@layout/view_track_item"/>
 
