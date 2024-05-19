@@ -31,6 +31,7 @@
             android:background="@drawable/shape"
             android:backgroundTint="?attr/search_string_background_color"
             android:hint="@string/search"
+            android:imeOptions="actionDone"
             android:inputType="text"
             android:lines="1"
             android:paddingStart="@dimen/edit_text_search_padding_start"

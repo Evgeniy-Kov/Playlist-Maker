@@ -4,15 +4,19 @@ import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.view.KeyEvent
+import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
-import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
 import com.example.playlistmaker.databinding.ActivitySearchBinding
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
 class SearchActivity : AppCompatActivity() {
 
@@ -35,6 +39,19 @@ class SearchActivity : AppCompatActivity() {
     private var searchInput = ""
 
     private val trackAdapter = TrackAdapter()
+
+    private var queryInput = ""
+
+    private val baseUrl = "https://itunes.apple.com"
+
+    private val retrofit = Retrofit.Builder()
+        .baseUrl(baseUrl)
+        .addConverterFactory(GsonConverterFactory.create())
+        .build()
+
+    private val iTunesApiService = retrofit.create(ITunesSearchApi::class.java)
+
+    private val trackList = mutableListOf<Track>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -61,17 +78,15 @@ class SearchActivity : AppCompatActivity() {
 
         clearButton.setOnClickListener {
             editTextSearch.setText("")
-            val inputMethodManager = getSystemService(
-                Context.INPUT_METHOD_SERVICE
-            ) as? InputMethodManager
-
-            inputMethodManager?.hideSoftInputFromWindow(editTextSearch.windowToken, 0)
+            hideKeyboard()
         }
 
-        editTextSearch.setOnKeyListener { v, keyCode, event ->
-            if (event.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
-                Toast.makeText(this, "Поиск: $searchInput", Toast.LENGTH_SHORT).show()
-                return@setOnKeyListener true
+        editTextSearch.setOnEditorActionListener { _, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                queryInput = searchInput
+                hideKeyboard()
+                sendQuery()
+                return@setOnEditorActionListener true
             }
             false
         }
@@ -91,7 +106,43 @@ class SearchActivity : AppCompatActivity() {
         editTextSearch.setText(searchInput)
     }
 
+    private fun hideKeyboard() {
+        val inputMethodManager = getSystemService(
+            Context.INPUT_METHOD_SERVICE
+        ) as InputMethodManager
+        inputMethodManager.hideSoftInputFromWindow(editTextSearch.windowToken, 0)
+    }
+
+    private fun sendQuery() {
+        iTunesApiService.search(queryInput).enqueue(object : Callback<TrackResponse> {
+            override fun onResponse(
+                call: Call<TrackResponse>,
+                response: Response<TrackResponse>
+            ) {
+                when (response.code()) {
+                    STATUS_SUCCESS -> {
+                        if (!response.body()?.results.isNullOrEmpty()) {
+                            trackList.clear()
+                            trackList.addAll(response.body()?.results ?: emptyList())
+                            trackAdapter.trackList = trackList
+                            /*TODO Error message*/
+                        } else {
+                            trackAdapter.trackList = emptyList()
+                            /*TODO Error message*/
+                        }
+                    }
+                    else -> { /*TODO Error message*/ }
+                }
+            }
+
+            override fun onFailure(call: Call<TrackResponse>, t: Throwable) {
+                /*TODO Error message*/
+            }
+        })
+    }
+
     companion object {
         private const val SEARCH_INPUT = "SEARCH_INPUT"
+        private const val STATUS_SUCCESS = 200
     }
 }
