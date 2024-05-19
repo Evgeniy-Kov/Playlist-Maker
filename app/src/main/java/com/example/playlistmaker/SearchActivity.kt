@@ -108,7 +108,6 @@ class SearchActivity : AppCompatActivity() {
         }
 
         rvTracks.adapter = trackAdapter
-        trackAdapter.trackList = TrackListMockObject.trackList
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
