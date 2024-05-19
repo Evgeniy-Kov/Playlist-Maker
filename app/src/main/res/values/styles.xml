@@ -47,4 +47,9 @@
         <item name="android:textSize">11sp</item>
         <item name="android:textFontWeight">400</item>
     </style>
+
+    <style name="TrackItemViewSongInfoBottomStringStyle">
+        <item name="android:textAppearance">@style/FontYSDisplayRegularSize11Weight400</item>
+        <item name="android:textColor">?attr/settings_activity_ic_tint</item>
+    </style>
 </resources>

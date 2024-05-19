@@ -8,7 +8,7 @@
     <dimen name="corner_radius_8">8dp</dimen>
     <dimen name="track_item_view_height">61dp</dimen>
     <dimen name="track_item_view_padding">12dp</dimen>
-    <dimen name="track_item_view_cover_size">45dp</dimen>
+    <dimen name="track_item_view_cover_size">48dp</dimen>
     <dimen name="track_item_view_dot_delimiter_size">
         @dimen/track_item_view_tv_song_info_bottom_string_height
     </dimen>
@@ -26,6 +26,8 @@
     <dimen name="search_activity_recycler_view_margin_top">24dp</dimen>
     <dimen name="main_activity_title_margin_top">12dp</dimen>
     <dimen name="main_activity_padding_top">24dp</dimen>
+    <dimen name="view_track_item_default_margin">8dp</dimen>
+    <dimen name="view_track_item_dot_delimiter_scalable_margin">4sp</dimen>
 
 
 
