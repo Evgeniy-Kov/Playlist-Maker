@@ -10,59 +10,59 @@
 
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/toolbar"
+        style="@style/ToolbarStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/toolbar_margin_top"
-        app:title="@string/search"
-        style="@style/ToolbarStyle" />
+        app:title="@string/search" />
 
 
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/search_activity_search_field_margin_top"
         android:layout_marginStart="@dimen/default_margin"
+        android:layout_marginTop="@dimen/search_activity_search_field_margin_top"
         android:layout_marginEnd="@dimen/default_margin">
 
         <EditText
             android:id="@+id/edit_text_search"
             android:layout_width="match_parent"
             android:layout_height="36dp"
-            app:cornerRadius="@dimen/search_activity_search_field_corner_radius"
             android:background="@drawable/shape"
             android:backgroundTint="?attr/search_string_background_color"
-            android:inputType="text"
             android:hint="@string/search"
+            android:inputType="text"
+            android:lines="1"
             android:paddingStart="@dimen/edit_text_search_padding_start"
             android:paddingEnd="@dimen/edit_text_search_padding_end"
-            android:lines="1"
             android:textAppearance="@style/FontYSDisplayRegularSize16Weight400"
             android:textColor="@color/yp_black"
             android:textColorHint="?attr/search_string_item_color"
             android:textCursorDrawable="@drawable/text_cursor_shape"
+            app:cornerRadius="@dimen/search_activity_search_field_corner_radius"
             tools:ignore="Autofill" />
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_search_16"
-            app:tint="?attr/search_string_item_color"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="@dimen/default_margin"
             android:background="@android:color/transparent"
             android:contentDescription="@string/search"
-            android:layout_gravity="center_vertical"
-            android:layout_marginStart="@dimen/default_margin"/>
+            android:src="@drawable/ic_search_16"
+            app:tint="?attr/search_string_item_color" />
 
         <ImageView
             android:id="@+id/image_view_clear_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_clear"
-            app:tint="?attr/search_string_item_color"
+            android:layout_gravity="end|center_vertical"
+            android:layout_marginEnd="@dimen/search_activity_search_clear_button_margin_end"
             android:background="@android:color/transparent"
             android:contentDescription="@string/clear_button_description"
-            android:layout_marginEnd="@dimen/search_activity_search_clear_button_margin_end"
-            android:layout_gravity="end|center_vertical"
-            android:visibility="gone" />
+            android:src="@drawable/ic_clear"
+            android:visibility="gone"
+            app:tint="?attr/search_string_item_color" />
 
     </FrameLayout>
 
@@ -72,6 +72,48 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/search_activity_recycler_view_margin_top"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        tools:listitem="@layout/view_track_item"/>
+        tools:listitem="@layout/view_track_item" />
+
+    <LinearLayout
+        android:id="@+id/ll_no_connection"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <com.google.android.material.textview.MaterialTextView
+            style="@style/SearchActivityPlaceholderStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginHorizontal="@dimen/search_activity_placeholder_margin_horizontal"
+            android:layout_marginTop="@dimen/search_activity_placeholder_margin_top"
+            android:drawableTop="@drawable/no_connection_placeholder"
+            android:text="@string/no_connection" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/button_update"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/search_activity_update_button_margin_top"
+            android:backgroundTint="?attr/colorSecondary"
+            android:text="@string/update"
+            android:textColor="?attr/colorPrimary"
+            app:cornerRadius="@dimen/search_activity_update_button_corner_radius" />
+
+    </LinearLayout>
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/tv_nothing_found"
+        style="@style/SearchActivityPlaceholderStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginHorizontal="@dimen/search_activity_placeholder_margin_horizontal"
+        android:layout_marginTop="@dimen/search_activity_placeholder_margin_top"
+        android:drawableTop="@drawable/nothing_found_placeholder"
+        android:text="@string/nothing_found"
+        android:visibility="gone" />
 
 </LinearLayout>
