@@ -1,8 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="default_margin">16dp</dimen>
-    <dimen name="large_text_size">22sp</dimen>
-    <dimen name="medium_text_size">16sp</dimen>
     <dimen name="settings_screen_item_height">61dp</dimen>
     <dimen name="settings_screen_layout_marginEnd">12dp</dimen>
+    <dimen name="track_item_view_padding">12dp</dimen>
+    <dimen name="track_item_view_cover_size">48dp</dimen>
+    <dimen name="track_item_view_forward_arrow_size">24dp</dimen>
+    <dimen name="edit_text_search_padding_start">36dp</dimen>
+    <dimen name="edit_text_search_padding_end">40dp</dimen>
+    <dimen name="toolbar_margin_top">4dp</dimen>
+    <dimen name="search_activity_search_field_margin_top">8dp</dimen>
+    <dimen name="search_activity_search_field_corner_radius">8dp</dimen>
+    <dimen name="search_activity_search_clear_button_margin_end">12dp</dimen>
+    <dimen name="search_activity_recycler_view_margin_top">24dp</dimen>
+    <dimen name="main_activity_title_margin_top">12dp</dimen>
+    <dimen name="main_activity_padding_top">24dp</dimen>
+    <dimen name="view_track_item_default_margin">8dp</dimen>
+    <dimen name="view_track_item_dot_delimiter_scalable_margin">4sp</dimen>
 </resources>

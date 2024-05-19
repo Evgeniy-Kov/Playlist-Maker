@@ -16,4 +16,7 @@
     <string name="support_email_body">Спасибо разработчикам и разработчицам
         за крутое приложение!</string>
     <string name="offer_link">https://yandex.ru/legal/practicum_offer</string>
+    <string name="forward_arrow_description">Forward arrow</string>
+    <string name="song_cover_description">Song cover</string>
+    <string name="dot_delimiter">•</string>
 </resources>
