@@ -32,6 +32,18 @@ class SearchActivity : AppCompatActivity() {
         binding.imageViewClearButton
     }
 
+    private val tvNothingFound by lazy {
+        binding.tvNothingFound
+    }
+
+    private val linearLayoutNoConnection by lazy {
+        binding.llNoConnection
+    }
+
+    private val buttonUpdate by lazy {
+        binding.buttonUpdate
+    }
+
     private val rvTracks by lazy {
         binding.rvTracks
     }
@@ -91,6 +103,10 @@ class SearchActivity : AppCompatActivity() {
             false
         }
 
+        buttonUpdate.setOnClickListener {
+            sendQuery()
+        }
+
         rvTracks.adapter = trackAdapter
         trackAdapter.trackList = TrackListMockObject.trackList
     }
@@ -125,20 +141,37 @@ class SearchActivity : AppCompatActivity() {
                             trackList.clear()
                             trackList.addAll(response.body()?.results ?: emptyList())
                             trackAdapter.trackList = trackList
-                            /*TODO Error message*/
+                            showErrorMessage(ErrorMessageType.SUCCESS)
                         } else {
                             trackAdapter.trackList = emptyList()
-                            /*TODO Error message*/
+                            showErrorMessage(ErrorMessageType.NOTHING_FOUND)
                         }
                     }
-                    else -> { /*TODO Error message*/ }
+                    else -> { showErrorMessage(ErrorMessageType.NO_CONNECTION) }
                 }
             }
 
             override fun onFailure(call: Call<TrackResponse>, t: Throwable) {
-                /*TODO Error message*/
+                showErrorMessage(ErrorMessageType.NO_CONNECTION)
             }
         })
+    }
+
+    private fun showErrorMessage(errorType: ErrorMessageType) {
+        when (errorType) {
+            ErrorMessageType.NOTHING_FOUND -> {
+                linearLayoutNoConnection.isVisible = false
+                tvNothingFound.isVisible = true
+            }
+            ErrorMessageType.NO_CONNECTION -> {
+                tvNothingFound.isVisible = false
+                linearLayoutNoConnection.isVisible = true
+            }
+            ErrorMessageType.SUCCESS -> {
+                tvNothingFound.isVisible = false
+                linearLayoutNoConnection.isVisible = false
+            }
+        }
     }
 
     companion object {
