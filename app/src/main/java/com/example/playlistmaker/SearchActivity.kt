@@ -91,11 +91,13 @@ class SearchActivity : AppCompatActivity() {
         clearButton.setOnClickListener {
             editTextSearch.setText("")
             hideKeyboard()
+            clearTrackList()
         }
 
         editTextSearch.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 queryInput = searchInput
+                editTextSearch.setText("")
                 hideKeyboard()
                 sendQuery()
                 return@setOnEditorActionListener true
@@ -129,6 +131,8 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun sendQuery() {
+        showErrorMessage(ErrorMessageType.HIDE_MESSAGE)
+        clearTrackList()
         iTunesApiService.search(queryInput).enqueue(object : Callback<TrackResponse> {
             override fun onResponse(
                 call: Call<TrackResponse>,
@@ -140,13 +144,15 @@ class SearchActivity : AppCompatActivity() {
                             trackList.clear()
                             trackList.addAll(response.body()?.results ?: emptyList())
                             trackAdapter.trackList = trackList
-                            showErrorMessage(ErrorMessageType.SUCCESS)
                         } else {
                             trackAdapter.trackList = emptyList()
                             showErrorMessage(ErrorMessageType.NOTHING_FOUND)
                         }
                     }
-                    else -> { showErrorMessage(ErrorMessageType.NO_CONNECTION) }
+
+                    else -> {
+                        showErrorMessage(ErrorMessageType.NO_CONNECTION)
+                    }
                 }
             }
 
@@ -162,15 +168,22 @@ class SearchActivity : AppCompatActivity() {
                 linearLayoutNoConnection.isVisible = false
                 tvNothingFound.isVisible = true
             }
+
             ErrorMessageType.NO_CONNECTION -> {
                 tvNothingFound.isVisible = false
                 linearLayoutNoConnection.isVisible = true
             }
-            ErrorMessageType.SUCCESS -> {
+
+            ErrorMessageType.HIDE_MESSAGE -> {
                 tvNothingFound.isVisible = false
                 linearLayoutNoConnection.isVisible = false
             }
         }
+    }
+
+    private fun clearTrackList() {
+        trackList.clear()
+        trackAdapter.trackList = trackList
     }
 
     companion object {
