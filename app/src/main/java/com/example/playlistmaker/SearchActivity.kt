@@ -24,30 +24,6 @@ class SearchActivity : AppCompatActivity() {
         ActivitySearchBinding.inflate(layoutInflater)
     }
 
-    private val editTextSearch by lazy {
-        binding.editTextSearch
-    }
-
-    private val clearButton by lazy {
-        binding.imageViewClearButton
-    }
-
-    private val tvNothingFound by lazy {
-        binding.tvNothingFound
-    }
-
-    private val linearLayoutNoConnection by lazy {
-        binding.llNoConnection
-    }
-
-    private val buttonUpdate by lazy {
-        binding.buttonUpdate
-    }
-
-    private val rvTracks by lazy {
-        binding.rvTracks
-    }
-
     private var searchInput = ""
 
     private val trackAdapter = TrackAdapter()
@@ -77,27 +53,27 @@ class SearchActivity : AppCompatActivity() {
 
         binding.toolbar.setNavigationOnClickListener { finish() }
 
-        editTextSearch.addTextChangedListener(object : TextWatcher {
+        binding.editTextSearch.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                clearButton.isVisible = !s.isNullOrEmpty()
-                searchInput = editTextSearch.text.toString()
+                binding.ivClear.isVisible = !s.isNullOrEmpty()
+                searchInput = binding.editTextSearch.text.toString()
             }
 
             override fun afterTextChanged(s: Editable?) {}
         })
 
-        clearButton.setOnClickListener {
-            editTextSearch.setText("")
+        binding.ivClear.setOnClickListener {
+            binding.editTextSearch.setText("")
             hideKeyboard()
             clearTrackList()
         }
 
-        editTextSearch.setOnEditorActionListener { _, actionId, _ ->
+        binding.editTextSearch.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 queryInput = searchInput
-                editTextSearch.setText("")
+                binding.editTextSearch.setText("")
                 hideKeyboard()
                 sendQuery()
                 return@setOnEditorActionListener true
@@ -105,11 +81,11 @@ class SearchActivity : AppCompatActivity() {
             false
         }
 
-        buttonUpdate.setOnClickListener {
+        binding.buttonUpdate.setOnClickListener {
             sendQuery()
         }
 
-        rvTracks.adapter = trackAdapter
+        binding.rvTracks.adapter = trackAdapter
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -120,14 +96,14 @@ class SearchActivity : AppCompatActivity() {
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
         searchInput = savedInstanceState.getString(SEARCH_INPUT, "")
-        editTextSearch.setText(searchInput)
+        binding.editTextSearch.setText(searchInput)
     }
 
     private fun hideKeyboard() {
         val inputMethodManager = getSystemService(
             Context.INPUT_METHOD_SERVICE
         ) as InputMethodManager
-        inputMethodManager.hideSoftInputFromWindow(editTextSearch.windowToken, 0)
+        inputMethodManager.hideSoftInputFromWindow(binding.editTextSearch.windowToken, 0)
     }
 
     private fun sendQuery() {
@@ -165,18 +141,18 @@ class SearchActivity : AppCompatActivity() {
     private fun showErrorMessage(errorType: ErrorMessageType) {
         when (errorType) {
             ErrorMessageType.NOTHING_FOUND -> {
-                linearLayoutNoConnection.isVisible = false
-                tvNothingFound.isVisible = true
+                binding.llNoConnection.isVisible = false
+                binding.tvNothingFound.isVisible = true
             }
 
             ErrorMessageType.NO_CONNECTION -> {
-                tvNothingFound.isVisible = false
-                linearLayoutNoConnection.isVisible = true
+                binding.tvNothingFound.isVisible = false
+                binding.llNoConnection.isVisible = true
             }
 
             ErrorMessageType.HIDE_MESSAGE -> {
-                tvNothingFound.isVisible = false
-                linearLayoutNoConnection.isVisible = false
+                binding.tvNothingFound.isVisible = false
+                binding.llNoConnection.isVisible = false
             }
         }
     }
