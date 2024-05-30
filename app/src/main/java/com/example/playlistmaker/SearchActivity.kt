@@ -107,7 +107,7 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun sendQuery() {
-        showErrorMessage(ErrorMessageType.HIDE_MESSAGE)
+        hideErrorMessage()
         clearTrackList()
         iTunesApiService.search(queryInput).enqueue(object : Callback<TrackResponse> {
             override fun onResponse(
@@ -149,12 +149,12 @@ class SearchActivity : AppCompatActivity() {
                 binding.tvNothingFound.isVisible = false
                 binding.llNoConnection.isVisible = true
             }
-
-            ErrorMessageType.HIDE_MESSAGE -> {
-                binding.tvNothingFound.isVisible = false
-                binding.llNoConnection.isVisible = false
-            }
         }
+    }
+
+    private fun hideErrorMessage() {
+        binding.tvNothingFound.isVisible = false
+        binding.llNoConnection.isVisible = false
     }
 
     private fun clearTrackList() {
