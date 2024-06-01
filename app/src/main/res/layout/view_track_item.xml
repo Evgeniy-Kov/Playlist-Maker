@@ -20,7 +20,7 @@
         tools:src="@drawable/placeholder" />
 
     <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/tv_song_name"
+        android:id="@+id/tv_track_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/view_track_item_default_margin"
@@ -52,7 +52,7 @@
         app:layout_constraintHorizontal_bias="0"
         app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintStart_toEndOf="@id/iv_cover"
-        app:layout_constraintTop_toBottomOf="@id/tv_song_name"
+        app:layout_constraintTop_toBottomOf="@id/tv_track_name"
         tools:text="The Beatles" />
 
     <com.google.android.material.textview.MaterialTextView

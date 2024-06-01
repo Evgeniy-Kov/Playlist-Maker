@@ -5,6 +5,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.databinding.ViewTrackItemBinding
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 class TrackViewHolder(
     private val binding: ViewTrackItemBinding
@@ -13,9 +15,13 @@ class TrackViewHolder(
     fun bind(track: Track) {
         val coverCornerRadius = 2f
         binding.apply {
-            tvSongName.text = track.songName
+            tvTrackName.text = track.trackName
             tvArtistName.text = track.artistName
-            tvTrackTime.text = track.trackTime
+            tvTrackTime.text = SimpleDateFormat(
+                "mm:ss",
+                Locale.getDefault()
+            ).format(track.trackTimeMillis)
+
             Glide.with(this.root)
                 .load(track.artworkUrl100)
                 .placeholder(R.drawable.placeholder)

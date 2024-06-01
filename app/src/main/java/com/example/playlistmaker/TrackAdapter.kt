@@ -23,7 +23,7 @@ class TrackAdapter : RecyclerView.Adapter<TrackViewHolder>() {
                 }
 
                 override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-                    return oldTrackList[oldItemPosition].songName == newTrackList[newItemPosition].songName
+                    return oldTrackList[oldItemPosition].trackName == newTrackList[newItemPosition].trackName
                 }
 
                 override fun areContentsTheSame(
