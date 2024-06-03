@@ -239,7 +239,7 @@ class SearchActivity : AppCompatActivity() {
     private fun addTrackToSearchHistory(track: Track) {
         if (searchHistory.contains(track)) {
             searchHistory.remove(track)
-        } else if (searchHistory.size == 10) {
+        } else if (searchHistory.size == MAX_SEARCH_HISTORY_SIZE) {
             searchHistory.removeLast()
         }
         searchHistory.add(0, track)
@@ -257,5 +257,6 @@ class SearchActivity : AppCompatActivity() {
     companion object {
         private const val SEARCH_INPUT = "SEARCH_INPUT"
         private const val STATUS_SUCCESS = 200
+        private const val MAX_SEARCH_HISTORY_SIZE = 10
     }
 }
