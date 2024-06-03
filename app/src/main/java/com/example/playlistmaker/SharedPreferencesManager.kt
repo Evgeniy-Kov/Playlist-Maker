@@ -1,7 +1,6 @@
 package com.example.playlistmaker
 
 import android.content.Context
-import android.util.Log
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.edit
 import com.google.gson.Gson
@@ -23,7 +22,6 @@ class SharedPreferencesManager(context: Context) {
         DARK_THEME_MODE_KEY, AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
     )
 
-
     fun saveSearchHistory(trackList: List<Track>) {
         val searchHistoryJson = Gson().toJson(trackList)
         preferences.edit {
@@ -35,7 +33,6 @@ class SharedPreferencesManager(context: Context) {
         val searchHistoryJson = preferences.getString(SEARCH_HISTORY_KEY, "")
         val searchHistory =
             Gson().fromJson(searchHistoryJson, Array<Track>::class.java) ?: emptyArray()
-        Log.d("searchHistory size", "${searchHistory.size}")
         return searchHistory.toMutableList()
     }
 
