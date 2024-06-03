@@ -8,6 +8,7 @@ import com.example.playlistmaker.databinding.ViewTrackItemBinding
 
 class TrackAdapter : RecyclerView.Adapter<TrackViewHolder>() {
 
+    var onItemClickListener: TrackViewHolder.OnItemClickListener? = null
     var trackList: List<Track> = emptyList()
         set(value) {
             val oldTrackList = field
@@ -48,6 +49,9 @@ class TrackAdapter : RecyclerView.Adapter<TrackViewHolder>() {
     }
 
     override fun onBindViewHolder(holder: TrackViewHolder, position: Int) {
-        holder.bind(trackList[position])
+        holder.bind(
+            trackList[position],
+            onItemClickListener
+        )
     }
 }

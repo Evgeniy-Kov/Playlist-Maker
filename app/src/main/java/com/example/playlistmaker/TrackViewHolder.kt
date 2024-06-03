@@ -12,9 +12,12 @@ class TrackViewHolder(
     private val binding: ViewTrackItemBinding
 ) : RecyclerView.ViewHolder(binding.root) {
 
-    fun bind(track: Track) {
+    fun bind(track: Track, onItemClickListener: OnItemClickListener?) {
         val coverCornerRadius = 2f
         binding.apply {
+            root.setOnClickListener {
+                onItemClickListener?.onItemClick(track)
+            }
             tvTrackName.text = track.trackName
             tvArtistName.text = track.artistName
             tvTrackTime.text = SimpleDateFormat(
@@ -37,5 +40,9 @@ class TrackViewHolder(
                 )
                 .into(ivCover)
         }
+    }
+
+    fun interface OnItemClickListener {
+        fun onItemClick(track: Track)
     }
 }
