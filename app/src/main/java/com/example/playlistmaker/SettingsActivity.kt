@@ -5,6 +5,7 @@ import android.net.Uri
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.playlistmaker.databinding.ActivitySettingsBinding
@@ -60,6 +61,13 @@ class SettingsActivity : AppCompatActivity() {
             }
 
             startActivity(agreementIntent)
+        }
+
+        binding.switchTheme.setOnCheckedChangeListener { switcher, isChecked ->
+            (applicationContext as App).switchTheme(
+                if (isChecked) AppCompatDelegate.MODE_NIGHT_YES else AppCompatDelegate.MODE_NIGHT_NO
+            )
+            (applicationContext as App).sharedPreferencesManager.saveDarkThemeMode(isChecked)
         }
     }
 }
