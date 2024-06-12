@@ -5,7 +5,6 @@ import androidx.appcompat.app.AppCompatDelegate
 
 class App : Application() {
 
-    private var darkThemeMode = AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
     val sharedPreferencesManager by lazy {
         SharedPreferencesManager(applicationContext)
     }
@@ -17,8 +16,19 @@ class App : Application() {
         )
     }
 
-    fun switchTheme(darkThemeMode: Int) {
-        this.darkThemeMode = darkThemeMode
-        AppCompatDelegate.setDefaultNightMode(darkThemeMode)
+    fun switchTheme(darkThemeMode: DarkThemeMode) {
+        when (darkThemeMode) {
+            DarkThemeMode.FOLLOW_SYSTEM -> {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+            }
+
+            DarkThemeMode.ON -> {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+            }
+
+            DarkThemeMode.OFF -> {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+            }
+        }
     }
 }

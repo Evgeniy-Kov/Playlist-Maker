@@ -1,26 +1,26 @@
 package com.example.playlistmaker
 
 import android.content.Context
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.edit
 import com.google.gson.Gson
 
 class SharedPreferencesManager(context: Context) {
     private val preferences = context.getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE)
 
-    fun saveDarkThemeMode(darkThemeEnabled: Boolean) {
+    fun saveDarkThemeMode(darkThemeMode: DarkThemeMode) {
         preferences.edit {
-            putInt(
-                DARK_THEME_MODE_KEY,
-                if (darkThemeEnabled) AppCompatDelegate.MODE_NIGHT_YES
-                else AppCompatDelegate.MODE_NIGHT_NO
+            putString(
+                DARK_THEME_MODE_KEY, darkThemeMode.name
             )
         }
     }
 
-    fun getDarkThemeMode() = preferences.getInt(
-        DARK_THEME_MODE_KEY, AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
-    )
+    fun getDarkThemeMode(): DarkThemeMode {
+        val darkThemeModeString = preferences.getString(
+            DARK_THEME_MODE_KEY, null
+        ) ?: DarkThemeMode.FOLLOW_SYSTEM.name
+        return DarkThemeMode.valueOf(darkThemeModeString)
+    }
 
     fun saveSearchHistory(trackList: List<Track>) {
         val searchHistoryJson = Gson().toJson(trackList)
