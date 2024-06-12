@@ -43,8 +43,6 @@ class SearchActivity : AppCompatActivity() {
 
     private val trackList = mutableListOf<Track>()
 
-    private val searchHistory = mutableListOf<Track>()
-
     private val sharedPreferencesManager by lazy {
         SharedPreferencesManager(applicationContext)
     }
@@ -59,8 +57,7 @@ class SearchActivity : AppCompatActivity() {
             insets
         }
 
-        searchHistory.addAll(sharedPreferencesManager.getSearchHistory())
-        searchHistoryAdapter.trackList = searchHistory
+        searchHistoryAdapter.trackList = sharedPreferencesManager.getSearchHistory()
 
         binding.toolbar.setNavigationOnClickListener { finish() }
 
@@ -68,7 +65,7 @@ class SearchActivity : AppCompatActivity() {
             val screenMode = if (
                 hasFocus
                 && binding.editTextSearch.text.isEmpty()
-                && searchHistory.isNotEmpty()
+                && sharedPreferencesManager.getSearchHistory().isNotEmpty()
             ) {
                 SearchScreenMode.SEARCH_HISTORY_SCREEN
             } else {
@@ -86,7 +83,7 @@ class SearchActivity : AppCompatActivity() {
                 val screenMode = if (
                     binding.editTextSearch.hasFocus()
                     && binding.editTextSearch.text.isEmpty()
-                    && searchHistory.isNotEmpty()
+                    && sharedPreferencesManager.getSearchHistory().isNotEmpty()
                 ) {
                     clearTrackList()
                     SearchScreenMode.SEARCH_HISTORY_SCREEN
@@ -237,6 +234,7 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun addTrackToSearchHistory(track: Track) {
+        val searchHistory = sharedPreferencesManager.getSearchHistory()
         if (searchHistory.contains(track)) {
             searchHistory.remove(track)
         } else if (searchHistory.size == MAX_SEARCH_HISTORY_SIZE) {
@@ -248,7 +246,6 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun clearSearchHistory() {
-        searchHistory.clear()
         sharedPreferencesManager.clearSearchHistory()
         searchHistoryAdapter.trackList = emptyList()
         changeSearchScreenMode(SearchScreenMode.NORMAL_SCREEN)
