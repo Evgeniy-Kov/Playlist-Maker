@@ -61,5 +61,11 @@ class SettingsActivity : AppCompatActivity() {
 
             startActivity(agreementIntent)
         }
+
+        binding.switchTheme.setOnCheckedChangeListener { switcher, isChecked ->
+            val darkThemeMode = if (isChecked) DarkThemeMode.ON else DarkThemeMode.OFF
+            (applicationContext as App).switchTheme(darkThemeMode)
+            (applicationContext as App).sharedPreferencesManager.saveDarkThemeMode(darkThemeMode)
+        }
     }
 }

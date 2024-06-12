@@ -67,13 +67,41 @@
 
     </FrameLayout>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_tracks"
+    <TextView
+        android:id="@+id/search_history_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/search_activity_recycler_view_margin_top"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        tools:listitem="@layout/view_track_item" />
+        android:layout_marginTop="48dp"
+        android:text="@string/search_history_title"
+        android:textAlignment="center"
+        android:textColor="?attr/colorSecondary"
+        android:textAppearance="@style/FontYSDisplayMediumSize19Weight500"
+        android:visibility="gone" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_tracks"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="@dimen/search_activity_recycler_view_margin_top"
+            android:layout_weight="1"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            tools:listitem="@layout/view_track_item" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/button_clear_history"
+            style="@style/SearchActivityMaterialButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginVertical="@dimen/search_activity_material_button_margin_vertical"
+            android:text="@string/clear_history"
+            android:visibility="gone" />
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/ll_no_connection"
@@ -94,14 +122,12 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/button_update"
+            style="@style/SearchActivityMaterialButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="@dimen/search_activity_update_button_margin_top"
-            android:backgroundTint="?attr/colorSecondary"
-            android:text="@string/update"
-            android:textColor="?attr/colorPrimary"
-            app:cornerRadius="@dimen/search_activity_update_button_corner_radius" />
+            android:layout_marginTop="@dimen/search_activity_material_button_margin_vertical"
+            android:text="@string/update" />
 
     </LinearLayout>
 

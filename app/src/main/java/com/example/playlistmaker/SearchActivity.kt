@@ -28,6 +28,8 @@ class SearchActivity : AppCompatActivity() {
 
     private val trackAdapter = TrackAdapter()
 
+    private val searchHistoryAdapter = TrackAdapter()
+
     private var queryInput = ""
 
     private val baseUrl = "https://itunes.apple.com"
@@ -41,6 +43,10 @@ class SearchActivity : AppCompatActivity() {
 
     private val trackList = mutableListOf<Track>()
 
+    private val sharedPreferencesManager by lazy {
+        SharedPreferencesManager(applicationContext)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -51,7 +57,22 @@ class SearchActivity : AppCompatActivity() {
             insets
         }
 
+        searchHistoryAdapter.trackList = sharedPreferencesManager.getSearchHistory()
+
         binding.toolbar.setNavigationOnClickListener { finish() }
+
+        binding.editTextSearch.setOnFocusChangeListener { editText, hasFocus ->
+            val screenMode = if (
+                hasFocus
+                && binding.editTextSearch.text.isEmpty()
+                && sharedPreferencesManager.getSearchHistory().isNotEmpty()
+            ) {
+                SearchScreenMode.SEARCH_HISTORY_SCREEN
+            } else {
+                SearchScreenMode.NORMAL_SCREEN
+            }
+            changeSearchScreenMode(screenMode)
+        }
 
         binding.editTextSearch.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
@@ -59,6 +80,17 @@ class SearchActivity : AppCompatActivity() {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 binding.ivClear.isVisible = !s.isNullOrEmpty()
                 searchInput = binding.editTextSearch.text.toString()
+                val screenMode = if (
+                    binding.editTextSearch.hasFocus()
+                    && binding.editTextSearch.text.isEmpty()
+                    && sharedPreferencesManager.getSearchHistory().isNotEmpty()
+                ) {
+                    clearTrackList()
+                    SearchScreenMode.SEARCH_HISTORY_SCREEN
+                } else {
+                    SearchScreenMode.NORMAL_SCREEN
+                }
+                changeSearchScreenMode(screenMode)
             }
 
             override fun afterTextChanged(s: Editable?) {}
@@ -85,7 +117,19 @@ class SearchActivity : AppCompatActivity() {
             sendQuery()
         }
 
-        binding.rvTracks.adapter = trackAdapter
+        trackAdapter.onItemClickListener = TrackViewHolder.OnItemClickListener {
+            addTrackToSearchHistory(it)
+        }
+
+        searchHistoryAdapter.onItemClickListener = TrackViewHolder.OnItemClickListener {
+            addTrackToSearchHistory(it)
+        }
+
+        binding.buttonClearHistory.setOnClickListener {
+            clearSearchHistory()
+        }
+
+        changeSearchScreenMode(SearchScreenMode.NORMAL_SCREEN)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -107,7 +151,7 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun sendQuery() {
-        hideErrorMessage()
+        changeSearchScreenMode(SearchScreenMode.NORMAL_SCREEN)
         clearTrackList()
         iTunesApiService.search(queryInput).enqueue(object : Callback<TrackResponse> {
             override fun onResponse(
@@ -122,39 +166,66 @@ class SearchActivity : AppCompatActivity() {
                             trackAdapter.trackList = trackList
                         } else {
                             trackAdapter.trackList = emptyList()
-                            showErrorMessage(ErrorMessageType.NOTHING_FOUND)
+                            changeSearchScreenMode(SearchScreenMode.NOTHING_FOUND)
                         }
                     }
 
                     else -> {
-                        showErrorMessage(ErrorMessageType.NO_CONNECTION)
+                        changeSearchScreenMode(SearchScreenMode.NO_CONNECTION)
                     }
                 }
             }
 
             override fun onFailure(call: Call<TrackResponse>, t: Throwable) {
-                showErrorMessage(ErrorMessageType.NO_CONNECTION)
+                changeSearchScreenMode(SearchScreenMode.NO_CONNECTION)
             }
         })
     }
 
-    private fun showErrorMessage(errorType: ErrorMessageType) {
-        when (errorType) {
-            ErrorMessageType.NOTHING_FOUND -> {
-                binding.llNoConnection.isVisible = false
-                binding.tvNothingFound.isVisible = true
+    private fun changeSearchScreenMode(screenMode: SearchScreenMode) {
+        when (screenMode) {
+            SearchScreenMode.NORMAL_SCREEN -> {
+                binding.apply {
+                    tvNothingFound.isVisible = false
+                    llNoConnection.isVisible = false
+                    searchHistoryTitle.isVisible = false
+                    buttonClearHistory.isVisible = false
+                    rvTracks.isVisible = true
+                    rvTracks.adapter = trackAdapter
+                }
             }
 
-            ErrorMessageType.NO_CONNECTION -> {
-                binding.tvNothingFound.isVisible = false
-                binding.llNoConnection.isVisible = true
+            SearchScreenMode.SEARCH_HISTORY_SCREEN -> {
+                binding.apply {
+                    tvNothingFound.isVisible = false
+                    llNoConnection.isVisible = false
+                    searchHistoryTitle.isVisible = true
+                    buttonClearHistory.isVisible = true
+                    rvTracks.isVisible = true
+                    rvTracks.adapter = searchHistoryAdapter
+                }
+            }
+
+            SearchScreenMode.NOTHING_FOUND -> {
+                binding.apply {
+                    tvNothingFound.isVisible = true
+                    llNoConnection.isVisible = false
+                    searchHistoryTitle.isVisible = false
+                    buttonClearHistory.isVisible = false
+                    rvTracks.isVisible = false
+                }
+            }
+
+            SearchScreenMode.NO_CONNECTION -> {
+                binding.apply {
+                    tvNothingFound.isVisible = false
+                    llNoConnection.isVisible = true
+                    searchHistoryTitle.isVisible = false
+                    buttonClearHistory.isVisible = false
+                    rvTracks.isVisible = false
+                }
             }
         }
-    }
-
-    private fun hideErrorMessage() {
-        binding.tvNothingFound.isVisible = false
-        binding.llNoConnection.isVisible = false
     }
 
     private fun clearTrackList() {
@@ -162,8 +233,27 @@ class SearchActivity : AppCompatActivity() {
         trackAdapter.trackList = trackList
     }
 
+    private fun addTrackToSearchHistory(track: Track) {
+        val searchHistory = sharedPreferencesManager.getSearchHistory()
+        if (searchHistory.contains(track)) {
+            searchHistory.remove(track)
+        } else if (searchHistory.size == MAX_SEARCH_HISTORY_SIZE) {
+            searchHistory.removeLast()
+        }
+        searchHistory.add(0, track)
+        sharedPreferencesManager.saveSearchHistory(searchHistory)
+        searchHistoryAdapter.trackList = searchHistory
+    }
+
+    private fun clearSearchHistory() {
+        sharedPreferencesManager.clearSearchHistory()
+        searchHistoryAdapter.trackList = emptyList()
+        changeSearchScreenMode(SearchScreenMode.NORMAL_SCREEN)
+    }
+
     companion object {
         private const val SEARCH_INPUT = "SEARCH_INPUT"
         private const val STATUS_SUCCESS = 200
+        private const val MAX_SEARCH_HISTORY_SIZE = 10
     }
 }
