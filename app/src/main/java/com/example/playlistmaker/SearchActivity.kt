@@ -119,10 +119,12 @@ class SearchActivity : AppCompatActivity() {
 
         trackAdapter.onItemClickListener = TrackViewHolder.OnItemClickListener {
             addTrackToSearchHistory(it)
+            startActivity(PlayerActivity.newIntent(this, it))
         }
 
         searchHistoryAdapter.onItemClickListener = TrackViewHolder.OnItemClickListener {
             addTrackToSearchHistory(it)
+            startActivity(PlayerActivity.newIntent(this, it))
         }
 
         binding.buttonClearHistory.setOnClickListener {
