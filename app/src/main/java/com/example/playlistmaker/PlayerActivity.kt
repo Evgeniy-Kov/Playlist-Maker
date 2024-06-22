@@ -11,6 +11,7 @@ import com.example.playlistmaker.databinding.ActivityPlayerBinding
 import com.google.gson.Gson
 
 class PlayerActivity : AppCompatActivity() {
+    private lateinit var track: Track
 
     private val binding by lazy {
         ActivityPlayerBinding.inflate(layoutInflater)
@@ -25,6 +26,15 @@ class PlayerActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+
+        parseIntent()
+    }
+
+    private fun parseIntent() {
+        if (!intent.hasExtra(EXTRA_TRACK_ITEM)) {
+            throw RuntimeException(getString(R.string.track_not_found_exception))
+        }
+        track = Gson().fromJson(intent.getStringExtra(EXTRA_TRACK_ITEM), Track::class.java)
     }
 
     companion object {
