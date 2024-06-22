@@ -1,29 +1,22 @@
 package com.example.playlistmaker
 
-import android.util.TypedValue
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.databinding.ViewTrackItemBinding
-import java.text.SimpleDateFormat
-import java.util.Locale
 
 class TrackViewHolder(
     private val binding: ViewTrackItemBinding
 ) : RecyclerView.ViewHolder(binding.root) {
 
     fun bind(track: Track, onItemClickListener: OnItemClickListener?) {
-        val coverCornerRadius = 2f
         binding.apply {
             root.setOnClickListener {
                 onItemClickListener?.onItemClick(track)
             }
             tvTrackName.text = track.trackName
             tvArtistName.text = track.artistName
-            tvTrackTime.text = SimpleDateFormat(
-                "mm:ss",
-                Locale.getDefault()
-            ).format(track.trackTimeMillis)
+            tvTrackTime.text = track.getFormattedTime()
 
             Glide.with(this.root)
                 .load(track.artworkUrl100)
@@ -31,11 +24,10 @@ class TrackViewHolder(
                 .centerCrop()
                 .transform(
                     RoundedCorners(
-                        TypedValue.applyDimension(
-                            TypedValue.COMPLEX_UNIT_DIP,
-                            coverCornerRadius,
-                            binding.root.context.resources.displayMetrics
-                        ).toInt()
+                        convertDpToPx(
+                            binding.root.context.resources.displayMetrics,
+                            COVER_CORNER_RADIUS_IN_DP
+                        )
                     )
                 )
                 .into(ivCover)
@@ -44,5 +36,9 @@ class TrackViewHolder(
 
     fun interface OnItemClickListener {
         fun onItemClick(track: Track)
+    }
+
+    private companion object {
+        private const val COVER_CORNER_RADIUS_IN_DP = 2f
     }
 }
