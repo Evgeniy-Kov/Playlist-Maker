@@ -3,6 +3,7 @@ package com.example.playlistmaker
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.example.playlistmaker.Track.Companion.getFormattedTime
 import com.example.playlistmaker.databinding.ViewTrackItemBinding
 
 class TrackViewHolder(
@@ -24,10 +25,7 @@ class TrackViewHolder(
                 .centerCrop()
                 .transform(
                     RoundedCorners(
-                        convertDpToPx(
-                            binding.root.context.resources.displayMetrics,
-                            COVER_CORNER_RADIUS_IN_DP
-                        )
+                        binding.root.context.convertDpToPx(COVER_CORNER_RADIUS_IN_DP)
                     )
                 )
                 .into(ivCover)
