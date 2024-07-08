@@ -74,8 +74,8 @@
         android:layout_marginTop="48dp"
         android:text="@string/search_history_title"
         android:textAlignment="center"
-        android:textColor="?attr/colorSecondary"
         android:textAppearance="@style/FontYSDisplayMediumSize19Weight500"
+        android:textColor="?attr/colorSecondary"
         android:visibility="gone" />
 
     <LinearLayout
@@ -141,6 +141,15 @@
         android:layout_marginTop="@dimen/search_activity_placeholder_margin_top"
         android:drawableTop="@drawable/nothing_found_placeholder"
         android:text="@string/nothing_found"
+        android:visibility="gone" />
+
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/search_activity_progress_bar_margin_top"
+        android:indeterminateTint="@color/yp_blue"
         android:visibility="gone" />
 
 </LinearLayout>

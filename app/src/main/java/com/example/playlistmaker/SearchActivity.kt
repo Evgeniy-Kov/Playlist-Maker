@@ -172,7 +172,7 @@ class SearchActivity : AppCompatActivity() {
     private fun sendQuery() {
         queryInput = searchInput
         if (queryInput.isNotBlank()) {
-            changeSearchScreenMode(SearchScreenMode.NORMAL_SCREEN)
+            changeSearchScreenMode(SearchScreenMode.WAITING)
             clearTrackList()
             iTunesApiService.search(queryInput).enqueue(object : Callback<TrackResponse> {
                 override fun onResponse(
@@ -185,6 +185,7 @@ class SearchActivity : AppCompatActivity() {
                                 trackList.clear()
                                 trackList.addAll(response.body()?.results ?: emptyList())
                                 trackAdapter.trackList = trackList
+                                changeSearchScreenMode(SearchScreenMode.NORMAL_SCREEN)
                             } else {
                                 trackAdapter.trackList = emptyList()
                                 changeSearchScreenMode(SearchScreenMode.NOTHING_FOUND)
@@ -212,6 +213,7 @@ class SearchActivity : AppCompatActivity() {
                     llNoConnection.isVisible = false
                     searchHistoryTitle.isVisible = false
                     buttonClearHistory.isVisible = false
+                    progressBar.isVisible = false
                     rvTracks.isVisible = true
                     rvTracks.adapter = trackAdapter
                 }
@@ -223,6 +225,7 @@ class SearchActivity : AppCompatActivity() {
                     llNoConnection.isVisible = false
                     searchHistoryTitle.isVisible = true
                     buttonClearHistory.isVisible = true
+                    progressBar.isVisible = false
                     rvTracks.isVisible = true
                     rvTracks.adapter = searchHistoryAdapter
                 }
@@ -234,6 +237,7 @@ class SearchActivity : AppCompatActivity() {
                     llNoConnection.isVisible = false
                     searchHistoryTitle.isVisible = false
                     buttonClearHistory.isVisible = false
+                    progressBar.isVisible = false
                     rvTracks.isVisible = false
                 }
             }
@@ -244,6 +248,18 @@ class SearchActivity : AppCompatActivity() {
                     llNoConnection.isVisible = true
                     searchHistoryTitle.isVisible = false
                     buttonClearHistory.isVisible = false
+                    progressBar.isVisible = false
+                    rvTracks.isVisible = false
+                }
+            }
+
+            SearchScreenMode.WAITING -> {
+                binding.apply {
+                    tvNothingFound.isVisible = false
+                    llNoConnection.isVisible = false
+                    searchHistoryTitle.isVisible = false
+                    buttonClearHistory.isVisible = false
+                    progressBar.isVisible = true
                     rvTracks.isVisible = false
                 }
             }
