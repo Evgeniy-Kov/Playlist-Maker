@@ -139,14 +139,15 @@ class PlayerActivity : AppCompatActivity() {
     }
 
     private fun playbackControl() {
-        when(playerState) {
+        when (playerState) {
             PLAYER_STATE_PLAYING -> playerPause()
             PLAYER_STATE_PREPARED, PLAYER_STATE_PAUSED -> playerPlay()
         }
     }
 
     private fun setPlaybackTime(timeMillis: Int) {
-        binding.tvPlaybackProgress.text = SimpleDateFormat("mm:ss", Locale.getDefault()).format(timeMillis)
+        binding.tvPlaybackProgress.text =
+            SimpleDateFormat("mm:ss", Locale.getDefault()).format(timeMillis)
     }
 
     private fun createUpdatePlaybackTimeTask(): Runnable {
