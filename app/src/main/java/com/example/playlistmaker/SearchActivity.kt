@@ -28,6 +28,8 @@ class SearchActivity : AppCompatActivity() {
 
     private var searchInput = ""
 
+    private var isClickAllowed = true
+
     private val trackAdapter = TrackAdapter()
 
     private val searchHistoryAdapter = TrackAdapter()
@@ -130,13 +132,17 @@ class SearchActivity : AppCompatActivity() {
         }
 
         trackAdapter.onItemClickListener = TrackViewHolder.OnItemClickListener {
-            addTrackToSearchHistory(it)
-            startActivity(PlayerActivity.newIntent(this, it))
+            if (clickDebounce()) {
+                addTrackToSearchHistory(it)
+                startActivity(PlayerActivity.newIntent(this, it))
+            }
         }
 
         searchHistoryAdapter.onItemClickListener = TrackViewHolder.OnItemClickListener {
-            addTrackToSearchHistory(it)
-            startActivity(PlayerActivity.newIntent(this, it))
+            if (clickDebounce()) {
+                addTrackToSearchHistory(it)
+                startActivity(PlayerActivity.newIntent(this, it))
+            }
         }
 
         binding.buttonClearHistory.setOnClickListener {
@@ -160,6 +166,15 @@ class SearchActivity : AppCompatActivity() {
     private fun searchDebounce() {
         handler.removeCallbacks(searchRunnable)
         handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY_MILLIS)
+    }
+
+    private fun clickDebounce(): Boolean {
+        val current = isClickAllowed
+        if (isClickAllowed) {
+            isClickAllowed = false
+            handler.postDelayed({ isClickAllowed = true }, CLICK_DEBOUNCE_DELAY_MILLIS)
+        }
+        return current
     }
 
     private fun hideKeyboard() {
@@ -291,7 +306,8 @@ class SearchActivity : AppCompatActivity() {
 
     companion object {
         private const val SEARCH_INPUT = "SEARCH_INPUT"
-        private const val SEARCH_DEBOUNCE_DELAY_MILLIS = 2000L
+        private const val SEARCH_DEBOUNCE_DELAY_MILLIS = 1000L
+        private const val CLICK_DEBOUNCE_DELAY_MILLIS = 1000L
         private const val STATUS_SUCCESS = 200
         private const val MAX_SEARCH_HISTORY_SIZE = 10
     }
