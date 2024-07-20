@@ -51,9 +51,7 @@ class SearchActivity : AppCompatActivity() {
         SharedPreferencesManager(applicationContext)
     }
 
-    private val handler by lazy {
-        Handler(Looper.getMainLooper())
-    }
+    private val handler = Handler(Looper.getMainLooper())
 
     private val searchRunnable by lazy {
         Runnable {

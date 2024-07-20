@@ -32,9 +32,7 @@ class PlayerActivity : AppCompatActivity() {
         ActivityPlayerBinding.inflate(layoutInflater)
     }
 
-    private val handler by lazy {
-        Handler(Looper.getMainLooper())
-    }
+    private val handler = Handler(Looper.getMainLooper())
 
     private val updatePlaybackTimeRunnable by lazy {
         createUpdatePlaybackTimeTask()
