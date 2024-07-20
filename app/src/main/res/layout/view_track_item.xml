@@ -6,7 +6,8 @@
     android:layout_height="wrap_content"
     android:gravity="center_vertical"
     android:paddingStart="@dimen/track_item_view_padding"
-    android:paddingEnd="@dimen/track_item_view_padding">
+    android:paddingEnd="@dimen/track_item_view_padding"
+    android:foreground="?attr/selectableItemBackground">
 
     <ImageView
         android:id="@+id/iv_cover"

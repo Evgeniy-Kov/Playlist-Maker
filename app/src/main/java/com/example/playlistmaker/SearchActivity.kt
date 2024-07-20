@@ -2,6 +2,8 @@ package com.example.playlistmaker
 
 import android.content.Context
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.inputmethod.EditorInfo
@@ -26,6 +28,8 @@ class SearchActivity : AppCompatActivity() {
 
     private var searchInput = ""
 
+    private var isClickAllowed = true
+
     private val trackAdapter = TrackAdapter()
 
     private val searchHistoryAdapter = TrackAdapter()
@@ -45,6 +49,14 @@ class SearchActivity : AppCompatActivity() {
 
     private val sharedPreferencesManager by lazy {
         SharedPreferencesManager(applicationContext)
+    }
+
+    private val handler = Handler(Looper.getMainLooper())
+
+    private val searchRunnable by lazy {
+        Runnable {
+            sendQuery()
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -80,15 +92,18 @@ class SearchActivity : AppCompatActivity() {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 binding.ivClear.isVisible = !s.isNullOrEmpty()
                 searchInput = binding.editTextSearch.text.toString()
-                val screenMode = if (
+                var screenMode: SearchScreenMode
+                if (
                     binding.editTextSearch.hasFocus()
                     && binding.editTextSearch.text.isEmpty()
                     && sharedPreferencesManager.getSearchHistory().isNotEmpty()
                 ) {
                     clearTrackList()
-                    SearchScreenMode.SEARCH_HISTORY_SCREEN
+                    handler.removeCallbacks(searchRunnable)
+                    screenMode = SearchScreenMode.SEARCH_HISTORY_SCREEN
                 } else {
-                    SearchScreenMode.NORMAL_SCREEN
+                    searchDebounce()
+                    screenMode = SearchScreenMode.NORMAL_SCREEN
                 }
                 changeSearchScreenMode(screenMode)
             }
@@ -104,10 +119,7 @@ class SearchActivity : AppCompatActivity() {
 
         binding.editTextSearch.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
-                queryInput = searchInput
-                binding.editTextSearch.setText("")
                 hideKeyboard()
-                sendQuery()
                 return@setOnEditorActionListener true
             }
             false
@@ -118,13 +130,17 @@ class SearchActivity : AppCompatActivity() {
         }
 
         trackAdapter.onItemClickListener = TrackViewHolder.OnItemClickListener {
-            addTrackToSearchHistory(it)
-            startActivity(PlayerActivity.newIntent(this, it))
+            if (clickDebounce()) {
+                addTrackToSearchHistory(it)
+                startActivity(PlayerActivity.newIntent(this, it))
+            }
         }
 
         searchHistoryAdapter.onItemClickListener = TrackViewHolder.OnItemClickListener {
-            addTrackToSearchHistory(it)
-            startActivity(PlayerActivity.newIntent(this, it))
+            if (clickDebounce()) {
+                addTrackToSearchHistory(it)
+                startActivity(PlayerActivity.newIntent(this, it))
+            }
         }
 
         binding.buttonClearHistory.setOnClickListener {
@@ -145,6 +161,20 @@ class SearchActivity : AppCompatActivity() {
         binding.editTextSearch.setText(searchInput)
     }
 
+    private fun searchDebounce() {
+        handler.removeCallbacks(searchRunnable)
+        handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY_MILLIS)
+    }
+
+    private fun clickDebounce(): Boolean {
+        val current = isClickAllowed
+        if (isClickAllowed) {
+            isClickAllowed = false
+            handler.postDelayed({ isClickAllowed = true }, CLICK_DEBOUNCE_DELAY_MILLIS)
+        }
+        return current
+    }
+
     private fun hideKeyboard() {
         val inputMethodManager = getSystemService(
             Context.INPUT_METHOD_SERVICE
@@ -153,35 +183,39 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun sendQuery() {
-        changeSearchScreenMode(SearchScreenMode.NORMAL_SCREEN)
-        clearTrackList()
-        iTunesApiService.search(queryInput).enqueue(object : Callback<TrackResponse> {
-            override fun onResponse(
-                call: Call<TrackResponse>,
-                response: Response<TrackResponse>
-            ) {
-                when (response.code()) {
-                    STATUS_SUCCESS -> {
-                        if (!response.body()?.results.isNullOrEmpty()) {
-                            trackList.clear()
-                            trackList.addAll(response.body()?.results ?: emptyList())
-                            trackAdapter.trackList = trackList
-                        } else {
-                            trackAdapter.trackList = emptyList()
-                            changeSearchScreenMode(SearchScreenMode.NOTHING_FOUND)
+        queryInput = searchInput
+        if (queryInput.isNotBlank()) {
+            changeSearchScreenMode(SearchScreenMode.WAITING)
+            clearTrackList()
+            iTunesApiService.search(queryInput).enqueue(object : Callback<TrackResponse> {
+                override fun onResponse(
+                    call: Call<TrackResponse>,
+                    response: Response<TrackResponse>
+                ) {
+                    when (response.code()) {
+                        STATUS_SUCCESS -> {
+                            if (!response.body()?.results.isNullOrEmpty()) {
+                                trackList.clear()
+                                trackList.addAll(response.body()?.results ?: emptyList())
+                                trackAdapter.trackList = trackList
+                                changeSearchScreenMode(SearchScreenMode.NORMAL_SCREEN)
+                            } else {
+                                trackAdapter.trackList = emptyList()
+                                changeSearchScreenMode(SearchScreenMode.NOTHING_FOUND)
+                            }
+                        }
+
+                        else -> {
+                            changeSearchScreenMode(SearchScreenMode.NO_CONNECTION)
                         }
                     }
-
-                    else -> {
-                        changeSearchScreenMode(SearchScreenMode.NO_CONNECTION)
-                    }
                 }
-            }
 
-            override fun onFailure(call: Call<TrackResponse>, t: Throwable) {
-                changeSearchScreenMode(SearchScreenMode.NO_CONNECTION)
-            }
-        })
+                override fun onFailure(call: Call<TrackResponse>, t: Throwable) {
+                    changeSearchScreenMode(SearchScreenMode.NO_CONNECTION)
+                }
+            })
+        }
     }
 
     private fun changeSearchScreenMode(screenMode: SearchScreenMode) {
@@ -192,6 +226,7 @@ class SearchActivity : AppCompatActivity() {
                     llNoConnection.isVisible = false
                     searchHistoryTitle.isVisible = false
                     buttonClearHistory.isVisible = false
+                    progressBar.isVisible = false
                     rvTracks.isVisible = true
                     rvTracks.adapter = trackAdapter
                 }
@@ -203,6 +238,7 @@ class SearchActivity : AppCompatActivity() {
                     llNoConnection.isVisible = false
                     searchHistoryTitle.isVisible = true
                     buttonClearHistory.isVisible = true
+                    progressBar.isVisible = false
                     rvTracks.isVisible = true
                     rvTracks.adapter = searchHistoryAdapter
                 }
@@ -214,6 +250,7 @@ class SearchActivity : AppCompatActivity() {
                     llNoConnection.isVisible = false
                     searchHistoryTitle.isVisible = false
                     buttonClearHistory.isVisible = false
+                    progressBar.isVisible = false
                     rvTracks.isVisible = false
                 }
             }
@@ -224,6 +261,18 @@ class SearchActivity : AppCompatActivity() {
                     llNoConnection.isVisible = true
                     searchHistoryTitle.isVisible = false
                     buttonClearHistory.isVisible = false
+                    progressBar.isVisible = false
+                    rvTracks.isVisible = false
+                }
+            }
+
+            SearchScreenMode.WAITING -> {
+                binding.apply {
+                    tvNothingFound.isVisible = false
+                    llNoConnection.isVisible = false
+                    searchHistoryTitle.isVisible = false
+                    buttonClearHistory.isVisible = false
+                    progressBar.isVisible = true
                     rvTracks.isVisible = false
                 }
             }
@@ -255,6 +304,8 @@ class SearchActivity : AppCompatActivity() {
 
     companion object {
         private const val SEARCH_INPUT = "SEARCH_INPUT"
+        private const val SEARCH_DEBOUNCE_DELAY_MILLIS = 1000L
+        private const val CLICK_DEBOUNCE_DELAY_MILLIS = 1000L
         private const val STATUS_SUCCESS = 200
         private const val MAX_SEARCH_HISTORY_SIZE = 10
     }

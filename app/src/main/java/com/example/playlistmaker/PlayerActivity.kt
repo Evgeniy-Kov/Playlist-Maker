@@ -2,7 +2,10 @@ package com.example.playlistmaker
 
 import android.content.Context
 import android.content.Intent
+import android.media.MediaPlayer
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -15,13 +18,24 @@ import com.example.playlistmaker.Track.Companion.getFormattedTime
 import com.example.playlistmaker.Track.Companion.getFormattedYear
 import com.example.playlistmaker.Track.Companion.getHighQualityCoverLink
 import com.example.playlistmaker.databinding.ActivityPlayerBinding
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 class PlayerActivity : AppCompatActivity() {
     private lateinit var track: Track
-    var counter = 1
+
+    private var playerState = PLAYER_STATE_DEFAULT
+
+    private val mediaPlayer = MediaPlayer()
 
     private val binding by lazy {
         ActivityPlayerBinding.inflate(layoutInflater)
+    }
+
+    private val handler = Handler(Looper.getMainLooper())
+
+    private val updatePlaybackTimeRunnable by lazy {
+        createUpdatePlaybackTimeTask()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -43,6 +57,17 @@ class PlayerActivity : AppCompatActivity() {
             return
         }
         initializeViews()
+        preparePlayer()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        playerPause()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        mediaPlayer.release()
     }
 
     private fun parseIntent(): Boolean {
@@ -80,12 +105,70 @@ class PlayerActivity : AppCompatActivity() {
             tvYear.text = track.getFormattedYear()
             tvGenre.text = track.primaryGenreName
             tvCountry.text = track.country
+            buttonPlay.setOnClickListener { playbackControl() }
+        }
+    }
+
+    private fun preparePlayer() {
+        mediaPlayer.setDataSource(track.previewUrl)
+        mediaPlayer.prepareAsync()
+        mediaPlayer.setOnPreparedListener {
+            playerState = PLAYER_STATE_PREPARED
+        }
+        mediaPlayer.setOnCompletionListener {
+            setPlaybackTime(PLAYER_DEFAULT_PLAYBACK_TIME)
+            binding.buttonPlay.setBackgroundResource(R.drawable.ic_button_play)
+            playerState = PLAYER_STATE_PREPARED
+        }
+    }
+
+    private fun playerPlay() {
+        mediaPlayer.start()
+        binding.buttonPlay.setBackgroundResource(R.drawable.ic_button_pause)
+        playerState = PLAYER_STATE_PLAYING
+        handler.post(updatePlaybackTimeRunnable)
+    }
+
+    private fun playerPause() {
+        mediaPlayer.pause()
+        binding.buttonPlay.setBackgroundResource(R.drawable.ic_button_play)
+        playerState = PLAYER_STATE_PAUSED
+        handler.removeCallbacks(updatePlaybackTimeRunnable)
+    }
+
+    private fun playbackControl() {
+        when (playerState) {
+            PLAYER_STATE_PLAYING -> playerPause()
+            PLAYER_STATE_PREPARED, PLAYER_STATE_PAUSED -> playerPlay()
+        }
+    }
+
+    private fun setPlaybackTime(timeMillis: Int) {
+        binding.tvPlaybackProgress.text =
+            SimpleDateFormat("mm:ss", Locale.getDefault()).format(timeMillis)
+    }
+
+    private fun createUpdatePlaybackTimeTask(): Runnable {
+        return object : Runnable {
+            override fun run() {
+//                val currentPlaybackTime = mediaPlayer.currentPosition
+                if (playerState == PLAYER_STATE_PLAYING) {
+                    setPlaybackTime(mediaPlayer.currentPosition)
+                    handler.postDelayed(this, PLAYER_UPDATE_PLAYBACK_TIME_DELAY_MILLIS)
+                }
+            }
         }
     }
 
     companion object {
         private const val COVER_CORNER_RADIUS_IN_DP = 8f
         private const val EXTRA_TRACK_ITEM = "extra_track_item"
+        private const val PLAYER_STATE_DEFAULT = 0
+        private const val PLAYER_STATE_PREPARED = 1
+        private const val PLAYER_STATE_PLAYING = 2
+        private const val PLAYER_STATE_PAUSED = 3
+        private const val PLAYER_DEFAULT_PLAYBACK_TIME = 0
+        private const val PLAYER_UPDATE_PLAYBACK_TIME_DELAY_MILLIS = 100L
         fun newIntent(context: Context, track: Track): Intent {
             val intent = Intent(context, PlayerActivity::class.java).apply {
                 putExtra(EXTRA_TRACK_ITEM, track)
