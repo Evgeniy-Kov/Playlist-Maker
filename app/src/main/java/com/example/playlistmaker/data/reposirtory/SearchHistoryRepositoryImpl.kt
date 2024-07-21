@@ -6,9 +6,21 @@ import com.example.playlistmaker.domain.api.SearchHistoryRepository
 import com.example.playlistmaker.domain.model.Track
 import com.google.gson.Gson
 
-class SearchHistoryRepositoryImpl(private val preferences: SharedPreferences) :
-    SearchHistoryRepository {
-    override fun saveSearchHistory(trackList: List<Track>) {
+class SearchHistoryRepositoryImpl(
+    private val preferences: SharedPreferences
+) : SearchHistoryRepository {
+
+    override fun addTrackToSearchHistory(track: Track) {
+        val searchHistory = getSearchHistory()
+        searchHistory.removeIf { it.trackId == track.trackId }
+        if (searchHistory.size == MAX_SEARCH_HISTORY_SIZE) {
+            searchHistory.removeLast()
+        }
+        searchHistory.add(0, track)
+        saveSearchHistory(searchHistory)
+    }
+
+    private fun saveSearchHistory(trackList: List<Track>) {
         val searchHistoryJson = Gson().toJson(trackList)
         preferences.edit {
             putString(SEARCH_HISTORY_KEY, searchHistoryJson)
@@ -30,5 +42,6 @@ class SearchHistoryRepositoryImpl(private val preferences: SharedPreferences) :
 
     private companion object {
         const val SEARCH_HISTORY_KEY = "search_history_key"
+        const val MAX_SEARCH_HISTORY_SIZE = 10
     }
 }

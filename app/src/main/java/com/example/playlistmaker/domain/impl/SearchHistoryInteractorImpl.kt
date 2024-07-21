@@ -7,8 +7,8 @@ import com.example.playlistmaker.domain.model.Track
 class SearchHistoryInteractorImpl(
     private val searchHistoryRepository: SearchHistoryRepository
 ) : SearchHistoryInteractor {
-    override fun saveSearchHistory(trackList: List<Track>) {
-        searchHistoryRepository.saveSearchHistory(trackList)
+    override fun addTrackToSearchHistory(track: Track) {
+        searchHistoryRepository.addTrackToSearchHistory(track)
     }
 
     override fun getSearchHistory(): MutableList<Track> {

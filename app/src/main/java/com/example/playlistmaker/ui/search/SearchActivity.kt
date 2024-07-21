@@ -281,15 +281,8 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun addTrackToSearchHistory(track: Track) {
-        val searchHistory = searchHistoryInteractor.getSearchHistory()
-        if (searchHistory.contains(track)) {
-            searchHistory.remove(track)
-        } else if (searchHistory.size == MAX_SEARCH_HISTORY_SIZE) {
-            searchHistory.removeLast()
-        }
-        searchHistory.add(0, track)
-        searchHistoryInteractor.saveSearchHistory(searchHistory)
-        searchHistoryAdapter.trackList = searchHistory
+        searchHistoryInteractor.addTrackToSearchHistory(track)
+        searchHistoryAdapter.trackList = searchHistoryInteractor.getSearchHistory()
     }
 
     private fun clearSearchHistory() {
@@ -302,6 +295,5 @@ class SearchActivity : AppCompatActivity() {
         private const val SEARCH_INPUT = "SEARCH_INPUT"
         private const val SEARCH_DEBOUNCE_DELAY_MILLIS = 1000L
         private const val CLICK_DEBOUNCE_DELAY_MILLIS = 1000L
-        private const val MAX_SEARCH_HISTORY_SIZE = 10
     }
 }
