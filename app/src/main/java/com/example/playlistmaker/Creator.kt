@@ -1,13 +1,20 @@
 package com.example.playlistmaker
 
 import android.app.Application
+import android.content.Context
+import android.content.SharedPreferences
 import com.example.playlistmaker.data.network.RetrofitNetworkClient
+import com.example.playlistmaker.data.reposirtory.SearchHistoryRepositoryImpl
 import com.example.playlistmaker.data.reposirtory.TracksRepositoryImpl
+import com.example.playlistmaker.domain.api.SearchHistoryInteractor
+import com.example.playlistmaker.domain.api.SearchHistoryRepository
 import com.example.playlistmaker.domain.api.TracksInteractor
 import com.example.playlistmaker.domain.api.TracksRepository
+import com.example.playlistmaker.domain.impl.SearchHistoryInteractorImpl
 import com.example.playlistmaker.domain.impl.TracksInteractorImpl
 
 object Creator {
+    private const val APP_PREFERENCES = "playlist_maker_preferences"
     private lateinit var application: Application
 
     fun initApplication(application: Application) {
@@ -20,5 +27,17 @@ object Creator {
 
     fun provideTracksInteractor(): TracksInteractor {
         return TracksInteractorImpl(provideTracksRepository())
+    }
+
+    private fun provideSharedPreferences(): SharedPreferences {
+        return application.getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE)
+    }
+
+    private fun provideSearchHistoryRepository(): SearchHistoryRepository {
+        return SearchHistoryRepositoryImpl(provideSharedPreferences())
+    }
+
+    fun provideSearchHistoryInteractor(): SearchHistoryInteractor {
+        return SearchHistoryInteractorImpl(provideSearchHistoryRepository())
     }
 }
