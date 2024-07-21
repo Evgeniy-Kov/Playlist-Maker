@@ -1,4 +1,4 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.ui
 
 import android.content.Context
 import android.content.Intent
@@ -14,9 +14,11 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
-import com.example.playlistmaker.Track.Companion.getFormattedTime
-import com.example.playlistmaker.Track.Companion.getFormattedYear
-import com.example.playlistmaker.Track.Companion.getHighQualityCoverLink
+import com.example.playlistmaker.R
+import com.example.playlistmaker.domain.model.Track
+import com.example.playlistmaker.domain.model.Track.Companion.getFormattedTime
+import com.example.playlistmaker.domain.model.Track.Companion.getFormattedYear
+import com.example.playlistmaker.domain.model.Track.Companion.getHighQualityCoverLink
 import com.example.playlistmaker.databinding.ActivityPlayerBinding
 import java.text.SimpleDateFormat
 import java.util.Locale

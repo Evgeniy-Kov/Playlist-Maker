@@ -1,7 +1,9 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.data
 
 import android.content.Context
 import androidx.core.content.edit
+import com.example.playlistmaker.domain.model.DarkThemeMode
+import com.example.playlistmaker.domain.model.Track
 import com.google.gson.Gson
 
 class SharedPreferencesManager(context: Context) {

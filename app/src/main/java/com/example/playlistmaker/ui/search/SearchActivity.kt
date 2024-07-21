@@ -1,4 +1,4 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.ui.search
 
 import android.content.Context
 import android.os.Bundle
@@ -13,6 +13,11 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
+import com.example.playlistmaker.data.network.ITunesSearchApi
+import com.example.playlistmaker.ui.PlayerActivity
+import com.example.playlistmaker.data.SharedPreferencesManager
+import com.example.playlistmaker.domain.model.Track
+import com.example.playlistmaker.data.dto.TrackResponse
 import com.example.playlistmaker.databinding.ActivitySearchBinding
 import retrofit2.Call
 import retrofit2.Callback
