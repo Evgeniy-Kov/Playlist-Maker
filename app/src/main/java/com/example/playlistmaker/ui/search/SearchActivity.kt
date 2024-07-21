@@ -14,7 +14,6 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
 import com.example.playlistmaker.Creator
-import com.example.playlistmaker.data.SharedPreferencesManager
 import com.example.playlistmaker.databinding.ActivitySearchBinding
 import com.example.playlistmaker.domain.api.Consumer
 import com.example.playlistmaker.domain.api.ConsumerData
@@ -39,10 +38,6 @@ class SearchActivity : AppCompatActivity() {
 
     private val trackList = mutableListOf<Track>()
 
-    private val sharedPreferencesManager by lazy {
-        SharedPreferencesManager(applicationContext)
-    }
-
     private val handler = Handler(Looper.getMainLooper())
 
     private val searchRunnable by lazy {
@@ -55,6 +50,8 @@ class SearchActivity : AppCompatActivity() {
 
     private val tracksInteractor = Creator.provideTracksInteractor()
 
+    private val searchHistoryInteractor = Creator.provideSearchHistoryInteractor()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -65,7 +62,7 @@ class SearchActivity : AppCompatActivity() {
             insets
         }
 
-        searchHistoryAdapter.trackList = sharedPreferencesManager.getSearchHistory()
+        searchHistoryAdapter.trackList = searchHistoryInteractor.getSearchHistory()
 
         binding.toolbar.setNavigationOnClickListener { finish() }
 
@@ -73,7 +70,7 @@ class SearchActivity : AppCompatActivity() {
             val screenMode = if (
                 hasFocus
                 && binding.editTextSearch.text.isEmpty()
-                && sharedPreferencesManager.getSearchHistory().isNotEmpty()
+                && searchHistoryInteractor.getSearchHistory().isNotEmpty()
             ) {
                 SearchScreenMode.SEARCH_HISTORY_SCREEN
             } else {
@@ -92,7 +89,7 @@ class SearchActivity : AppCompatActivity() {
                 if (
                     binding.editTextSearch.hasFocus()
                     && binding.editTextSearch.text.isEmpty()
-                    && sharedPreferencesManager.getSearchHistory().isNotEmpty()
+                    && searchHistoryInteractor.getSearchHistory().isNotEmpty()
                 ) {
                     clearTrackList()
                     handler.removeCallbacks(searchRunnable)
@@ -284,19 +281,19 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun addTrackToSearchHistory(track: Track) {
-        val searchHistory = sharedPreferencesManager.getSearchHistory()
+        val searchHistory = searchHistoryInteractor.getSearchHistory()
         if (searchHistory.contains(track)) {
             searchHistory.remove(track)
         } else if (searchHistory.size == MAX_SEARCH_HISTORY_SIZE) {
             searchHistory.removeLast()
         }
         searchHistory.add(0, track)
-        sharedPreferencesManager.saveSearchHistory(searchHistory)
+        searchHistoryInteractor.saveSearchHistory(searchHistory)
         searchHistoryAdapter.trackList = searchHistory
     }
 
     private fun clearSearchHistory() {
-        sharedPreferencesManager.clearSearchHistory()
+        searchHistoryInteractor.clearSearchHistory()
         searchHistoryAdapter.trackList = emptyList()
         changeSearchScreenMode(SearchScreenMode.NORMAL_SCREEN)
     }
