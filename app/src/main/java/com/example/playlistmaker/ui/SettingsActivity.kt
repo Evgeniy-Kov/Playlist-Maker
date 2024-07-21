@@ -8,15 +8,18 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.playlistmaker.App
-import com.example.playlistmaker.domain.model.DarkThemeMode
+import com.example.playlistmaker.Creator
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.ActivitySettingsBinding
+import com.example.playlistmaker.domain.model.DarkThemeMode
 
 class SettingsActivity : AppCompatActivity() {
 
     private val binding by lazy {
         ActivitySettingsBinding.inflate(layoutInflater)
     }
+
+    private val saveDarkThemeModeUseCase = Creator.provideSaveDarkThemeModeUseCase()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -68,7 +71,7 @@ class SettingsActivity : AppCompatActivity() {
         binding.switchTheme.setOnCheckedChangeListener { switcher, isChecked ->
             val darkThemeMode = if (isChecked) DarkThemeMode.ON else DarkThemeMode.OFF
             (applicationContext as App).switchTheme(darkThemeMode)
-            (applicationContext as App).sharedPreferencesManager.saveDarkThemeMode(darkThemeMode)
+            saveDarkThemeModeUseCase(darkThemeMode)
         }
     }
 }
