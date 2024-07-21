@@ -13,6 +13,9 @@ class App : Application() {
 
     override fun onCreate() {
         super.onCreate()
+
+        Creator.initApplication(this)
+
         switchTheme(
             sharedPreferencesManager.getDarkThemeMode()
         )
