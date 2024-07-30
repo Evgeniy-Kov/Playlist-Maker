@@ -16,6 +16,7 @@ import com.example.playlistmaker.domain.impl.SearchHistoryInteractorImpl
 import com.example.playlistmaker.domain.impl.TracksInteractorImpl
 import com.example.playlistmaker.domain.usecase.GetDarkThemeModeUseCase
 import com.example.playlistmaker.domain.usecase.SaveDarkThemeModeUseCase
+import com.google.gson.Gson
 
 object Creator {
     private const val APP_PREFERENCES = "playlist_maker_preferences"
@@ -25,28 +26,12 @@ object Creator {
         this.application = application
     }
 
-    private fun provideTracksRepository(): TracksRepository {
-        return TracksRepositoryImpl(RetrofitNetworkClient())
-    }
-
     fun provideTracksInteractor(): TracksInteractor {
         return TracksInteractorImpl(provideTracksRepository())
     }
 
-    private fun provideSharedPreferences(): SharedPreferences {
-        return application.getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE)
-    }
-
-    private fun provideSearchHistoryRepository(): SearchHistoryRepository {
-        return SearchHistoryRepositoryImpl(provideSharedPreferences())
-    }
-
     fun provideSearchHistoryInteractor(): SearchHistoryInteractor {
         return SearchHistoryInteractorImpl(provideSearchHistoryRepository())
-    }
-
-    private fun provideDarkThemeModeRepository(): DarkThemeModeRepository {
-        return DarkThemeModeRepositoryImpl(provideSharedPreferences())
     }
 
     fun provideSaveDarkThemeModeUseCase(): SaveDarkThemeModeUseCase {
@@ -55,5 +40,21 @@ object Creator {
 
     fun provideGetDarkThemeModeUseCase(): GetDarkThemeModeUseCase {
         return GetDarkThemeModeUseCase(provideDarkThemeModeRepository())
+    }
+
+    private fun provideTracksRepository(): TracksRepository {
+        return TracksRepositoryImpl(RetrofitNetworkClient())
+    }
+
+    private fun provideSharedPreferences(): SharedPreferences {
+        return application.getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE)
+    }
+
+    private fun provideSearchHistoryRepository(): SearchHistoryRepository {
+        return SearchHistoryRepositoryImpl(provideSharedPreferences(), Gson())
+    }
+
+    private fun provideDarkThemeModeRepository(): DarkThemeModeRepository {
+        return DarkThemeModeRepositoryImpl(provideSharedPreferences())
     }
 }

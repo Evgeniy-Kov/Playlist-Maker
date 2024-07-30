@@ -6,8 +6,11 @@ import com.example.playlistmaker.domain.api.SearchHistoryRepository
 import com.example.playlistmaker.domain.model.Track
 import com.google.gson.Gson
 
+//import com.google.gson.Gson
+
 class SearchHistoryRepositoryImpl(
-    private val preferences: SharedPreferences
+    private val preferences: SharedPreferences,
+    private val gson: Gson
 ) : SearchHistoryRepository {
 
     override fun addTrackToSearchHistory(track: Track) {
@@ -21,7 +24,7 @@ class SearchHistoryRepositoryImpl(
     }
 
     private fun saveSearchHistory(trackList: List<Track>) {
-        val searchHistoryJson = Gson().toJson(trackList)
+        val searchHistoryJson = gson.toJson(trackList)
         preferences.edit {
             putString(SEARCH_HISTORY_KEY, searchHistoryJson)
         }
@@ -30,7 +33,7 @@ class SearchHistoryRepositoryImpl(
     override fun getSearchHistory(): MutableList<Track> {
         val searchHistoryJson = preferences.getString(SEARCH_HISTORY_KEY, "")
         val searchHistory =
-            Gson().fromJson(searchHistoryJson, Array<Track>::class.java) ?: emptyArray()
+            gson.fromJson(searchHistoryJson, Array<Track>::class.java) ?: emptyArray()
         return searchHistory.toMutableList()
     }
 

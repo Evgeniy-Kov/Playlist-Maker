@@ -26,10 +26,10 @@ class RetrofitNetworkClient : NetworkClient {
 
                 return body.apply { resultCode = response.code() }
             } else {
-                return Response().apply { resultCode = 400 }
+                return Response(400)
             }
         } catch (e: Exception) {
-            return Response().apply { resultCode = 500 }
+            return Response(500)
         }
     }
 }

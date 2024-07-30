@@ -24,6 +24,6 @@ class DarkThemeModeRepositoryImpl(private val preferences: SharedPreferences) :
     }
 
     private companion object {
-        private const val DARK_THEME_MODE_KEY = "dark_theme_mode_key"
+        const val DARK_THEME_MODE_KEY = "dark_theme_mode_key"
     }
 }

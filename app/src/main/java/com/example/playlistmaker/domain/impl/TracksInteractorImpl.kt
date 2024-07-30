@@ -13,9 +13,8 @@ class TracksInteractorImpl(private val tracksRepository: TracksRepository) : Tra
 
     override fun searchTracks(expression: String, consumer: Consumer<List<Track>>) {
         executor.execute {
-            val response = tracksRepository.searchTracks(expression)
 
-            when (response) {
+            when (val response = tracksRepository.searchTracks(expression)) {
                 is Resourse.Success -> {
                     consumer.consume(ConsumerData.Data(response.data))
                 }

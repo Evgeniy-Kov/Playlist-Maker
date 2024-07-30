@@ -122,6 +122,11 @@ class SearchActivity : AppCompatActivity() {
             sendQuery()
         }
 
+        tracksInteractor.searchTracks("sss", {
+            consumerData ->
+
+        })
+
         trackAdapter.onItemClickListener = TrackViewHolder.OnItemClickListener {
             if (clickDebounce()) {
                 addTrackToSearchHistory(it)
@@ -186,8 +191,9 @@ class SearchActivity : AppCompatActivity() {
         queryInput = searchInput
         if (queryInput.isNotBlank()) {
             changeSearchScreenMode(SearchScreenMode.WAITING)
-            tracksInteractor.searchTracks(queryInput, object : Consumer<List<Track>> {
-                override fun consume(data: ConsumerData<List<Track>>) {
+            tracksInteractor.searchTracks(
+                expression = queryInput,
+                consumer = { data ->
                     val runnable = Runnable {
                         when (data) {
                             is ConsumerData.Data -> {
@@ -210,7 +216,7 @@ class SearchActivity : AppCompatActivity() {
                     consumerRunnable = runnable
                     handler.post(runnable)
                 }
-            })
+            )
         }
     }
 
