@@ -1,9 +1,12 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.ui.search
 
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
-import com.example.playlistmaker.Track.Companion.getFormattedTime
+import com.example.playlistmaker.R
+import com.example.playlistmaker.domain.model.Track
+import com.example.playlistmaker.domain.model.Track.Companion.getFormattedTime
+import com.example.playlistmaker.ui.convertDpToPx
 import com.example.playlistmaker.databinding.ViewTrackItemBinding
 
 class TrackViewHolder(

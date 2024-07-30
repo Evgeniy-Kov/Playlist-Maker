@@ -2,17 +2,21 @@ package com.example.playlistmaker
 
 import android.app.Application
 import androidx.appcompat.app.AppCompatDelegate
+import com.example.playlistmaker.domain.model.DarkThemeMode
 
 class App : Application() {
 
-    val sharedPreferencesManager by lazy {
-        SharedPreferencesManager(applicationContext)
+    private val getDarkThemeModeUseCase by lazy {
+        Creator.provideGetDarkThemeModeUseCase()
     }
 
     override fun onCreate() {
         super.onCreate()
+
+        Creator.initApplication(this)
+
         switchTheme(
-            sharedPreferencesManager.getDarkThemeMode()
+            getDarkThemeModeUseCase()
         )
     }
 

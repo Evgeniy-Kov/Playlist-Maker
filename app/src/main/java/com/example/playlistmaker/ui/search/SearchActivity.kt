@@ -1,4 +1,4 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.ui.search
 
 import android.content.Context
 import android.os.Bundle
@@ -13,12 +13,12 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
+import com.example.playlistmaker.Creator
 import com.example.playlistmaker.databinding.ActivitySearchBinding
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
+import com.example.playlistmaker.domain.api.Consumer
+import com.example.playlistmaker.domain.api.ConsumerData
+import com.example.playlistmaker.domain.model.Track
+import com.example.playlistmaker.ui.PlayerActivity
 
 class SearchActivity : AppCompatActivity() {
 
@@ -36,20 +36,7 @@ class SearchActivity : AppCompatActivity() {
 
     private var queryInput = ""
 
-    private val baseUrl = "https://itunes.apple.com"
-
-    private val retrofit = Retrofit.Builder()
-        .baseUrl(baseUrl)
-        .addConverterFactory(GsonConverterFactory.create())
-        .build()
-
-    private val iTunesApiService = retrofit.create(ITunesSearchApi::class.java)
-
     private val trackList = mutableListOf<Track>()
-
-    private val sharedPreferencesManager by lazy {
-        SharedPreferencesManager(applicationContext)
-    }
 
     private val handler = Handler(Looper.getMainLooper())
 
@@ -58,6 +45,12 @@ class SearchActivity : AppCompatActivity() {
             sendQuery()
         }
     }
+
+    private var consumerRunnable: Runnable? = null
+
+    private val tracksInteractor = Creator.provideTracksInteractor()
+
+    private val searchHistoryInteractor = Creator.provideSearchHistoryInteractor()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -69,7 +62,7 @@ class SearchActivity : AppCompatActivity() {
             insets
         }
 
-        searchHistoryAdapter.trackList = sharedPreferencesManager.getSearchHistory()
+        searchHistoryAdapter.trackList = searchHistoryInteractor.getSearchHistory()
 
         binding.toolbar.setNavigationOnClickListener { finish() }
 
@@ -77,7 +70,7 @@ class SearchActivity : AppCompatActivity() {
             val screenMode = if (
                 hasFocus
                 && binding.editTextSearch.text.isEmpty()
-                && sharedPreferencesManager.getSearchHistory().isNotEmpty()
+                && searchHistoryInteractor.getSearchHistory().isNotEmpty()
             ) {
                 SearchScreenMode.SEARCH_HISTORY_SCREEN
             } else {
@@ -96,7 +89,7 @@ class SearchActivity : AppCompatActivity() {
                 if (
                     binding.editTextSearch.hasFocus()
                     && binding.editTextSearch.text.isEmpty()
-                    && sharedPreferencesManager.getSearchHistory().isNotEmpty()
+                    && searchHistoryInteractor.getSearchHistory().isNotEmpty()
                 ) {
                     clearTrackList()
                     handler.removeCallbacks(searchRunnable)
@@ -128,6 +121,11 @@ class SearchActivity : AppCompatActivity() {
         binding.buttonUpdate.setOnClickListener {
             sendQuery()
         }
+
+        tracksInteractor.searchTracks("sss", {
+            consumerData ->
+
+        })
 
         trackAdapter.onItemClickListener = TrackViewHolder.OnItemClickListener {
             if (clickDebounce()) {
@@ -161,6 +159,13 @@ class SearchActivity : AppCompatActivity() {
         binding.editTextSearch.setText(searchInput)
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        consumerRunnable?.let { runnable ->
+            handler.removeCallbacks(runnable)
+        }
+    }
+
     private fun searchDebounce() {
         handler.removeCallbacks(searchRunnable)
         handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY_MILLIS)
@@ -186,35 +191,32 @@ class SearchActivity : AppCompatActivity() {
         queryInput = searchInput
         if (queryInput.isNotBlank()) {
             changeSearchScreenMode(SearchScreenMode.WAITING)
-            clearTrackList()
-            iTunesApiService.search(queryInput).enqueue(object : Callback<TrackResponse> {
-                override fun onResponse(
-                    call: Call<TrackResponse>,
-                    response: Response<TrackResponse>
-                ) {
-                    when (response.code()) {
-                        STATUS_SUCCESS -> {
-                            if (!response.body()?.results.isNullOrEmpty()) {
-                                trackList.clear()
-                                trackList.addAll(response.body()?.results ?: emptyList())
-                                trackAdapter.trackList = trackList
-                                changeSearchScreenMode(SearchScreenMode.NORMAL_SCREEN)
-                            } else {
-                                trackAdapter.trackList = emptyList()
-                                changeSearchScreenMode(SearchScreenMode.NOTHING_FOUND)
+            tracksInteractor.searchTracks(
+                expression = queryInput,
+                consumer = { data ->
+                    val runnable = Runnable {
+                        when (data) {
+                            is ConsumerData.Data -> {
+                                if (!data.value.isNullOrEmpty()) {
+                                    trackList.clear()
+                                    trackList.addAll(data.value)
+                                    trackAdapter.trackList = trackList
+                                    changeSearchScreenMode(SearchScreenMode.NORMAL_SCREEN)
+                                } else {
+                                    trackAdapter.trackList = emptyList()
+                                    changeSearchScreenMode(SearchScreenMode.NOTHING_FOUND)
+                                }
+                            }
+
+                            is ConsumerData.Error -> {
+                                changeSearchScreenMode(SearchScreenMode.NO_CONNECTION)
                             }
                         }
-
-                        else -> {
-                            changeSearchScreenMode(SearchScreenMode.NO_CONNECTION)
-                        }
                     }
+                    consumerRunnable = runnable
+                    handler.post(runnable)
                 }
-
-                override fun onFailure(call: Call<TrackResponse>, t: Throwable) {
-                    changeSearchScreenMode(SearchScreenMode.NO_CONNECTION)
-                }
-            })
+            )
         }
     }
 
@@ -285,19 +287,12 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun addTrackToSearchHistory(track: Track) {
-        val searchHistory = sharedPreferencesManager.getSearchHistory()
-        if (searchHistory.contains(track)) {
-            searchHistory.remove(track)
-        } else if (searchHistory.size == MAX_SEARCH_HISTORY_SIZE) {
-            searchHistory.removeLast()
-        }
-        searchHistory.add(0, track)
-        sharedPreferencesManager.saveSearchHistory(searchHistory)
-        searchHistoryAdapter.trackList = searchHistory
+        searchHistoryInteractor.addTrackToSearchHistory(track)
+        searchHistoryAdapter.trackList = searchHistoryInteractor.getSearchHistory()
     }
 
     private fun clearSearchHistory() {
-        sharedPreferencesManager.clearSearchHistory()
+        searchHistoryInteractor.clearSearchHistory()
         searchHistoryAdapter.trackList = emptyList()
         changeSearchScreenMode(SearchScreenMode.NORMAL_SCREEN)
     }
@@ -306,7 +301,5 @@ class SearchActivity : AppCompatActivity() {
         private const val SEARCH_INPUT = "SEARCH_INPUT"
         private const val SEARCH_DEBOUNCE_DELAY_MILLIS = 1000L
         private const val CLICK_DEBOUNCE_DELAY_MILLIS = 1000L
-        private const val STATUS_SUCCESS = 200
-        private const val MAX_SEARCH_HISTORY_SIZE = 10
     }
 }
