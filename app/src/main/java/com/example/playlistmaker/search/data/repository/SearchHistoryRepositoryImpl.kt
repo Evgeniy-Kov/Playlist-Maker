@@ -2,11 +2,9 @@ package com.example.playlistmaker.search.data.repository
 
 import android.content.SharedPreferences
 import androidx.core.content.edit
-import com.example.playlistmaker.search.domain.api.SearchHistoryRepository
 import com.example.playlistmaker.common.domain.model.Track
+import com.example.playlistmaker.search.domain.api.SearchHistoryRepository
 import com.google.gson.Gson
-
-//import com.google.gson.Gson
 
 class SearchHistoryRepositoryImpl(
     private val preferences: SharedPreferences,
