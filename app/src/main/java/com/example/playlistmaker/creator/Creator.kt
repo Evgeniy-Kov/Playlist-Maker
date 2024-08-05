@@ -60,7 +60,7 @@ object Creator {
     }
 
     private fun provideTracksRepository(): TracksRepository {
-        return TracksRepositoryImpl(RetrofitNetworkClient())
+        return TracksRepositoryImpl(RetrofitNetworkClient(application))
     }
 
     private fun provideSharedPreferences(): SharedPreferences {
