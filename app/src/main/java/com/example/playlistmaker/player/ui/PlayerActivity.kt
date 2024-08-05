@@ -2,7 +2,6 @@ package com.example.playlistmaker.player.ui
 
 import android.content.Context
 import android.content.Intent
-import android.media.MediaPlayer
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -28,8 +27,6 @@ import java.util.Locale
 
 class PlayerActivity : AppCompatActivity() {
     private lateinit var track: Track
-
-    private val mediaPlayer = MediaPlayer()
 
     private val binding by lazy {
         ActivityPlayerBinding.inflate(layoutInflater)
@@ -74,7 +71,6 @@ class PlayerActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        mediaPlayer.release()
     }
 
     private fun parseIntent(): Boolean {
