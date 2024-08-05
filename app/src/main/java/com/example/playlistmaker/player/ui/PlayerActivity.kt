@@ -8,6 +8,7 @@ import android.os.Handler
 import android.os.Looper
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -20,14 +21,13 @@ import com.example.playlistmaker.common.domain.model.Track.Companion.getFormatte
 import com.example.playlistmaker.common.domain.model.Track.Companion.getFormattedYear
 import com.example.playlistmaker.common.domain.model.Track.Companion.getHighQualityCoverLink
 import com.example.playlistmaker.databinding.ActivityPlayerBinding
+import com.example.playlistmaker.player.domain.model.PlayStatus
 import com.example.playlistmaker.utils.convertDpToPx
 import java.text.SimpleDateFormat
 import java.util.Locale
 
 class PlayerActivity : AppCompatActivity() {
     private lateinit var track: Track
-
-    private var playerState = PLAYER_STATE_DEFAULT
 
     private val mediaPlayer = MediaPlayer()
 
@@ -37,8 +37,8 @@ class PlayerActivity : AppCompatActivity() {
 
     private val handler = Handler(Looper.getMainLooper())
 
-    private val updatePlaybackTimeRunnable by lazy {
-        createUpdatePlaybackTimeTask()
+    private val vieModel by viewModels<PlayerViewModel> {
+        PlayerViewModel.getViewModelFactory()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -60,12 +60,16 @@ class PlayerActivity : AppCompatActivity() {
             return
         }
         initializeViews()
-        preparePlayer()
+        vieModel.prepare(track.previewUrl)
+        vieModel.playStatusLiveData.observe(this) { playStatus ->
+            changePlayButtonStyle(playStatus)
+            setPlaybackTime(playStatus.progress)
+        }
     }
 
     override fun onPause() {
         super.onPause()
-        playerPause()
+        vieModel.pause()
     }
 
     override fun onDestroy() {
@@ -108,41 +112,7 @@ class PlayerActivity : AppCompatActivity() {
             tvYear.text = track.getFormattedYear()
             tvGenre.text = track.primaryGenreName
             tvCountry.text = track.country
-            buttonPlay.setOnClickListener { playbackControl() }
-        }
-    }
-
-    private fun preparePlayer() {
-        mediaPlayer.setDataSource(track.previewUrl)
-        mediaPlayer.prepareAsync()
-        mediaPlayer.setOnPreparedListener {
-            playerState = PLAYER_STATE_PREPARED
-        }
-        mediaPlayer.setOnCompletionListener {
-            setPlaybackTime(PLAYER_DEFAULT_PLAYBACK_TIME)
-            binding.buttonPlay.setBackgroundResource(R.drawable.ic_button_play)
-            playerState = PLAYER_STATE_PREPARED
-        }
-    }
-
-    private fun playerPlay() {
-        mediaPlayer.start()
-        binding.buttonPlay.setBackgroundResource(R.drawable.ic_button_pause)
-        playerState = PLAYER_STATE_PLAYING
-        handler.post(updatePlaybackTimeRunnable)
-    }
-
-    private fun playerPause() {
-        mediaPlayer.pause()
-        binding.buttonPlay.setBackgroundResource(R.drawable.ic_button_play)
-        playerState = PLAYER_STATE_PAUSED
-        handler.removeCallbacks(updatePlaybackTimeRunnable)
-    }
-
-    private fun playbackControl() {
-        when (playerState) {
-            PLAYER_STATE_PLAYING -> playerPause()
-            PLAYER_STATE_PREPARED, PLAYER_STATE_PAUSED -> playerPlay()
+            buttonPlay.setOnClickListener { vieModel.playbackControl() }
         }
     }
 
@@ -151,27 +121,18 @@ class PlayerActivity : AppCompatActivity() {
             SimpleDateFormat("mm:ss", Locale.getDefault()).format(timeMillis)
     }
 
-    private fun createUpdatePlaybackTimeTask(): Runnable {
-        return object : Runnable {
-            override fun run() {
-//                val currentPlaybackTime = mediaPlayer.currentPosition
-                if (playerState == PLAYER_STATE_PLAYING) {
-                    setPlaybackTime(mediaPlayer.currentPosition)
-                    handler.postDelayed(this, PLAYER_UPDATE_PLAYBACK_TIME_DELAY_MILLIS)
-                }
-            }
+    private fun changePlayButtonStyle(playStatus: PlayStatus) {
+        val drawable = if (playStatus.isPlaying) {
+            R.drawable.ic_button_pause
+        } else {
+            R.drawable.ic_button_play
         }
+        binding.buttonPlay.setBackgroundResource(drawable)
     }
 
     companion object {
         private const val COVER_CORNER_RADIUS_IN_DP = 8f
         private const val EXTRA_TRACK_ITEM = "extra_track_item"
-        private const val PLAYER_STATE_DEFAULT = 0
-        private const val PLAYER_STATE_PREPARED = 1
-        private const val PLAYER_STATE_PLAYING = 2
-        private const val PLAYER_STATE_PAUSED = 3
-        private const val PLAYER_DEFAULT_PLAYBACK_TIME = 0
-        private const val PLAYER_UPDATE_PLAYBACK_TIME_DELAY_MILLIS = 100L
         fun newIntent(context: Context, track: Track): Intent {
             val intent = Intent(context, PlayerActivity::class.java).apply {
                 putExtra(EXTRA_TRACK_ITEM, track)
