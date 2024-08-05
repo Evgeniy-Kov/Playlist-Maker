@@ -16,6 +16,10 @@ import com.example.playlistmaker.search.domain.impl.SearchHistoryInteractorImpl
 import com.example.playlistmaker.search.domain.impl.TracksInteractorImpl
 import com.example.playlistmaker.settings.domain.usecase.GetDarkThemeModeUseCase
 import com.example.playlistmaker.settings.domain.usecase.SaveDarkThemeModeUseCase
+import com.example.playlistmaker.sharing.data.ExternalNavigatorImpl
+import com.example.playlistmaker.sharing.domain.api.ExternalNavigator
+import com.example.playlistmaker.sharing.domain.api.SharingInteractor
+import com.example.playlistmaker.sharing.domain.impl.SharingInteractorImpl
 import com.google.gson.Gson
 
 object Creator {
@@ -42,6 +46,10 @@ object Creator {
         return GetDarkThemeModeUseCase(provideDarkThemeModeRepository())
     }
 
+    fun provideSharingInteractor(): SharingInteractor {
+        return SharingInteractorImpl(provideExternalNavigator(), application)
+    }
+
     private fun provideTracksRepository(): TracksRepository {
         return TracksRepositoryImpl(RetrofitNetworkClient())
     }
@@ -56,5 +64,9 @@ object Creator {
 
     private fun provideDarkThemeModeRepository(): DarkThemeModeRepository {
         return DarkThemeModeRepositoryImpl(provideSharedPreferences())
+    }
+
+    private fun provideExternalNavigator(): ExternalNavigator {
+        return ExternalNavigatorImpl(application)
     }
 }
