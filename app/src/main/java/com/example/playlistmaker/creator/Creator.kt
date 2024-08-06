@@ -9,16 +9,16 @@ import com.example.playlistmaker.player.domain.api.PlayerInteractor
 import com.example.playlistmaker.player.domain.api.PlayerRepository
 import com.example.playlistmaker.player.domain.impl.PlayerInteractorImpl
 import com.example.playlistmaker.search.data.network.RetrofitNetworkClient
-import com.example.playlistmaker.settings.data.repository.DarkThemeModeRepositoryImpl
 import com.example.playlistmaker.search.data.repository.SearchHistoryRepositoryImpl
 import com.example.playlistmaker.search.data.repository.TracksRepositoryImpl
-import com.example.playlistmaker.settings.domain.api.DarkThemeModeRepository
 import com.example.playlistmaker.search.domain.api.SearchHistoryInteractor
 import com.example.playlistmaker.search.domain.api.SearchHistoryRepository
 import com.example.playlistmaker.search.domain.api.TracksInteractor
 import com.example.playlistmaker.search.domain.api.TracksRepository
 import com.example.playlistmaker.search.domain.impl.SearchHistoryInteractorImpl
 import com.example.playlistmaker.search.domain.impl.TracksInteractorImpl
+import com.example.playlistmaker.settings.data.repository.DarkThemeModeRepositoryImpl
+import com.example.playlistmaker.settings.domain.api.DarkThemeModeRepository
 import com.example.playlistmaker.settings.domain.usecase.GetDarkThemeModeUseCase
 import com.example.playlistmaker.settings.domain.usecase.SaveDarkThemeModeUseCase
 import com.example.playlistmaker.sharing.data.ExternalNavigatorImpl
@@ -52,7 +52,7 @@ object Creator {
     }
 
     fun provideSharingInteractor(): SharingInteractor {
-        return SharingInteractorImpl(provideExternalNavigator(), application)
+        return SharingInteractorImpl(provideExternalNavigator())
     }
 
     fun providePlayerInteractor(): PlayerInteractor {
