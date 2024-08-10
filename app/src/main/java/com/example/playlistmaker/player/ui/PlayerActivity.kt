@@ -34,7 +34,7 @@ class PlayerActivity : AppCompatActivity() {
 
     private val handler = Handler(Looper.getMainLooper())
 
-    private val vieModel by viewModels<PlayerViewModel> {
+    private val viewModel by viewModels<PlayerViewModel> {
         PlayerViewModel.getViewModelFactory()
     }
 
@@ -57,8 +57,8 @@ class PlayerActivity : AppCompatActivity() {
             return
         }
         initializeViews()
-        vieModel.prepare(track.previewUrl)
-        vieModel.playStatusLiveData.observe(this) { playStatus ->
+        viewModel.prepare(track.previewUrl)
+        viewModel.playStatusLiveData.observe(this) { playStatus ->
             changePlayButtonStyle(playStatus)
             setPlaybackTime(playStatus.progress)
         }
@@ -66,7 +66,7 @@ class PlayerActivity : AppCompatActivity() {
 
     override fun onPause() {
         super.onPause()
-        vieModel.pause()
+        viewModel.pause()
     }
 
     override fun onDestroy() {
@@ -108,7 +108,7 @@ class PlayerActivity : AppCompatActivity() {
             tvYear.text = track.getFormattedYear()
             tvGenre.text = track.primaryGenreName
             tvCountry.text = track.country
-            buttonPlay.setOnClickListener { vieModel.playbackControl() }
+            buttonPlay.setOnClickListener { viewModel.playbackControl() }
         }
     }
 

@@ -22,7 +22,9 @@ import com.example.playlistmaker.settings.domain.api.DarkThemeModeRepository
 import com.example.playlistmaker.settings.domain.usecase.GetDarkThemeModeUseCase
 import com.example.playlistmaker.settings.domain.usecase.SaveDarkThemeModeUseCase
 import com.example.playlistmaker.sharing.data.ExternalNavigatorImpl
+import com.example.playlistmaker.sharing.data.LocalResourcesRepositoryImpl
 import com.example.playlistmaker.sharing.domain.api.ExternalNavigator
+import com.example.playlistmaker.sharing.domain.api.LocalResourcesRepository
 import com.example.playlistmaker.sharing.domain.api.SharingInteractor
 import com.example.playlistmaker.sharing.domain.impl.SharingInteractorImpl
 import com.google.gson.Gson
@@ -52,7 +54,7 @@ object Creator {
     }
 
     fun provideSharingInteractor(): SharingInteractor {
-        return SharingInteractorImpl(provideExternalNavigator())
+        return SharingInteractorImpl(provideExternalNavigator(), provideLocalResourcesRepository())
     }
 
     fun providePlayerInteractor(): PlayerInteractor {
@@ -77,6 +79,10 @@ object Creator {
 
     private fun provideExternalNavigator(): ExternalNavigator {
         return ExternalNavigatorImpl(application)
+    }
+
+    private fun provideLocalResourcesRepository(): LocalResourcesRepository {
+        return LocalResourcesRepositoryImpl(application)
     }
 
     private fun providePlayerRepository(): PlayerRepository {

@@ -19,7 +19,6 @@ class App : Application() {
         switchTheme(
             getDarkThemeModeUseCase()
         )
-        context = this
     }
 
     fun switchTheme(darkThemeMode: DarkThemeMode) {
@@ -35,14 +34,6 @@ class App : Application() {
             DarkThemeMode.OFF -> {
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
             }
-        }
-    }
-
-    companion object {
-        private lateinit var context: Application
-
-        fun getStringFromResources(resourceId: Int): String {
-            return context.getString(resourceId)
         }
     }
 }
