@@ -3,11 +3,6 @@ package com.example.playlistmaker.creator
 import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
-import android.media.MediaPlayer
-import com.example.playlistmaker.player.data.repository.PlayerRepositoryImpl
-import com.example.playlistmaker.player.domain.api.PlayerInteractor
-import com.example.playlistmaker.player.domain.api.PlayerRepository
-import com.example.playlistmaker.player.domain.impl.PlayerInteractorImpl
 import com.example.playlistmaker.search.data.network.RetrofitNetworkClient
 import com.example.playlistmaker.search.data.repository.SearchHistoryRepositoryImpl
 import com.example.playlistmaker.search.data.repository.TracksRepositoryImpl
@@ -57,10 +52,6 @@ object Creator {
         return SharingInteractorImpl(provideExternalNavigator(), provideLocalResourcesRepository())
     }
 
-    fun providePlayerInteractor(): PlayerInteractor {
-        return PlayerInteractorImpl(providePlayerRepository())
-    }
-
     private fun provideTracksRepository(): TracksRepository {
         return TracksRepositoryImpl(RetrofitNetworkClient(application))
     }
@@ -83,9 +74,5 @@ object Creator {
 
     private fun provideLocalResourcesRepository(): LocalResourcesRepository {
         return LocalResourcesRepositoryImpl(application)
-    }
-
-    private fun providePlayerRepository(): PlayerRepository {
-        return PlayerRepositoryImpl(MediaPlayer())
     }
 }

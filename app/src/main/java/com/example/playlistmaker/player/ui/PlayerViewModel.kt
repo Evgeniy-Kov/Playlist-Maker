@@ -64,12 +64,12 @@ class PlayerViewModel(private val playerInteractor: PlayerInteractor) : ViewMode
     }
 
     companion object {
-        fun getViewModelFactory(): ViewModelProvider.Factory {
-            return viewModelFactory {
-                initializer {
-                    PlayerViewModel(Creator.providePlayerInteractor())
-                }
-            }
-        }
+//        fun getViewModelFactory(): ViewModelProvider.Factory {
+//            return viewModelFactory {
+//                initializer {
+//                    PlayerViewModel(Creator.providePlayerInteractor())
+//                }
+//            }
+//        }
     }
 }

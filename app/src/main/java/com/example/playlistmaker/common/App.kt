@@ -3,7 +3,9 @@ package com.example.playlistmaker.common
 import android.app.Application
 import androidx.appcompat.app.AppCompatDelegate
 import com.example.playlistmaker.creator.Creator
+import com.example.playlistmaker.di.playerModule
 import com.example.playlistmaker.settings.domain.model.DarkThemeMode
+import org.koin.core.context.startKoin
 
 class App : Application() {
 
@@ -13,6 +15,10 @@ class App : Application() {
 
     override fun onCreate() {
         super.onCreate()
+
+        startKoin {
+            modules(playerModule)
+        }
 
         Creator.initApplication(this)
 
