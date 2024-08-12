@@ -6,8 +6,8 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
 import com.example.playlistmaker.common.domain.model.Track
 import com.example.playlistmaker.common.domain.model.Track.Companion.getFormattedTime
-import com.example.playlistmaker.utils.convertDpToPx
 import com.example.playlistmaker.databinding.ViewTrackItemBinding
+import com.example.playlistmaker.utils.convertDpToPx
 
 class TrackViewHolder(
     private val binding: ViewTrackItemBinding
