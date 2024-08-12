@@ -30,16 +30,16 @@ class SettingsViewModel(
         saveDarkThemeModeUseCase(darkThemeMode)
     }
 
-    companion object {
-        fun getViewModelFactory(): ViewModelProvider.Factory {
-            return viewModelFactory {
-                initializer {
-                    SettingsViewModel(
-                        Creator.provideSharingInteractor(),
-                        Creator.provideSaveDarkThemeModeUseCase()
-                    )
-                }
-            }
-        }
-    }
+//    companion object {
+//        fun getViewModelFactory(): ViewModelProvider.Factory {
+//            return viewModelFactory {
+//                initializer {
+//                    SettingsViewModel(
+//                        Creator.provideSharingInteractor(),
+//                        Creator.provideSaveDarkThemeModeUseCase()
+//                    )
+//                }
+//            }
+//        }
+//    }
 }

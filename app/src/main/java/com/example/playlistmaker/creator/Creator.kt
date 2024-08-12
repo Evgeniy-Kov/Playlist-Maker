@@ -12,16 +12,6 @@ import com.example.playlistmaker.search.domain.api.TracksInteractor
 import com.example.playlistmaker.search.domain.api.TracksRepository
 import com.example.playlistmaker.search.domain.impl.SearchHistoryInteractorImpl
 import com.example.playlistmaker.search.domain.impl.TracksInteractorImpl
-import com.example.playlistmaker.settings.data.repository.DarkThemeModeRepositoryImpl
-import com.example.playlistmaker.settings.domain.api.DarkThemeModeRepository
-import com.example.playlistmaker.settings.domain.usecase.GetDarkThemeModeUseCase
-import com.example.playlistmaker.settings.domain.usecase.SaveDarkThemeModeUseCase
-import com.example.playlistmaker.sharing.data.ExternalNavigatorImpl
-import com.example.playlistmaker.sharing.data.LocalResourcesRepositoryImpl
-import com.example.playlistmaker.sharing.domain.api.ExternalNavigator
-import com.example.playlistmaker.sharing.domain.api.LocalResourcesRepository
-import com.example.playlistmaker.sharing.domain.api.SharingInteractor
-import com.example.playlistmaker.sharing.domain.impl.SharingInteractorImpl
 import com.google.gson.Gson
 
 object Creator {
@@ -40,18 +30,6 @@ object Creator {
         return SearchHistoryInteractorImpl(provideSearchHistoryRepository())
     }
 
-    fun provideSaveDarkThemeModeUseCase(): SaveDarkThemeModeUseCase {
-        return SaveDarkThemeModeUseCase(provideDarkThemeModeRepository())
-    }
-
-    fun provideGetDarkThemeModeUseCase(): GetDarkThemeModeUseCase {
-        return GetDarkThemeModeUseCase(provideDarkThemeModeRepository())
-    }
-
-    fun provideSharingInteractor(): SharingInteractor {
-        return SharingInteractorImpl(provideExternalNavigator(), provideLocalResourcesRepository())
-    }
-
     private fun provideTracksRepository(): TracksRepository {
         return TracksRepositoryImpl(RetrofitNetworkClient(application))
     }
@@ -62,17 +40,5 @@ object Creator {
 
     private fun provideSearchHistoryRepository(): SearchHistoryRepository {
         return SearchHistoryRepositoryImpl(provideSharedPreferences(), Gson())
-    }
-
-    private fun provideDarkThemeModeRepository(): DarkThemeModeRepository {
-        return DarkThemeModeRepositoryImpl(provideSharedPreferences())
-    }
-
-    private fun provideExternalNavigator(): ExternalNavigator {
-        return ExternalNavigatorImpl(application)
-    }
-
-    private fun provideLocalResourcesRepository(): LocalResourcesRepository {
-        return LocalResourcesRepositoryImpl(application)
     }
 }

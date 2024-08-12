@@ -9,6 +9,7 @@ import androidx.core.view.WindowInsetsCompat
 import com.example.playlistmaker.common.App
 import com.example.playlistmaker.databinding.ActivitySettingsBinding
 import com.example.playlistmaker.settings.domain.model.DarkThemeMode
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SettingsActivity : AppCompatActivity() {
 
@@ -16,9 +17,7 @@ class SettingsActivity : AppCompatActivity() {
         ActivitySettingsBinding.inflate(layoutInflater)
     }
 
-    private val viewModel by viewModels<SettingsViewModel> {
-        SettingsViewModel.getViewModelFactory()
-    }
+    private val viewModel by viewModel<SettingsViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
