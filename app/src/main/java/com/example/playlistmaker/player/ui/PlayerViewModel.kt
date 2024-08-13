@@ -50,12 +50,12 @@ class PlayerViewModel(private val playerInteractor: PlayerInteractor) : ViewMode
             })
     }
 
-    fun release() {
-        playerInteractor.release()
+    fun reset() {
+        playerInteractor.reset()
     }
 
     override fun onCleared() {
         super.onCleared()
-        release()
+        reset()
     }
 }

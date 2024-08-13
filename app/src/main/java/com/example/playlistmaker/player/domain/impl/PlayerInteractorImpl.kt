@@ -18,8 +18,8 @@ class PlayerInteractorImpl(private val repository: PlayerRepository) : PlayerInt
         repository.prepare(dataSource, observer)
     }
 
-    override fun release() {
-        repository.release()
+    override fun reset() {
+        repository.reset()
     }
 
     override fun getPlayerState(): PlayerState {

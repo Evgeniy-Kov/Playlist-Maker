@@ -11,11 +11,11 @@ import org.koin.dsl.module
 
 val sharingModule = module {
 
-    factory<ExternalNavigator> {
+    single<ExternalNavigator> {
         ExternalNavigatorImpl(androidContext())
     }
 
-    factory<LocalResourcesRepository> {
+    single<LocalResourcesRepository> {
         LocalResourcesRepositoryImpl(androidContext())
     }
 

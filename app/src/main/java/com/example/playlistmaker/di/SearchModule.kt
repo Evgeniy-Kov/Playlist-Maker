@@ -39,13 +39,13 @@ val searchModule = module {
             .getSharedPreferences("playlist_maker_preferences", Context.MODE_PRIVATE)
     }
 
-    factory { Gson() }
+    single { Gson() }
 
-    factory<TracksRepository> {
+    single<TracksRepository> {
         TracksRepositoryImpl(get())
     }
 
-    factory<SearchHistoryRepository> {
+    single<SearchHistoryRepository> {
         SearchHistoryRepositoryImpl(get(), get())
     }
 
