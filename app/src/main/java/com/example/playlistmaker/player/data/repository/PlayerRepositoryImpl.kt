@@ -49,8 +49,8 @@ class PlayerRepositoryImpl(private val mediaPlayer: MediaPlayer) : PlayerReposit
         }
     }
 
-    override fun release() {
-        mediaPlayer.release()
+    override fun reset() {
+        mediaPlayer.reset()
     }
 
     override fun getPlayerState(): PlayerState {

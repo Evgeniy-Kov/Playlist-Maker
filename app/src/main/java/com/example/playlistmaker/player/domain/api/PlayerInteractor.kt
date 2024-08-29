@@ -10,7 +10,7 @@ interface PlayerInteractor {
 
     fun prepare(dataSource: String, observer: StatusObserver)
 
-    fun release()
+    fun reset()
 
     fun getPlayerState(): PlayerState
 }
