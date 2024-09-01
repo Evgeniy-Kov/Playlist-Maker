@@ -10,7 +10,7 @@ class MediaLibraryViewPagerAdapter(
     lifecycle: Lifecycle
 ) : FragmentStateAdapter(fragmentManager, lifecycle) {
     override fun getItemCount(): Int {
-        return ITEN_COUNT
+        return ITEM_COUNT
     }
 
     override fun createFragment(position: Int): Fragment {
@@ -21,6 +21,6 @@ class MediaLibraryViewPagerAdapter(
     }
 
     private companion object {
-        const val ITEN_COUNT = 2
+        const val ITEM_COUNT = 2
     }
 }
