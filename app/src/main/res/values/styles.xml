@@ -131,4 +131,11 @@
         <item name="android:textAppearance">@style/FontYSDisplayMediumSize14Weight500</item>
         <item name="cornerRadius">@dimen/playlists_fragment_new_playlist_button_corner_radius</item>
     </style>
+
+    <style name="TabLayoutStyle">
+        <item name="tabIndicatorColor">?attr/colorSecondary</item>
+        <item name="android:background">?attr/colorPrimary</item>
+        <item name="tabTextColor">?attr/colorSecondary</item>
+        <item name="tabTextAppearance">@style/FontYSDisplayMediumSize14Weight500</item>
+    </style>
 </resources>
