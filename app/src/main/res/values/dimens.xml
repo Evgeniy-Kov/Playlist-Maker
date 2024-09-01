@@ -35,4 +35,8 @@
     <dimen name="player_activity_track_time_title_end_margin">4dp</dimen>
     <dimen name="favourite_tracks_fragment_placeholder_margin_top">104dp</dimen>
     <dimen name="favourite_tracks_fragment_placeholder_margin_horizontal">24dp</dimen>
+    <dimen name="playlists_fragment_placeholder_margin_top">48dp</dimen>
+    <dimen name="playlists_fragment_placeholder_margin_horizontal">24dp</dimen>
+    <dimen name="playlists_fragment_new_playlist_button_corner_radius">45dp</dimen>
+    <dimen name="playlists_fragment_new_playlist_button_margin_top">24dp</dimen>
 </resources>
