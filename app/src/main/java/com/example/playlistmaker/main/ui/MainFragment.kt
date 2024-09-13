@@ -11,7 +11,7 @@ import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentMainBinding
 import com.example.playlistmaker.library.ui.MediaLibraryActivity
 import com.example.playlistmaker.search.ui.SearchFragment
-import com.example.playlistmaker.settings.ui.SettingsActivity
+import com.example.playlistmaker.settings.ui.SettingsFragment
 
 class MainFragment : Fragment() {
 
@@ -45,7 +45,10 @@ class MainFragment : Fragment() {
             startActivity(Intent(requireContext(), MediaLibraryActivity::class.java))
         }
         binding.buttonSettings.setOnClickListener {
-            startActivity(Intent(requireContext(), SettingsActivity::class.java))
+            parentFragmentManager.commit {
+                replace(R.id.host_fragment_container, SettingsFragment())
+                addToBackStack(null)
+            }
         }
     }
 
