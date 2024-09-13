@@ -26,10 +26,6 @@
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".search.ui.SearchActivity"
-            android:exported="false"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".settings.ui.SettingsActivity"
             android:exported="false"
             android:screenOrientation="portrait" />

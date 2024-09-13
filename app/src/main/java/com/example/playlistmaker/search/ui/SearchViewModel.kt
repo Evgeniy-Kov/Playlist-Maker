@@ -28,9 +28,9 @@ class SearchViewModel(
 
     private val trackList = mutableListOf<Track>()
 
-    private val _screenStateLiveData = MutableLiveData<SearchActivityState>()
+    private val _screenStateLiveData = MutableLiveData<SearchFragmentState>()
 
-    val screenStateLiveData: LiveData<SearchActivityState>
+    val screenStateLiveData: LiveData<SearchFragmentState>
         get() = _screenStateLiveData
 
     private val _isClearInputbuttonVisibileLiveData = MutableLiveData<Boolean>(false)
@@ -48,19 +48,19 @@ class SearchViewModel(
         _isClearInputbuttonVisibileLiveData.value = searchInput.toString().isNotEmpty()
         if (hasFocus && searchInput.toString().isEmpty() && searchHistory.isNotEmpty()) {
             handler.removeCallbacks(searchRunnable)
-            _screenStateLiveData.value = SearchActivityState.History(searchHistory)
+            _screenStateLiveData.value = SearchFragmentState.History(searchHistory)
         } else {
             searchDebounce(searchInput.toString())
         }
     }
 
-    fun changeScreenState(state: SearchActivityState) {
+    fun changeScreenState(state: SearchFragmentState) {
         _screenStateLiveData.value = state
     }
 
     fun cleanSearchHistory() {
         searchHistoryInteractor.clearSearchHistory()
-        _screenStateLiveData.value = SearchActivityState.Content(emptyList())
+        _screenStateLiveData.value = SearchFragmentState.Content(emptyList())
     }
 
     fun repeatLastRequest() {
@@ -69,19 +69,19 @@ class SearchViewModel(
 
     fun addTrackToSearchHistory(track: Track) {
         searchHistoryInteractor.addTrackToSearchHistory(track)
-        if (_screenStateLiveData.value is SearchActivityState.History) {
+        if (_screenStateLiveData.value is SearchFragmentState.History) {
             _screenStateLiveData.value =
-                SearchActivityState.History(searchHistoryInteractor.getSearchHistory())
+                SearchFragmentState.History(searchHistoryInteractor.getSearchHistory())
         }
     }
 
     private fun sendQuery(newSearchText: String) {
         if (newSearchText.isNotBlank()) {
-            _screenStateLiveData.value = SearchActivityState.Loading
+            _screenStateLiveData.value = SearchFragmentState.Loading
             tracksInteractor.searchTracks(
                 expression = newSearchText,
                 consumer = { data ->
-                    if (screenStateLiveData.value != SearchActivityState.Loading) {
+                    if (screenStateLiveData.value != SearchFragmentState.Loading) {
                         return@searchTracks
                     }
                     when (data) {
@@ -89,14 +89,14 @@ class SearchViewModel(
                             if (!data.value.isNullOrEmpty()) {
                                 trackList.clear()
                                 trackList.addAll(data.value)
-                                _screenStateLiveData.postValue(SearchActivityState.Content(trackList))
+                                _screenStateLiveData.postValue(SearchFragmentState.Content(trackList))
                             } else {
-                                _screenStateLiveData.postValue(SearchActivityState.Empty)
+                                _screenStateLiveData.postValue(SearchFragmentState.Empty)
                             }
                         }
 
                         is ConsumerData.Error -> {
-                            _screenStateLiveData.postValue(SearchActivityState.Error)
+                            _screenStateLiveData.postValue(SearchFragmentState.Error)
                         }
                     }
                 }

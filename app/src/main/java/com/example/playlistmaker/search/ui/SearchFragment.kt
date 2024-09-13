@@ -6,23 +6,23 @@ import android.os.Handler
 import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
-import androidx.activity.enableEdgeToEdge
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
 import com.example.playlistmaker.common.domain.model.Track
-import com.example.playlistmaker.databinding.ActivitySearchBinding
+import com.example.playlistmaker.databinding.FragmentSearchBinding
 import com.example.playlistmaker.player.ui.PlayerActivity
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class SearchActivity : AppCompatActivity() {
+class SearchFragment : Fragment() {
 
-    private val binding by lazy {
-        ActivitySearchBinding.inflate(layoutInflater)
-    }
+    private var _binding: FragmentSearchBinding? = null
+    private val binding: FragmentSearchBinding
+        get() = requireNotNull(_binding) { "Binding is null" }
 
     private var searchInput = ""
 
@@ -36,25 +36,27 @@ class SearchActivity : AppCompatActivity() {
 
     private val viewModel by viewModel<SearchViewModel>()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-        setContentView(binding.root)
-        ViewCompat.setOnApplyWindowInsetsListener(binding.main) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
-        }
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = FragmentSearchBinding.inflate(inflater, container, false)
+        return binding.root
+    }
 
-        viewModel.screenStateLiveData.observe(this) { screenState ->
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        viewModel.screenStateLiveData.observe(viewLifecycleOwner) { screenState ->
             changeScreenState(screenState)
         }
 
-        viewModel.isClearInputbuttonVisibileLiveData.observe(this) {
+        viewModel.isClearInputbuttonVisibileLiveData.observe(viewLifecycleOwner) {
             binding.ivClear.isVisible = it
         }
 
-        binding.toolbar.setNavigationOnClickListener { finish() }
+        binding.toolbar.setNavigationOnClickListener { parentFragmentManager.popBackStack() }
 
         binding.editTextSearch.setOnFocusChangeListener { _, hasFocus ->
             viewModel.onInputStateChanged(hasFocus, binding.editTextSearch.text)
@@ -91,14 +93,14 @@ class SearchActivity : AppCompatActivity() {
         trackAdapter.onItemClickListener = TrackViewHolder.OnItemClickListener {
             if (clickDebounce()) {
                 viewModel.addTrackToSearchHistory(it)
-                startActivity(PlayerActivity.newIntent(this, it))
+                startActivity(PlayerActivity.newIntent(requireContext(), it))
             }
         }
 
         searchHistoryAdapter.onItemClickListener = TrackViewHolder.OnItemClickListener {
             if (clickDebounce()) {
                 viewModel.addTrackToSearchHistory(it)
-                startActivity(PlayerActivity.newIntent(this, it))
+                startActivity(PlayerActivity.newIntent(requireContext(), it))
             }
         }
 
@@ -107,15 +109,9 @@ class SearchActivity : AppCompatActivity() {
         }
     }
 
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        outState.putString(SEARCH_INPUT, searchInput)
-    }
-
-    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
-        super.onRestoreInstanceState(savedInstanceState)
-        searchInput = savedInstanceState.getString(SEARCH_INPUT, "")
-        binding.editTextSearch.setText(searchInput)
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     private fun clickDebounce(): Boolean {
@@ -128,19 +124,19 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun hideKeyboard() {
-        val inputMethodManager = getSystemService(
+        val inputMethodManager = requireContext().getSystemService(
             Context.INPUT_METHOD_SERVICE
         ) as InputMethodManager
         inputMethodManager.hideSoftInputFromWindow(binding.editTextSearch.windowToken, 0)
     }
 
-    private fun changeScreenState(screenState: SearchActivityState) {
+    private fun changeScreenState(screenState: SearchFragmentState) {
         when (screenState) {
-            is SearchActivityState.Content -> showContent(screenState.tracks)
-            SearchActivityState.Empty -> showEmpty()
-            SearchActivityState.Error -> showError()
-            SearchActivityState.Loading -> showLoading()
-            is SearchActivityState.History -> showSearchHistory(screenState.tracks)
+            is SearchFragmentState.Content -> showContent(screenState.tracks)
+            SearchFragmentState.Empty -> showEmpty()
+            SearchFragmentState.Error -> showError()
+            SearchFragmentState.Loading -> showLoading()
+            is SearchFragmentState.History -> showSearchHistory(screenState.tracks)
         }
     }
 
