@@ -13,6 +13,7 @@ import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.example.playlistmaker.common.domain.model.Track
 import com.example.playlistmaker.databinding.FragmentSearchBinding
 import com.example.playlistmaker.player.ui.PlayerActivity
@@ -56,7 +57,9 @@ class SearchFragment : Fragment() {
             binding.ivClear.isVisible = it
         }
 
-        binding.toolbar.setNavigationOnClickListener { parentFragmentManager.popBackStack() }
+        binding.toolbar.setNavigationOnClickListener {
+            findNavController().navigateUp()
+        }
 
         binding.editTextSearch.setOnFocusChangeListener { _, hasFocus ->
             viewModel.onInputStateChanged(hasFocus, binding.editTextSearch.text)
@@ -200,7 +203,6 @@ class SearchFragment : Fragment() {
     }
 
     companion object {
-        private const val SEARCH_INPUT = "SEARCH_INPUT"
         private const val CLICK_DEBOUNCE_DELAY_MILLIS = 1000L
     }
 }
