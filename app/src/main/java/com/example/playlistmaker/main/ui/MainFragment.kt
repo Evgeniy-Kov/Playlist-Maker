@@ -9,7 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentMainBinding
-import com.example.playlistmaker.library.ui.MediaLibraryActivity
+import com.example.playlistmaker.library.ui.MediaLibraryFragment
 import com.example.playlistmaker.search.ui.SearchFragment
 import com.example.playlistmaker.settings.ui.SettingsFragment
 
@@ -42,7 +42,10 @@ class MainFragment : Fragment() {
         }
         binding.buttonSearch.setOnClickListener(searchClickListener)
         binding.buttonLibrary.setOnClickListener {
-            startActivity(Intent(requireContext(), MediaLibraryActivity::class.java))
+            parentFragmentManager.commit {
+                replace(R.id.host_fragment_container, MediaLibraryFragment())
+                addToBackStack(null)
+            }
         }
         binding.buttonSettings.setOnClickListener {
             parentFragmentManager.commit {
