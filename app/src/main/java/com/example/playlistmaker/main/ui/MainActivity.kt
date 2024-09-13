@@ -8,7 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.playlistmaker.databinding.ActivityMainBinding
-import com.example.playlistmaker.library.ui.LibraryActivity
+import com.example.playlistmaker.library.ui.MediaLibraryActivity
 import com.example.playlistmaker.search.ui.SearchActivity
 import com.example.playlistmaker.settings.ui.SettingsActivity
 
@@ -35,7 +35,7 @@ class MainActivity : AppCompatActivity() {
         }
         binding.buttonSearch.setOnClickListener(searchClickListener)
         binding.buttonLibrary.setOnClickListener {
-            startActivity(Intent(this, LibraryActivity::class.java))
+            startActivity(Intent(this, MediaLibraryActivity::class.java))
         }
         binding.buttonSettings.setOnClickListener {
             startActivity(Intent(this, SettingsActivity::class.java))
