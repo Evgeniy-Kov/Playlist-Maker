@@ -17,13 +17,16 @@
         android:theme="@style/Theme.PlaylistMaker"
         tools:targetApi="31">
         <activity
+            android:name=".main.ui.HostActivity"
+            android:exported="false" />
+        <activity
             android:name=".player.ui.PlayerActivity"
             android:exported="false"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".library.ui.MediaLibraryActivity"
             android:exported="false"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".search.ui.SearchActivity"
             android:exported="false"
