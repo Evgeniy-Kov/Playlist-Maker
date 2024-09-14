@@ -24,8 +24,8 @@
         <activity
             android:name=".main.ui.HostActivity"
             android:exported="true"
-            android:screenOrientation="portrait"
-            android:theme="@style/MainActivityTheme">
+            android:windowSoftInputMode="adjustNothing"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

@@ -57,10 +57,6 @@ class SearchFragment : Fragment() {
             binding.ivClear.isVisible = it
         }
 
-        binding.toolbar.setNavigationOnClickListener {
-            findNavController().navigateUp()
-        }
-
         binding.editTextSearch.setOnFocusChangeListener { _, hasFocus ->
             viewModel.onInputStateChanged(hasFocus, binding.editTextSearch.text)
         }
