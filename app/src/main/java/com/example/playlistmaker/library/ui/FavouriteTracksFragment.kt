@@ -15,15 +15,10 @@ class FavouriteTracksFragment : Fragment() {
 
     private val viewModel by viewModel<FavouriteTracksViewModel>()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentFavouriteTracksBinding.inflate(inflater, container, false)
         return binding.root
     }

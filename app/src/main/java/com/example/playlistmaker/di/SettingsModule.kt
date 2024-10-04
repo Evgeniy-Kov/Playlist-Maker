@@ -8,7 +8,7 @@ import com.example.playlistmaker.settings.ui.SettingsViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
-val settingsModule  = module {
+val settingsModule = module {
 
     single<DarkThemeModeRepository> {
         DarkThemeModeRepositoryImpl(get())

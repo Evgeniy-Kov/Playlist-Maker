@@ -1,20 +1,16 @@
 package com.example.playlistmaker.main.ui
 
- import android.os.Bundle
+import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
- import androidx.navigation.fragment.NavHostFragment
- import androidx.navigation.ui.setupWithNavController
- import com.example.playlistmaker.R
- import com.example.playlistmaker.databinding.ActivityHostBinding
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.setupWithNavController
+import com.example.playlistmaker.R
+import com.example.playlistmaker.databinding.ActivityHostBinding
 
 class HostActivity : AppCompatActivity() {
-
-//    private val binding by lazy {
-//        ActivityHostBinding.inflate(layoutInflater)
-//    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,18 +23,9 @@ class HostActivity : AppCompatActivity() {
             insets
         }
 
-        val navHostFragment = supportFragmentManager.findFragmentById(R.id.host_fragment_container) as NavHostFragment
+        val navHostFragment =
+            supportFragmentManager.findFragmentById(R.id.host_fragment_container) as NavHostFragment
         val navController = navHostFragment.navController
-//        navController.addOnDestinationChangedListener { _, destination, _ ->
-//            when (destination.id) {
-//                R.id.speciesFragment -> {
-//                    bottomNavigationView.visibility = View.GONE
-//                }
-//                else -> {
-//                    bottomNavigationView.visibility = View.VISIBLE
-//                }
-//            }
-//        }
         binding.bottomNavigationView.setupWithNavController(navController)
     }
 }

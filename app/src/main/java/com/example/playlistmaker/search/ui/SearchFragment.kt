@@ -16,7 +16,6 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.playlistmaker.common.domain.model.Track
 import com.example.playlistmaker.databinding.FragmentSearchBinding
-import com.example.playlistmaker.player.ui.PlayerActivity
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SearchFragment : Fragment() {
@@ -92,14 +91,16 @@ class SearchFragment : Fragment() {
         trackAdapter.onItemClickListener = TrackViewHolder.OnItemClickListener {
             if (clickDebounce()) {
                 viewModel.addTrackToSearchHistory(it)
-                startActivity(PlayerActivity.newIntent(requireContext(), it))
+                val direction = SearchFragmentDirections.actionSearchFragmentToPlayerActivity(it)
+                findNavController().navigate(direction)
             }
         }
 
         searchHistoryAdapter.onItemClickListener = TrackViewHolder.OnItemClickListener {
             if (clickDebounce()) {
                 viewModel.addTrackToSearchHistory(it)
-                startActivity(PlayerActivity.newIntent(requireContext(), it))
+                val direction = SearchFragmentDirections.actionSearchFragmentToPlayerActivity(it)
+                findNavController().navigate(direction)
             }
         }
 

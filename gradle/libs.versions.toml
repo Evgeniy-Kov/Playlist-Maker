@@ -16,6 +16,7 @@ constraintlayout = "2.1.4"
 navVersion = "2.8.0"
 retrofit = "2.11.0"
 parcelize = "2.0.0"
+safeArgs = "2.7.5"
 
 [libraries]
 androidx-activity-ktx = { module = "androidx.activity:activity-ktx", version.ref = "activityKtx" }
@@ -39,4 +40,5 @@ retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit
 androidApplication = { id = "com.android.application", version.ref = "agp" }
 jetbrainsKotlinAndroid = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlinParcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "parcelize"}
+kotlinSafeArgs = { id = "androidx.navigation.safeargs.kotlin", version.ref = "safeArgs"}
 
