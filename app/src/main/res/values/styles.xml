@@ -23,6 +23,13 @@
     </style>
 
     <style name="ToolbarStyle">
+        <item name="titleTextColor">?attr/colorSecondary</item>
+        <item name="navigationIconTint">?attr/colorSecondary</item>
+        <item name="contentInsetStartWithNavigation">64dp</item>
+        <item name="titleTextAppearance">@style/FontYSDisplayMediumSize22Weight500</item>
+    </style>
+
+    <style name="ToolbarWithNavigationStyle">
         <item name="navigationIcon">@drawable/ic_arrow_back</item>
         <item name="titleTextColor">?attr/colorSecondary</item>
         <item name="navigationIconTint">?attr/colorSecondary</item>
@@ -75,6 +82,12 @@
     <style name="FontYSDisplayRegularSize13Weight400">
         <item name="fontFamily">@font/ys_display_regular</item>
         <item name="android:textSize">13sp</item>
+        <item name="android:textFontWeight">400</item>
+    </style>
+
+    <style name="FontYSDisplayRegularSize12Weight400">
+        <item name="fontFamily">@font/ys_display_regular</item>
+        <item name="android:textSize">12sp</item>
         <item name="android:textFontWeight">400</item>
     </style>
 
@@ -137,5 +150,12 @@
         <item name="android:background">?attr/colorPrimary</item>
         <item name="tabTextColor">?attr/colorSecondary</item>
         <item name="tabTextAppearance">@style/FontYSDisplayMediumSize14Weight500</item>
+    </style>
+
+    <style name="BottomNavigationViewStyle">
+        <item name="itemTextAppearanceActive">@style/FontYSDisplayRegularSize12Weight400</item>
+        <item name="itemTextAppearanceInactive">@style/FontYSDisplayRegularSize12Weight400</item>
+        <item name="itemTextColor">@color/bottom_nav_color</item>
+        <item name="itemIconTint">@color/bottom_nav_color</item>
     </style>
 </resources>

@@ -1,16 +1,12 @@
 package com.example.playlistmaker.player.ui
 
-import android.content.Context
-import android.content.Intent
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
-import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
+import androidx.navigation.navArgs
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
@@ -28,11 +24,11 @@ import java.util.Locale
 class PlayerActivity : AppCompatActivity() {
     private lateinit var track: Track
 
+    private val args by navArgs<PlayerActivityArgs>()
+
     private val binding by lazy {
         ActivityPlayerBinding.inflate(layoutInflater)
     }
-
-    private val handler = Handler(Looper.getMainLooper())
 
     private val viewModel by viewModel<PlayerViewModel>()
 
@@ -47,13 +43,10 @@ class PlayerActivity : AppCompatActivity() {
         }
 
         binding.toolbar.setNavigationOnClickListener {
-            finish()
+            onBackPressedDispatcher.onBackPressed()
         }
+        track = args.track
 
-        if (!parseIntent()) {
-            finish()
-            return
-        }
         initializeViews()
         viewModel.prepare(track.previewUrl)
         viewModel.playStatusLiveData.observe(this) { playStatus ->
@@ -65,23 +58,6 @@ class PlayerActivity : AppCompatActivity() {
     override fun onPause() {
         super.onPause()
         viewModel.pause()
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-    }
-
-    private fun parseIntent(): Boolean {
-        if (!intent.hasExtra(EXTRA_TRACK_ITEM) && intent.getParcelableExtra<Track>(EXTRA_TRACK_ITEM) == null) {
-            Toast.makeText(
-                this,
-                getString(R.string.track_not_found_message),
-                Toast.LENGTH_SHORT
-            ).show()
-            return false
-        }
-        track = intent.getParcelableExtra(EXTRA_TRACK_ITEM)!!
-        return true
     }
 
     private fun initializeViews() {
@@ -126,12 +102,5 @@ class PlayerActivity : AppCompatActivity() {
 
     companion object {
         private const val COVER_CORNER_RADIUS_IN_DP = 8f
-        private const val EXTRA_TRACK_ITEM = "extra_track_item"
-        fun newIntent(context: Context, track: Track): Intent {
-            val intent = Intent(context, PlayerActivity::class.java).apply {
-                putExtra(EXTRA_TRACK_ITEM, track)
-            }
-            return intent
-        }
     }
 }
