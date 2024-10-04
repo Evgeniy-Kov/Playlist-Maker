@@ -2,8 +2,6 @@ package com.example.playlistmaker.search.ui
 
 import android.content.Context
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
@@ -13,9 +11,12 @@ import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.playlistmaker.common.domain.model.Track
 import com.example.playlistmaker.databinding.FragmentSearchBinding
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SearchFragment : Fragment() {
@@ -31,8 +32,6 @@ class SearchFragment : Fragment() {
     private val trackAdapter = TrackAdapter()
 
     private val searchHistoryAdapter = TrackAdapter()
-
-    private val handler = Handler(Looper.getMainLooper())
 
     private val viewModel by viewModel<SearchViewModel>()
 
@@ -90,17 +89,13 @@ class SearchFragment : Fragment() {
 
         trackAdapter.onItemClickListener = TrackViewHolder.OnItemClickListener {
             if (clickDebounce()) {
-                viewModel.addTrackToSearchHistory(it)
-                val direction = SearchFragmentDirections.actionSearchFragmentToPlayerActivity(it)
-                findNavController().navigate(direction)
+                onTrackClick(it)
             }
         }
 
         searchHistoryAdapter.onItemClickListener = TrackViewHolder.OnItemClickListener {
             if (clickDebounce()) {
-                viewModel.addTrackToSearchHistory(it)
-                val direction = SearchFragmentDirections.actionSearchFragmentToPlayerActivity(it)
-                findNavController().navigate(direction)
+                onTrackClick(it)
             }
         }
 
@@ -114,11 +109,20 @@ class SearchFragment : Fragment() {
         _binding = null
     }
 
+    private fun onTrackClick(track: Track) {
+        viewModel.addTrackToSearchHistory(track)
+        val direction = SearchFragmentDirections.actionSearchFragmentToPlayerActivity(track)
+        findNavController().navigate(direction)
+    }
+
     private fun clickDebounce(): Boolean {
         val current = isClickAllowed
         if (isClickAllowed) {
             isClickAllowed = false
-            handler.postDelayed({ isClickAllowed = true }, CLICK_DEBOUNCE_DELAY_MILLIS)
+            viewLifecycleOwner.lifecycleScope.launch {
+                delay(CLICK_DEBOUNCE_DELAY_MILLIS)
+                isClickAllowed = true
+            }
         }
         return current
     }
