@@ -1,9 +1,6 @@
 package com.example.playlistmaker.player.ui
 
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
-import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -33,8 +30,6 @@ class PlayerActivity : AppCompatActivity() {
         ActivityPlayerBinding.inflate(layoutInflater)
     }
 
-    private val handler = Handler(Looper.getMainLooper())
-
     private val viewModel by viewModel<PlayerViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -63,19 +58,6 @@ class PlayerActivity : AppCompatActivity() {
     override fun onPause() {
         super.onPause()
         viewModel.pause()
-    }
-
-    private fun parseIntent(): Boolean {
-        if (!intent.hasExtra(EXTRA_TRACK_ITEM) && intent.getParcelableExtra<Track>(EXTRA_TRACK_ITEM) == null) {
-            Toast.makeText(
-                this,
-                getString(R.string.track_not_found_message),
-                Toast.LENGTH_SHORT
-            ).show()
-            return false
-        }
-        track = intent.getParcelableExtra(EXTRA_TRACK_ITEM)!!
-        return true
     }
 
     private fun initializeViews() {
@@ -120,6 +102,5 @@ class PlayerActivity : AppCompatActivity() {
 
     companion object {
         private const val COVER_CORNER_RADIUS_IN_DP = 8f
-        private const val EXTRA_TRACK_ITEM = "extra_track_item"
     }
 }
