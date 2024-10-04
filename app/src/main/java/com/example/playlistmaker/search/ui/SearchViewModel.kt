@@ -1,27 +1,28 @@
 package com.example.playlistmaker.search.ui
 
-import android.os.Handler
-import android.os.Looper
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.common.domain.model.Track
 import com.example.playlistmaker.search.domain.api.ConsumerData
 import com.example.playlistmaker.search.domain.api.SearchHistoryInteractor
 import com.example.playlistmaker.search.domain.api.TracksInteractor
+import com.example.playlistmaker.utils.debounce
 
 class SearchViewModel(
     private val tracksInteractor: TracksInteractor,
     private val searchHistoryInteractor: SearchHistoryInteractor
 ) : ViewModel() {
 
-    private val handler = Handler(Looper.getMainLooper())
-
-    private val searchRunnable by lazy {
-        Runnable {
-            val newSearchText = lastSearchText
-            sendQuery(newSearchText)
-        }
+    private val searchDebounce: (String) -> Unit = debounce(
+        SEARCH_DEBOUNCE_DELAY_MILLIS,
+        viewModelScope,
+        true
+    ) {
+        lastSearchText = it
+        if (it.isNotBlank())
+            sendQuery(it)
     }
 
     private var lastSearchText = ""
@@ -37,25 +38,15 @@ class SearchViewModel(
     val isClearInputbuttonVisibileLiveData: LiveData<Boolean>
         get() = _isClearInputbuttonVisibileLiveData
 
-    fun searchDebounce(changedText: String) {
-        lastSearchText = changedText
-        handler.removeCallbacks(searchRunnable)
-        handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY_MILLIS)
-    }
-
     fun onInputStateChanged(hasFocus: Boolean, searchInput: CharSequence?) {
         val searchHistory = searchHistoryInteractor.getSearchHistory()
         _isClearInputbuttonVisibileLiveData.value = searchInput.toString().isNotEmpty()
         if (hasFocus && searchInput.toString().isEmpty() && searchHistory.isNotEmpty()) {
-            handler.removeCallbacks(searchRunnable)
+            searchDebounce(searchInput.toString())
             _screenStateLiveData.value = SearchFragmentState.History(searchHistory)
         } else {
             searchDebounce(searchInput.toString())
         }
-    }
-
-    fun changeScreenState(state: SearchFragmentState) {
-        _screenStateLiveData.value = state
     }
 
     fun cleanSearchHistory() {
@@ -102,11 +93,6 @@ class SearchViewModel(
                 }
             )
         }
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-        handler.removeCallbacks(searchRunnable)
     }
 
     private companion object {
