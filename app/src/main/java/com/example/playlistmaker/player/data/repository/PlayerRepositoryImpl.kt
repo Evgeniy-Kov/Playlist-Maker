@@ -77,6 +77,6 @@ class PlayerRepositoryImpl(private val mediaPlayer: MediaPlayer) : PlayerReposit
 
     companion object {
         private const val PLAYER_DEFAULT_PLAYBACK_TIME = 0
-        private const val PLAYER_UPDATE_PLAYBACK_TIME_DELAY_MILLIS = 200L
+        private const val PLAYER_UPDATE_PLAYBACK_TIME_DELAY_MILLIS = 300L
     }
 }
