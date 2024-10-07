@@ -1,35 +1,38 @@
 package com.example.playlistmaker.player.data.repository
 
 import android.media.MediaPlayer
-import android.os.Handler
-import android.os.Looper
 import com.example.playlistmaker.player.domain.api.PlayerRepository
 import com.example.playlistmaker.player.domain.api.StatusObserver
 import com.example.playlistmaker.player.domain.model.PlayerState
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class PlayerRepositoryImpl(private val mediaPlayer: MediaPlayer) : PlayerRepository {
     private var playerState = PlayerState.PLAYER_STATE_DEFAULT
 
     private lateinit var statusObserver: StatusObserver
 
-    private val handler = Handler(Looper.getMainLooper())
+    private var timerJob: Job? = null
 
-    private val updatePlaybackTimeRunnable by lazy {
-        createUpdatePlaybackTimeTask()
-    }
+    private var  scope: CoroutineScope? = null
+
 
     override fun play() {
         mediaPlayer.start()
         statusObserver.onPlay()
         playerState = PlayerState.PLAYER_STATE_PLAYING
-        handler.post(updatePlaybackTimeRunnable)
+        startTimer()
     }
 
     override fun pause() {
         mediaPlayer.pause()
         statusObserver.onPause()
         playerState = PlayerState.PLAYER_STATE_PAUSED
-        handler.removeCallbacks(updatePlaybackTimeRunnable)
+        stopTimer()
     }
 
     override fun prepare(dataSource: String, observer: StatusObserver) {
@@ -45,7 +48,7 @@ class PlayerRepositoryImpl(private val mediaPlayer: MediaPlayer) : PlayerReposit
             statusObserver.onProgress(PLAYER_DEFAULT_PLAYBACK_TIME)
             statusObserver.onPause()
             playerState = PlayerState.PLAYER_STATE_PREPARED
-            handler.removeCallbacks(updatePlaybackTimeRunnable)
+            stopTimer()
         }
     }
 
@@ -57,19 +60,23 @@ class PlayerRepositoryImpl(private val mediaPlayer: MediaPlayer) : PlayerReposit
         return playerState
     }
 
-    private fun createUpdatePlaybackTimeTask(): Runnable {
-        return object : Runnable {
-            override fun run() {
-                if (playerState == PlayerState.PLAYER_STATE_PLAYING) {
+    private fun startTimer() {
+            scope = MainScope()
+            timerJob = scope?.launch {
+                while (mediaPlayer.isPlaying) {
+                    delay(PLAYER_UPDATE_PLAYBACK_TIME_DELAY_MILLIS)
                     statusObserver.onProgress(mediaPlayer.currentPosition)
-                    handler.postDelayed(this, PLAYER_UPDATE_PLAYBACK_TIME_DELAY_MILLIS)
                 }
             }
-        }
+    }
+
+    private fun stopTimer() {
+        timerJob?.cancel()
+        scope?.cancel()
     }
 
     companion object {
         private const val PLAYER_DEFAULT_PLAYBACK_TIME = 0
-        private const val PLAYER_UPDATE_PLAYBACK_TIME_DELAY_MILLIS = 100L
+        private const val PLAYER_UPDATE_PLAYBACK_TIME_DELAY_MILLIS = 300L
     }
 }
