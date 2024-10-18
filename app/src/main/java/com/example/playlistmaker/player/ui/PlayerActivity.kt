@@ -12,7 +12,6 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
 import com.example.playlistmaker.common.domain.model.Track
 import com.example.playlistmaker.common.domain.model.Track.Companion.getFormattedTime
-import com.example.playlistmaker.common.domain.model.Track.Companion.getFormattedYear
 import com.example.playlistmaker.common.domain.model.Track.Companion.getHighQualityCoverLink
 import com.example.playlistmaker.databinding.ActivityPlayerBinding
 import com.example.playlistmaker.player.domain.model.PlayStatus
@@ -79,7 +78,7 @@ class PlayerActivity : AppCompatActivity() {
             } else {
                 tvCollectionName.text = track.collectionName
             }
-            tvYear.text = track.getFormattedYear()
+            tvYear.text = track.releaseDate
             tvGenre.text = track.primaryGenreName
             tvCountry.text = track.country
             buttonPlay.setOnClickListener { viewModel.playbackControl() }

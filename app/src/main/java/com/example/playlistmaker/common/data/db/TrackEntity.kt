@@ -2,7 +2,6 @@ package com.example.playlistmaker.common.data.db
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import java.util.Date
 
 @Entity(tableName = "track_table")
 data class TrackEntity (
@@ -13,7 +12,7 @@ data class TrackEntity (
     val trackTimeMillis: Int,
     val artworkUrl100: String,
     val collectionName: String,
-    val releaseDate: Date,
+    val releaseDate: String,
     val primaryGenreName: String,
     val country: String,
     val previewUrl: String

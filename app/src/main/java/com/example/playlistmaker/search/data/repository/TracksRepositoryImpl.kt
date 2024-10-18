@@ -2,6 +2,7 @@ package com.example.playlistmaker.search.data.repository
 
 import com.example.playlistmaker.common.domain.model.Track
 import com.example.playlistmaker.search.data.NetworkClient
+import com.example.playlistmaker.search.data.dto.TrackDto.Companion.getFormattedYear
 import com.example.playlistmaker.search.data.dto.TrackSearchRequest
 import com.example.playlistmaker.search.data.dto.TrackSearchResponse
 import com.example.playlistmaker.search.domain.api.TracksRepository
@@ -22,7 +23,7 @@ class TracksRepositoryImpl(private val networkClient: NetworkClient) : TracksRep
                     trackTimeMillis = trackDto.trackTimeMillis,
                     artworkUrl100 = trackDto.artworkUrl100,
                     collectionName = trackDto.collectionName,
-                    releaseDate = trackDto.releaseDate,
+                    releaseDate = trackDto.getFormattedYear(),
                     primaryGenreName = trackDto.primaryGenreName,
                     country = trackDto.country,
                     previewUrl = trackDto.previewUrl
