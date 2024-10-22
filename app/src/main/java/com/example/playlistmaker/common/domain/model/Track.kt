@@ -16,7 +16,8 @@ data class Track(
     val releaseDate: String,
     val primaryGenreName: String,
     val country: String,
-    val previewUrl: String
+    val previewUrl: String,
+    var isFavourite: Boolean = false
 ) : Parcelable {
     companion object {
         fun Track.getFormattedTime() =
