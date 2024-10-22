@@ -42,7 +42,7 @@ val searchModule = module {
     single { Gson() }
 
     single<TracksRepository> {
-        TracksRepositoryImpl(get())
+        TracksRepositoryImpl(get(), get())
     }
 
     single<SearchHistoryRepository> {
