@@ -52,6 +52,13 @@ class PlayerActivity : AppCompatActivity() {
             changePlayButtonStyle(playStatus)
             setPlaybackTime(playStatus.progress)
         }
+
+        binding.buttonLike.setOnClickListener {
+            viewModel.onFavouriteButtonPressed(track)
+            val currentFavouriteValue = track.isFavourite
+            track.isFavourite = !currentFavouriteValue
+            setButtonLikeResource()
+        }
     }
 
     override fun onPause() {
@@ -83,6 +90,16 @@ class PlayerActivity : AppCompatActivity() {
             tvCountry.text = track.country
             buttonPlay.setOnClickListener { viewModel.playbackControl() }
         }
+        setButtonLikeResource()
+    }
+
+    private fun setButtonLikeResource() {
+        val resId = if (track.isFavourite) {
+            R.drawable.ic_button_liked
+        } else {
+            R.drawable.ic_button_like
+        }
+        binding.buttonLike.setImageResource(resId)
     }
 
     private fun setPlaybackTime(timeMillis: Int) {
