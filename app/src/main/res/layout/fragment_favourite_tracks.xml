@@ -3,8 +3,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     tools:context=".library.ui.FavouriteTracksFragment">
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_tracks"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        android:orientation="vertical"
+        tools:listitem="@layout/view_track_item" />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/tv_nothing_found"
@@ -16,6 +25,6 @@
         android:layout_marginTop="@dimen/favourite_tracks_fragment_placeholder_margin_top"
         android:drawableTop="@drawable/nothing_found_placeholder"
         android:text="@string/media_library_is_empty"
-        android:visibility="visible" />
+        android:visibility="gone" />
 
 </LinearLayout>
