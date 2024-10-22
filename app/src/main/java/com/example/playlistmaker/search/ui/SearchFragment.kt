@@ -35,6 +35,8 @@ class SearchFragment : Fragment() {
 
     private val viewModel by viewModel<SearchViewModel>()
 
+    private val searchHistory = mutableListOf<Track>()
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -104,6 +106,11 @@ class SearchFragment : Fragment() {
         }
     }
 
+    override fun onStart() {
+        super.onStart()
+        getSearchHistory()
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
@@ -127,6 +134,12 @@ class SearchFragment : Fragment() {
         return current
     }
 
+    private fun getSearchHistory() {
+        searchHistory.clear()
+        searchHistory.addAll(viewModel.getSearchHistory())
+        searchHistoryAdapter.trackList = searchHistory
+    }
+
     private fun hideKeyboard() {
         val inputMethodManager = requireContext().getSystemService(
             Context.INPUT_METHOD_SERVICE
@@ -140,7 +153,7 @@ class SearchFragment : Fragment() {
             SearchFragmentState.Empty -> showEmpty()
             SearchFragmentState.Error -> showError()
             SearchFragmentState.Loading -> showLoading()
-            is SearchFragmentState.History -> showSearchHistory(screenState.tracks)
+            is SearchFragmentState.History -> showSearchHistory()
         }
     }
 
@@ -168,7 +181,7 @@ class SearchFragment : Fragment() {
         }
     }
 
-    private fun showSearchHistory(trackList: List<Track>) {
+    private fun showSearchHistory() {
         binding.apply {
             tvNothingFound.isVisible = false
             llNoConnection.isVisible = false
@@ -177,7 +190,7 @@ class SearchFragment : Fragment() {
             progressBar.isVisible = false
             rvTracks.isVisible = true
             rvTracks.adapter = searchHistoryAdapter
-            searchHistoryAdapter.trackList = trackList
+            searchHistoryAdapter.trackList = searchHistory
         }
     }
 
