@@ -3,17 +3,23 @@ package com.example.playlistmaker.player.ui
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.playlistmaker.common.domain.api.TracksInteractor
+import com.example.playlistmaker.common.domain.model.Track
 import com.example.playlistmaker.player.domain.api.PlayerInteractor
 import com.example.playlistmaker.player.domain.api.StatusObserver
 import com.example.playlistmaker.player.domain.model.PlayStatus
 import com.example.playlistmaker.player.domain.model.PlayerState
+import kotlinx.coroutines.launch
 
-class PlayerViewModel(private val playerInteractor: PlayerInteractor) : ViewModel() {
+class PlayerViewModel(
+    private val playerInteractor: PlayerInteractor,
+    private val tracksInteractor: TracksInteractor
+) : ViewModel() {
 
     private val _playStatusLiveData = MutableLiveData<PlayStatus>(PlayStatus())
     val playStatusLiveData: LiveData<PlayStatus>
         get() = _playStatusLiveData
-
 
     fun play() {
         playerInteractor.play()
@@ -52,6 +58,26 @@ class PlayerViewModel(private val playerInteractor: PlayerInteractor) : ViewMode
 
     fun reset() {
         playerInteractor.reset()
+    }
+
+    fun onFavouriteButtonPressed(track: Track) {
+        if (track.isFavourite) {
+            deleteTrackFromFavourite(track)
+        } else {
+            addTrackToFavourite(track)
+        }
+    }
+
+    private fun addTrackToFavourite(track: Track) {
+        viewModelScope.launch {
+            tracksInteractor.addTrackToFavourite(track)
+        }
+    }
+
+    private fun deleteTrackFromFavourite(track: Track) {
+        viewModelScope.launch {
+            tracksInteractor.deleteTrackFromFavourite(track)
+        }
     }
 
     override fun onCleared() {
