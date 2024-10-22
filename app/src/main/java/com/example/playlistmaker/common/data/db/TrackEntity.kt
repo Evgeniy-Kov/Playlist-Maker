@@ -3,7 +3,7 @@ package com.example.playlistmaker.common.data.db
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "track_table")
+@Entity(tableName = DbConfig.FAVOURITE_TRACKS_TABLE_NAME)
 data class TrackEntity (
     @PrimaryKey
     val trackId: Long,
