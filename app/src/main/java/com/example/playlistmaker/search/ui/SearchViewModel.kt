@@ -5,8 +5,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.common.domain.model.Track
-import com.example.playlistmaker.search.domain.api.SearchRequestResult
 import com.example.playlistmaker.search.domain.api.SearchHistoryInteractor
+import com.example.playlistmaker.search.domain.api.SearchRequestResult
 import com.example.playlistmaker.search.domain.api.TracksInteractor
 import com.example.playlistmaker.utils.debounce
 import kotlinx.coroutines.launch
@@ -98,6 +98,10 @@ class SearchViewModel(
                 _screenStateLiveData.postValue(SearchFragmentState.Error)
             }
         }
+    }
+
+    fun getSearchHistory(): List<Track> {
+        return searchHistoryInteractor.getSearchHistory()
     }
 
     private companion object {
