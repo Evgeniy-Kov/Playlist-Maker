@@ -14,6 +14,8 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.playlistmaker.common.domain.model.Track
+import com.example.playlistmaker.common.ui.TrackAdapter
+import com.example.playlistmaker.common.ui.TrackViewHolder
 import com.example.playlistmaker.databinding.FragmentSearchBinding
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
