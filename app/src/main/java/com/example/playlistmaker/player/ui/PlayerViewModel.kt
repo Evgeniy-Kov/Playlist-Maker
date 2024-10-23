@@ -21,6 +21,10 @@ class PlayerViewModel(
     val playStatusLiveData: LiveData<PlayStatus>
         get() = _playStatusLiveData
 
+    private val _isFavouriteTrackLiveData = MutableLiveData<Boolean>()
+    val isFavouriteTrackLiveData: LiveData<Boolean>
+        get() = _isFavouriteTrackLiveData
+
     fun play() {
         playerInteractor.play()
     }
@@ -66,6 +70,11 @@ class PlayerViewModel(
         } else {
             addTrackToFavourite(track)
         }
+        setIsFavouriteFlag(!track.isFavourite)
+    }
+
+    fun setIsFavouriteFlag(isFavourite: Boolean) {
+        _isFavouriteTrackLiveData.value = isFavourite
     }
 
     private fun addTrackToFavourite(track: Track) {
