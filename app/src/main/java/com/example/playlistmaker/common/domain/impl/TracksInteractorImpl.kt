@@ -13,8 +13,8 @@ class TracksInteractorImpl(
         repository.addTrackToFavourite(track)
     }
 
-    override suspend fun deleteTrackFromFavourite(track: Track) {
-        repository.deleteTrackFromFavourite(track)
+    override suspend fun deleteTrackFromFavourite(trackId: Long) {
+        repository.deleteTrackFromFavourite(trackId)
     }
 
     override fun getTracks(): Flow<List<Track>> {

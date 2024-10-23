@@ -1,7 +1,6 @@
 package com.example.playlistmaker.common.data.db
 
 import androidx.room.Dao
-import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
@@ -18,6 +17,6 @@ interface TrackDao {
     @Query("SELECT trackId FROM ${DbConfig.FAVOURITE_TRACKS_TABLE_NAME}")
     suspend fun getTracksIds(): List<Long>
 
-    @Delete()
-    suspend fun deleteTrack(track: TrackEntity)
+    @Query("DELETE FROM ${DbConfig.FAVOURITE_TRACKS_TABLE_NAME} WHERE trackId = :trackId")
+    suspend fun deleteTrack(trackId: Long)
 }

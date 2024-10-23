@@ -76,7 +76,7 @@ class PlayerViewModel(
 
     private fun deleteTrackFromFavourite(track: Track) {
         viewModelScope.launch {
-            tracksInteractor.deleteTrackFromFavourite(track)
+            tracksInteractor.deleteTrackFromFavourite(track.trackId)
         }
     }
 
