@@ -153,10 +153,11 @@ class SearchFragment : Fragment() {
     private fun changeScreenState(screenState: SearchFragmentState) {
         when (screenState) {
             is SearchFragmentState.Content -> showContent(screenState.tracks)
-            SearchFragmentState.Empty -> showEmpty()
+            SearchFragmentState.NothingFound -> showNothingFound()
             SearchFragmentState.Error -> showError()
             SearchFragmentState.Loading -> showLoading()
             is SearchFragmentState.History -> showSearchHistory()
+            SearchFragmentState.Empty -> showEmpty()
         }
     }
 
@@ -197,7 +198,7 @@ class SearchFragment : Fragment() {
         }
     }
 
-    private fun showEmpty() {
+    private fun showNothingFound() {
         binding.apply {
             includedNothingFoundPlaceholder.tvNothingFound.text =
                 requireContext().getText(R.string.nothing_found)
@@ -207,6 +208,19 @@ class SearchFragment : Fragment() {
             buttonClearHistory.isVisible = false
             progressBar.isVisible = false
             includedRv.rvTracks.isVisible = false
+        }
+    }
+
+    private fun showEmpty() {
+        binding.apply {
+            includedNothingFoundPlaceholder.tvNothingFound.isVisible = false
+            llNoConnection.isVisible = false
+            searchHistoryTitle.isVisible = false
+            buttonClearHistory.isVisible = false
+            progressBar.isVisible = false
+            includedRv.rvTracks.isVisible = true
+            includedRv.rvTracks.adapter = trackAdapter
+            trackAdapter.trackList = emptyList()
         }
     }
 
