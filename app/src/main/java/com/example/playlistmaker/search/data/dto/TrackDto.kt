@@ -1,6 +1,8 @@
 package com.example.playlistmaker.search.data.dto
 
+import java.text.SimpleDateFormat
 import java.util.Date
+import java.util.Locale
 
 data class TrackDto(
     val trackId: Long,
@@ -13,4 +15,9 @@ data class TrackDto(
     val primaryGenreName: String,
     val country: String,
     val previewUrl: String
-)
+) {
+    companion object {
+        fun TrackDto.getFormattedYear() =
+            SimpleDateFormat("yyyy", Locale.getDefault()).format(this.releaseDate)
+    }
+}

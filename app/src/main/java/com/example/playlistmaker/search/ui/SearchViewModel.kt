@@ -5,8 +5,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.common.domain.model.Track
-import com.example.playlistmaker.search.domain.api.SearchRequestResult
 import com.example.playlistmaker.search.domain.api.SearchHistoryInteractor
+import com.example.playlistmaker.search.domain.api.SearchRequestResult
 import com.example.playlistmaker.search.domain.api.TracksInteractor
 import com.example.playlistmaker.utils.debounce
 import kotlinx.coroutines.launch
@@ -30,7 +30,8 @@ class SearchViewModel(
 
     private val trackList = mutableListOf<Track>()
 
-    private val _screenStateLiveData = MutableLiveData<SearchFragmentState>()
+    private val _screenStateLiveData =
+        MutableLiveData<SearchFragmentState>(SearchFragmentState.Empty)
 
     val screenStateLiveData: LiveData<SearchFragmentState>
         get() = _screenStateLiveData
@@ -41,6 +42,19 @@ class SearchViewModel(
 
     fun onInputStateChanged(hasFocus: Boolean, searchInput: CharSequence?) {
         val searchHistory = searchHistoryInteractor.getSearchHistory()
+        when {
+            hasFocus && searchInput.toString().isEmpty() && searchHistory.isNotEmpty() -> {
+                searchDebounce(searchInput.toString())
+                _screenStateLiveData.value = SearchFragmentState.History(searchHistory)
+            }
+
+            hasFocus && searchInput.toString().isEmpty() && searchHistory.isEmpty() -> {
+                searchDebounce(searchInput.toString())
+                _screenStateLiveData.value = SearchFragmentState.Empty
+            }
+
+            else -> searchDebounce(searchInput.toString())
+        }
         _isClearInputbuttonVisibileLiveData.value = searchInput.toString().isNotEmpty()
         if (hasFocus && searchInput.toString().isEmpty() && searchHistory.isNotEmpty()) {
             searchDebounce(searchInput.toString())
@@ -90,7 +104,7 @@ class SearchViewModel(
                     trackList.addAll(result.value)
                     _screenStateLiveData.postValue(SearchFragmentState.Content(trackList))
                 } else {
-                    _screenStateLiveData.postValue(SearchFragmentState.Empty)
+                    _screenStateLiveData.postValue(SearchFragmentState.NothingFound)
                 }
             }
 
@@ -98,6 +112,10 @@ class SearchViewModel(
                 _screenStateLiveData.postValue(SearchFragmentState.Error)
             }
         }
+    }
+
+    fun getSearchHistory(): List<Track> {
+        return searchHistoryInteractor.getSearchHistory()
     }
 
     private companion object {

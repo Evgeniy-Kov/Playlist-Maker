@@ -2,6 +2,7 @@ package com.example.playlistmaker.common
 
 import android.app.Application
 import androidx.appcompat.app.AppCompatDelegate
+import com.example.playlistmaker.di.commonModule
 import com.example.playlistmaker.di.mediaLibraryModule
 import com.example.playlistmaker.di.playerModule
 import com.example.playlistmaker.di.searchModule
@@ -22,7 +23,7 @@ class App : Application() {
 
         startKoin {
             androidContext(this@App)
-            modules(mediaLibraryModule, playerModule, searchModule, settingsModule, sharingModule)
+            modules(commonModule, mediaLibraryModule, playerModule, searchModule, settingsModule, sharingModule)
         }
 
         switchTheme(

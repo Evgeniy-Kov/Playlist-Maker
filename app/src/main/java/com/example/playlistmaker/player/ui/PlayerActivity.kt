@@ -12,7 +12,6 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
 import com.example.playlistmaker.common.domain.model.Track
 import com.example.playlistmaker.common.domain.model.Track.Companion.getFormattedTime
-import com.example.playlistmaker.common.domain.model.Track.Companion.getFormattedYear
 import com.example.playlistmaker.common.domain.model.Track.Companion.getHighQualityCoverLink
 import com.example.playlistmaker.databinding.ActivityPlayerBinding
 import com.example.playlistmaker.player.domain.model.PlayStatus
@@ -53,6 +52,17 @@ class PlayerActivity : AppCompatActivity() {
             changePlayButtonStyle(playStatus)
             setPlaybackTime(playStatus.progress)
         }
+
+        binding.buttonLike.setOnClickListener {
+            viewModel.onFavouriteButtonPressed(track)
+        }
+
+        viewModel.isFavouriteTrackLiveData.observe(this) { isFavourite ->
+            setButtonLikeResource(isFavourite)
+            track.isFavourite = isFavourite
+        }
+
+        viewModel.setIsFavouriteFlag(track.isFavourite)
     }
 
     override fun onPause() {
@@ -79,11 +89,20 @@ class PlayerActivity : AppCompatActivity() {
             } else {
                 tvCollectionName.text = track.collectionName
             }
-            tvYear.text = track.getFormattedYear()
+            tvYear.text = track.releaseDate
             tvGenre.text = track.primaryGenreName
             tvCountry.text = track.country
             buttonPlay.setOnClickListener { viewModel.playbackControl() }
         }
+    }
+
+    private fun setButtonLikeResource(isFavourite: Boolean) {
+        val resId = if (isFavourite) {
+            R.drawable.ic_button_liked
+        } else {
+            R.drawable.ic_button_like
+        }
+        binding.buttonLike.setImageResource(resId)
     }
 
     private fun setPlaybackTime(timeMillis: Int) {

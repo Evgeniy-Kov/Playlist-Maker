@@ -12,5 +12,7 @@ sealed interface SearchFragmentState {
 
     object Empty : SearchFragmentState
 
+    object NothingFound : SearchFragmentState
+
     object Error : SearchFragmentState
 }

@@ -13,7 +13,10 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.example.playlistmaker.R
 import com.example.playlistmaker.common.domain.model.Track
+import com.example.playlistmaker.common.ui.TrackAdapter
+import com.example.playlistmaker.common.ui.TrackViewHolder
 import com.example.playlistmaker.databinding.FragmentSearchBinding
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -34,6 +37,8 @@ class SearchFragment : Fragment() {
     private val searchHistoryAdapter = TrackAdapter()
 
     private val viewModel by viewModel<SearchViewModel>()
+
+    private val searchHistory = mutableListOf<Track>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -104,6 +109,11 @@ class SearchFragment : Fragment() {
         }
     }
 
+    override fun onStart() {
+        super.onStart()
+        getSearchHistory()
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
@@ -127,6 +137,12 @@ class SearchFragment : Fragment() {
         return current
     }
 
+    private fun getSearchHistory() {
+        searchHistory.clear()
+        searchHistory.addAll(viewModel.getSearchHistory())
+        searchHistoryAdapter.trackList = searchHistory
+    }
+
     private fun hideKeyboard() {
         val inputMethodManager = requireContext().getSystemService(
             Context.INPUT_METHOD_SERVICE
@@ -137,69 +153,85 @@ class SearchFragment : Fragment() {
     private fun changeScreenState(screenState: SearchFragmentState) {
         when (screenState) {
             is SearchFragmentState.Content -> showContent(screenState.tracks)
-            SearchFragmentState.Empty -> showEmpty()
+            SearchFragmentState.NothingFound -> showNothingFound()
             SearchFragmentState.Error -> showError()
             SearchFragmentState.Loading -> showLoading()
-            is SearchFragmentState.History -> showSearchHistory(screenState.tracks)
+            is SearchFragmentState.History -> showSearchHistory()
+            SearchFragmentState.Empty -> showEmpty()
         }
     }
 
     private fun showLoading() {
         binding.apply {
-            tvNothingFound.isVisible = false
+            includedNothingFoundPlaceholder.tvNothingFound.isVisible = false
             llNoConnection.isVisible = false
             searchHistoryTitle.isVisible = false
             buttonClearHistory.isVisible = false
             progressBar.isVisible = true
-            rvTracks.isVisible = false
+            includedRv.rvTracks.isVisible = false
         }
     }
 
     private fun showContent(tracks: List<Track>) {
         binding.apply {
-            tvNothingFound.isVisible = false
+            includedNothingFoundPlaceholder.tvNothingFound.isVisible = false
             llNoConnection.isVisible = false
             searchHistoryTitle.isVisible = false
             buttonClearHistory.isVisible = false
             progressBar.isVisible = false
-            rvTracks.isVisible = true
-            rvTracks.adapter = trackAdapter
+            includedRv.rvTracks.isVisible = true
+            includedRv.rvTracks.adapter = trackAdapter
             trackAdapter.trackList = tracks
         }
     }
 
-    private fun showSearchHistory(trackList: List<Track>) {
+    private fun showSearchHistory() {
         binding.apply {
-            tvNothingFound.isVisible = false
+            includedNothingFoundPlaceholder.tvNothingFound.isVisible = false
             llNoConnection.isVisible = false
             searchHistoryTitle.isVisible = true
             buttonClearHistory.isVisible = true
             progressBar.isVisible = false
-            rvTracks.isVisible = true
-            rvTracks.adapter = searchHistoryAdapter
-            searchHistoryAdapter.trackList = trackList
+            includedRv.rvTracks.isVisible = true
+            includedRv.rvTracks.adapter = searchHistoryAdapter
+            searchHistoryAdapter.trackList = searchHistory
+        }
+    }
+
+    private fun showNothingFound() {
+        binding.apply {
+            includedNothingFoundPlaceholder.tvNothingFound.text =
+                requireContext().getText(R.string.nothing_found)
+            includedNothingFoundPlaceholder.tvNothingFound.isVisible = true
+            llNoConnection.isVisible = false
+            searchHistoryTitle.isVisible = false
+            buttonClearHistory.isVisible = false
+            progressBar.isVisible = false
+            includedRv.rvTracks.isVisible = false
         }
     }
 
     private fun showEmpty() {
         binding.apply {
-            tvNothingFound.isVisible = true
+            includedNothingFoundPlaceholder.tvNothingFound.isVisible = false
             llNoConnection.isVisible = false
             searchHistoryTitle.isVisible = false
             buttonClearHistory.isVisible = false
             progressBar.isVisible = false
-            rvTracks.isVisible = false
+            includedRv.rvTracks.isVisible = true
+            includedRv.rvTracks.adapter = trackAdapter
+            trackAdapter.trackList = emptyList()
         }
     }
 
     private fun showError() {
         binding.apply {
-            tvNothingFound.isVisible = false
+            includedNothingFoundPlaceholder.tvNothingFound.isVisible = false
             llNoConnection.isVisible = true
             searchHistoryTitle.isVisible = false
             buttonClearHistory.isVisible = false
             progressBar.isVisible = false
-            rvTracks.isVisible = false
+            includedRv.rvTracks.isVisible = false
         }
     }
 

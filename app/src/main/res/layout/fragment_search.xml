@@ -22,6 +22,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/default_margin"
         android:layout_marginTop="@dimen/search_activity_search_field_margin_top"
+        android:layout_marginBottom="8dp"
         android:layout_marginEnd="@dimen/default_margin">
 
         <EditText
@@ -83,14 +84,9 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_tracks"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_marginTop="@dimen/search_activity_recycler_view_margin_top"
-            android:layout_weight="1"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            tools:listitem="@layout/view_track_item" />
+        <include
+            android:id="@+id/included_rv"
+            layout="@layout/rv_tracks" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/button_clear_history"
@@ -131,17 +127,9 @@
 
     </LinearLayout>
 
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/tv_nothing_found"
-        style="@style/SearchActivityPlaceholderStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginHorizontal="@dimen/search_activity_placeholder_margin_horizontal"
-        android:layout_marginTop="@dimen/search_activity_placeholder_margin_top"
-        android:drawableTop="@drawable/nothing_found_placeholder"
-        android:text="@string/nothing_found"
-        android:visibility="gone" />
+    <include
+        android:id="@+id/included_nothing_found_placeholder"
+        layout="@layout/nothing_found_placeholder" />
 
     <ProgressBar
         android:id="@+id/progress_bar"
