@@ -8,6 +8,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.example.playlistmaker.R
 import com.example.playlistmaker.common.domain.model.Track
 import com.example.playlistmaker.common.ui.TrackAdapter
 import com.example.playlistmaker.common.ui.TrackViewHolder
@@ -55,7 +56,7 @@ class FavouriteTracksFragment : Fragment() {
             }
         }
 
-        binding.rvTracks.adapter = trackAdapter
+        binding.includedRv.rvTracks.adapter = trackAdapter
 
         trackAdapter.onItemClickListener = TrackViewHolder.OnItemClickListener { track ->
             if (clickDebounce()) {
@@ -67,17 +68,19 @@ class FavouriteTracksFragment : Fragment() {
 
     private fun showContent(tracks: List<Track>) {
         binding.apply {
-            tvNothingFound.isVisible = false
-            rvTracks.isVisible = true
-            rvTracks.adapter = trackAdapter
+            includedNothingFoundPlaceholder.tvNothingFound.isVisible = false
+            includedRv.rvTracks.isVisible = true
+            includedRv.rvTracks.adapter = trackAdapter
             trackAdapter.trackList = tracks
         }
     }
 
     private fun showPlaceholder() {
         binding.apply {
-            tvNothingFound.isVisible = true
-            rvTracks.isVisible = false
+            includedNothingFoundPlaceholder.tvNothingFound.text =
+                requireContext().getText(R.string.media_library_is_empty)
+            includedNothingFoundPlaceholder.tvNothingFound.isVisible = true
+            includedRv.rvTracks.isVisible = false
         }
     }
 
