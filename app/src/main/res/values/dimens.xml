@@ -49,4 +49,9 @@
     <dimen name="fragment_new_playlist_button_margin_horizontal">16dp</dimen>
     <dimen name="fragment_new_playlist_button_margin_bottom">32dp</dimen>
     <dimen name="fragment_new_playlist_button_corner_radius">8dp</dimen>
+    <dimen name="bottom_sheet_top_line_width">50dp</dimen>
+    <dimen name="bottom_sheet_top_line_height">4dp</dimen>
+    <dimen name="bottom_sheet_top_line_margin_top">8dp</dimen>
+    <dimen name="bottom_sheet_title_margin_top">32dp</dimen>
+    <dimen name="bottom_sheet_rv_margin_top">24dp</dimen>
 </resources>
