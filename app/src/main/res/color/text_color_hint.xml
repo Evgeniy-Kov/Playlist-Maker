@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:color="@color/yp_blue" android:state_enabled="true"/>
+    <item android:color="@color/yp_blue" android:state_activated="false"/>
+    <item android:color="@color/yp_black"/>
+</selector>
+
+<!--state focused-->
+<!--state window_focused-->
+<!--state enabled-->
+<!--state checkab-->
+<!--state check-->
+<!--state selected-->
+<!--state pressed-->
+<!--state activated-->
+<!--state active-->
+<!--state single-->
+<!--state first-->
+<!--state middle-->
+<!--state last-->
+<!--state accelerated-->
+<!--state hovered-->
+<!--state drag can_accept-->
+<!--state drag hovered-->
+<!--state accessibility focused-->
