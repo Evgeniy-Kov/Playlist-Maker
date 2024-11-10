@@ -33,7 +33,8 @@ class PlaylistsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.buttonNewPlaylist.setOnClickListener {
-            val direction = MediaLibraryFragmentDirections.actionMediaLibraryFragmentToNewPlaylistFragment()
+            val direction =
+                MediaLibraryFragmentDirections.actionMediaLibraryFragmentToNewPlaylistFragment()
             findNavController().navigate(direction)
 
         }
@@ -46,6 +47,7 @@ class PlaylistsFragment : Fragment() {
                 is PlaylistsFragmentState.Content -> {
                     showContent(state.playlists)
                 }
+
                 PlaylistsFragmentState.Empty -> {
                     showPlaceholder()
                 }

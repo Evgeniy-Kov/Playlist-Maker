@@ -20,10 +20,6 @@ class PlayerViewModel(
     private val playlistInteractor: PlaylistInteractor
 ) : ViewModel() {
 
-    init {
-        getPlaylists()
-    }
-
     private val _playStatusLiveData = MutableLiveData<PlayStatus>(PlayStatus())
     val playStatusLiveData: LiveData<PlayStatus>
         get() = _playStatusLiveData
@@ -36,15 +32,19 @@ class PlayerViewModel(
     val playlistsLiveData: LiveData<List<Playlist>>
         get() = _playlistsLiveData
 
-    private val _playlistsWithTrackLiveData = MutableLiveData<List<Playlist>>()
-    val playlistsWithTrackLiveData: LiveData<List<Playlist>>
-        get() = _playlistsWithTrackLiveData
+    private val _messageOfAddingTrackToPlaylistLiveData = MutableLiveData<String>()
+    val messageOfAddingTrackToPlaylistLiveData: LiveData<String>
+        get() = _messageOfAddingTrackToPlaylistLiveData
 
-    private val _resultOfAddingTrackToPlaylistLiveData = MutableLiveData<String>()
-    val resultOfAddingTrackToPlaylistLiveData: LiveData<String>
+    private val _resultOfAddingTrackToPlaylistLiveData = MutableLiveData<Boolean>()
+    val resultOfAddingTrackToPlaylistLiveData: LiveData<Boolean>
         get() = _resultOfAddingTrackToPlaylistLiveData
 
     private val playlistsWithTrack = mutableListOf<Playlist>()
+
+    init {
+        getPlaylists()
+    }
 
     fun play() {
         playerInteractor.play()
@@ -101,12 +101,16 @@ class PlayerViewModel(
     fun addTrackToPlaylist(track: Track, playlist: Playlist) {
 
         if (!isPlaylistContainsTrack(playlist)) {
-            _resultOfAddingTrackToPlaylistLiveData.value = "Добавлено в плейлист ${playlist.playlistName}"
+            _resultOfAddingTrackToPlaylistLiveData.value = true
+            _messageOfAddingTrackToPlaylistLiveData.value =
+                "Добавлено в плейлист ${playlist.playlistName}"
             viewModelScope.launch {
                 playlistInteractor.addTrackToPlaylist(track, playlist)
             }
         } else {
-            _resultOfAddingTrackToPlaylistLiveData.value = "Трек уже добавлен в плейлист ${playlist.playlistName}"
+            _resultOfAddingTrackToPlaylistLiveData.value = false
+            _messageOfAddingTrackToPlaylistLiveData.value =
+                "Трек уже добавлен в плейлист ${playlist.playlistName}"
         }
     }
 
@@ -124,7 +128,6 @@ class PlayerViewModel(
             playlistInteractor.getTrackWithPlaylists(trackId)
                 .collect { playlists ->
                     playlistsWithTrack.addAll(playlists)
-                    _playlistsWithTrackLiveData.postValue(playlists)
                 }
         }
     }
@@ -132,7 +135,6 @@ class PlayerViewModel(
     fun isPlaylistContainsTrack(playlist: Playlist): Boolean {
         return playlistsWithTrack.contains(playlist)
     }
-
 
 
     private fun addTrackToFavourite(track: Track) {

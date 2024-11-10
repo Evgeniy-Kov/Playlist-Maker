@@ -12,15 +12,13 @@ class PlaylistsViewModel(
     private val playlistInteractor: PlaylistInteractor
 ) : ViewModel() {
 
-    init {
-        getPlaylistsFlow()
-    }
-
     private val _screenStateLiveData = MutableLiveData<PlaylistsFragmentState>()
     val screenStateLiveData: LiveData<PlaylistsFragmentState>
         get() = _screenStateLiveData
 
-
+    init {
+        getPlaylistsFlow()
+    }
 
     fun getPlaylistsFlow() {
         viewModelScope.launch {

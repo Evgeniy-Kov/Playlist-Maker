@@ -1,6 +1,5 @@
 package com.example.playlistmaker.common.ui
 
-import android.util.Log
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
@@ -33,7 +32,6 @@ class TrackViewHolder(
                     )
                 )
                 .into(ivCover)
-            Log.d("MY_TAG", binding.root.context.convertDpToPx(COVER_CORNER_RADIUS_IN_DP).toString())
         }
     }
 
