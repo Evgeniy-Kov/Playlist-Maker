@@ -39,7 +39,14 @@
     <dimen name="playlists_fragment_placeholder_margin_horizontal">24dp</dimen>
     <dimen name="playlists_fragment_new_playlist_button_corner_radius">45dp</dimen>
     <dimen name="playlists_fragment_new_playlist_button_margin_top">24dp</dimen>
+    <dimen name="playlists_fragment_rv_margin_top">8dp</dimen>
     <dimen name="view_playlist_item_grid_cover_size">160dp</dimen>
     <dimen name="view_playlist_item_grid_cover_corner_radius">8dp</dimen>
     <dimen name="view_playlist_item_grid_cover_margin_bottom">4dp</dimen>
+    <dimen name="fragment_new_playlist_image_view_margin">24dp</dimen>
+    <dimen name="fragment_new_playlist_til_name_margin_top">32dp</dimen>
+    <dimen name="fragment_new_playlist_til_margin">16dp</dimen>
+    <dimen name="fragment_new_playlist_button_margin_horizontal">16dp</dimen>
+    <dimen name="fragment_new_playlist_button_margin_bottom">32dp</dimen>
+    <dimen name="fragment_new_playlist_button_corner_radius">8dp</dimen>
 </resources>
