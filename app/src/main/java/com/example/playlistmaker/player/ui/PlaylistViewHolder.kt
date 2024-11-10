@@ -2,9 +2,14 @@ package com.example.playlistmaker.player.ui
 
 import android.net.Uri
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.example.playlistmaker.R
 import com.example.playlistmaker.common.domain.model.Playlist
 import com.example.playlistmaker.common.domain.model.Playlist.Companion.getFormattedCount
+import com.example.playlistmaker.common.ui.TrackViewHolder
 import com.example.playlistmaker.databinding.ViewPlaylistItemRvBinding
+import com.example.playlistmaker.utils.convertDpToPx
 
 class PlaylistViewHolder(
     private val binding: ViewPlaylistItemRvBinding

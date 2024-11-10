@@ -54,4 +54,5 @@
     <dimen name="bottom_sheet_top_line_margin_top">8dp</dimen>
     <dimen name="bottom_sheet_title_margin_top">32dp</dimen>
     <dimen name="bottom_sheet_rv_margin_top">24dp</dimen>
+    <dimen name="bottom_sheet_rv_cover_corner_radius">5dp</dimen>
 </resources>
