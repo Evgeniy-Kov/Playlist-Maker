@@ -13,9 +13,13 @@ import com.example.playlistmaker.databinding.ActivityHostBinding
 
 class HostActivity : AppCompatActivity() {
 
+    val binding by lazy {
+        ActivityHostBinding.inflate(layoutInflater)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val binding = ActivityHostBinding.inflate(layoutInflater)
+
         setContentView(binding.root)
         ViewCompat.setOnApplyWindowInsetsListener(binding.main) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -30,21 +34,26 @@ class HostActivity : AppCompatActivity() {
 
             when (destination.id) {
                 R.id.newPlaylistFragment -> {
-                    binding.bottomNavigationView.isVisible = false
+                    changeBottomNavigationViewVisibility(false)
                     window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
                 }
 
                 R.id.playerFragment -> {
-                    binding.bottomNavigationView.isVisible = false
+                    changeBottomNavigationViewVisibility(false)
                     window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
                 }
 
                 else -> {
-                    binding.bottomNavigationView.isVisible = true
+                    changeBottomNavigationViewVisibility(true)
                     window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING)
                 }
             }
         }
         binding.bottomNavigationView.setupWithNavController(navController)
+    }
+
+    private fun changeBottomNavigationViewVisibility(isVisible: Boolean) {
+        binding.bottomNavigationView.isVisible = isVisible
+        binding.bottomNavigationDivider.isVisible = isVisible
     }
 }

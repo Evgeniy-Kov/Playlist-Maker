@@ -7,7 +7,6 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
 import com.example.playlistmaker.common.domain.model.Playlist
 import com.example.playlistmaker.common.domain.model.Playlist.Companion.getFormattedCount
-import com.example.playlistmaker.common.ui.TrackViewHolder
 import com.example.playlistmaker.databinding.ViewPlaylistItemRvBinding
 import com.example.playlistmaker.utils.convertDpToPx
 
@@ -23,6 +22,16 @@ class PlaylistViewHolder(
             tvPlaylistName.text = playlist.playlistName
             tvCount.text = playlist.getFormattedCount()
             ivCover.setImageURI(Uri.parse(playlist.playlistCoverPath))
+            Glide.with(this.root)
+                .load(playlist.playlistCoverPath)
+                .placeholder(R.drawable.placeholder)
+                .centerCrop()
+                .transform(
+                    RoundedCorners(
+                        binding.root.context.convertDpToPx(COVER_CORNER_RADIUS_IN_DP)
+                    )
+                )
+                .into(ivCover)
         }
     }
 
