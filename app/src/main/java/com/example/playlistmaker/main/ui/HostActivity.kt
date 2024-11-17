@@ -43,6 +43,11 @@ class HostActivity : AppCompatActivity() {
                     window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
                 }
 
+                R.id.playlistFragment -> {
+                    changeBottomNavigationViewVisibility(false)
+                    window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
+                }
+
                 else -> {
                     changeBottomNavigationViewVisibility(true)
                     window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING)

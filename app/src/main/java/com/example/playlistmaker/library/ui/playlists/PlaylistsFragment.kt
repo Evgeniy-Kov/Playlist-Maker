@@ -39,8 +39,6 @@ class PlaylistsFragment : Fragment() {
 
         }
 
-
-
         viewModel.screenStateLiveData.observe(viewLifecycleOwner) { state ->
             when (state) {
 
@@ -52,6 +50,14 @@ class PlaylistsFragment : Fragment() {
                     showPlaceholder()
                 }
             }
+        }
+
+        playlistAdapter.onItemClickListener = PlaylistViewHolder.OnItemClickListener { playlist ->
+            val direction =
+                MediaLibraryFragmentDirections.actionMediaLibraryFragmentToPlaylistFragment(
+                    playlist.playlistId
+                )
+            findNavController().navigate(direction)
         }
     }
 
