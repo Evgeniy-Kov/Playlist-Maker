@@ -77,6 +77,7 @@ class SearchFragment : Fragment() {
 
         binding.ivClear.setOnClickListener {
             binding.editTextSearch.setText("")
+            viewModel.onInputStateChanged(true, "")
             hideKeyboard()
         }
 
@@ -112,6 +113,7 @@ class SearchFragment : Fragment() {
     override fun onStart() {
         super.onStart()
         getSearchHistory()
+        isClickAllowed = true
     }
 
     override fun onDestroyView() {
@@ -121,7 +123,7 @@ class SearchFragment : Fragment() {
 
     private fun onTrackClick(track: Track) {
         viewModel.addTrackToSearchHistory(track)
-        val direction = SearchFragmentDirections.actionSearchFragmentToPlayerActivity(track)
+        val direction = SearchFragmentDirections.actionSearchFragmentToPlayerFragment(track)
         findNavController().navigate(direction)
     }
 

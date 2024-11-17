@@ -21,8 +21,10 @@ class TracksRepositoryImpl(
     }
 
     override fun getTracks(): Flow<List<Track>> = flow {
-        val tracks = appDatabase.favouriteTrackDao().getTracks().reversed()
-        emit(convertFromTrackEntity(tracks))
+
+        appDatabase.favouriteTrackDao().getTracks().collect { tracks ->
+            emit(convertFromTrackEntity(tracks.reversed()))
+        }
     }
 
     override fun getTracksIds(): Flow<List<Long>> = flow {

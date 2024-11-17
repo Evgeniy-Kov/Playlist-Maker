@@ -1,4 +1,4 @@
-package com.example.playlistmaker.library.ui
+package com.example.playlistmaker.library.ui.favourite
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -12,13 +12,13 @@ class FavouriteTracksViewModel(
     private val tracksInteractor: TracksInteractor
 ) : ViewModel() {
 
-    init {
-        getFavouriteTracks()
-    }
-
     private val _screenStateLiveData = MutableLiveData<FavouriteTracksFragmentState>()
     val screenStateLiveData: LiveData<FavouriteTracksFragmentState>
         get() = _screenStateLiveData
+
+    init {
+        getFavouriteTracks()
+    }
 
     fun getFavouriteTracks() {
         viewModelScope.launch {

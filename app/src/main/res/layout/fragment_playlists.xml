@@ -3,8 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    tools:context=".library.ui.PlaylistsFragment">
+    tools:context=".library.ui.playlists.PlaylistsFragment">
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/button_new_playlist"
@@ -14,6 +15,15 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="@dimen/playlists_fragment_new_playlist_button_margin_top"
         android:text="@string/new_playlist" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_playlists"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/playlists_fragment_rv_margin_top"
+        app:spanCount="2"
+        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+        tools:listitem="@layout/view_playlist_item_grid"/>
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/tv_nothing_found"
@@ -25,6 +35,6 @@
         android:layout_marginTop="@dimen/playlists_fragment_placeholder_margin_top"
         android:drawableTop="@drawable/nothing_found_placeholder"
         android:text="@string/no_playlists"
-        android:visibility="visible" />
+        android:visibility="gone" />
 
 </LinearLayout>

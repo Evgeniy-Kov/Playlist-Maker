@@ -53,7 +53,9 @@ class SearchViewModel(
                 _screenStateLiveData.value = SearchFragmentState.Empty
             }
 
-            else -> searchDebounce(searchInput.toString())
+            else -> {
+                searchDebounce(searchInput.toString())
+            }
         }
         _isClearInputbuttonVisibileLiveData.value = searchInput.toString().isNotEmpty()
         if (hasFocus && searchInput.toString().isEmpty() && searchHistory.isNotEmpty()) {

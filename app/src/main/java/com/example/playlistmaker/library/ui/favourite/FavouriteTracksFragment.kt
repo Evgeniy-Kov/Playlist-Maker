@@ -1,4 +1,4 @@
-package com.example.playlistmaker.library.ui
+package com.example.playlistmaker.library.ui.favourite
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -13,6 +13,7 @@ import com.example.playlistmaker.common.domain.model.Track
 import com.example.playlistmaker.common.ui.TrackAdapter
 import com.example.playlistmaker.common.ui.TrackViewHolder
 import com.example.playlistmaker.databinding.FragmentFavouriteTracksBinding
+import com.example.playlistmaker.library.ui.medialibrary.MediaLibraryFragmentDirections
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -98,7 +99,7 @@ class FavouriteTracksFragment : Fragment() {
 
     private fun onTrackClick(track: Track) {
         val direction =
-            MediaLibraryFragmentDirections.actionFavouriteTracksFragmentToPlayerActivity(track)
+            MediaLibraryFragmentDirections.actionFavouriteTracksFragmentToPlayerFragment(track)
         findNavController().navigate(direction)
     }
 

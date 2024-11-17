@@ -4,7 +4,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.playlistmaker.common.domain.api.PlaylistInteractor
 import com.example.playlistmaker.common.domain.api.TracksInteractor
+import com.example.playlistmaker.common.domain.model.Playlist
 import com.example.playlistmaker.common.domain.model.Track
 import com.example.playlistmaker.player.domain.api.PlayerInteractor
 import com.example.playlistmaker.player.domain.api.StatusObserver
@@ -14,7 +16,8 @@ import kotlinx.coroutines.launch
 
 class PlayerViewModel(
     private val playerInteractor: PlayerInteractor,
-    private val tracksInteractor: TracksInteractor
+    private val tracksInteractor: TracksInteractor,
+    private val playlistInteractor: PlaylistInteractor
 ) : ViewModel() {
 
     private val _playStatusLiveData = MutableLiveData<PlayStatus>(PlayStatus())
@@ -24,6 +27,24 @@ class PlayerViewModel(
     private val _isFavouriteTrackLiveData = MutableLiveData<Boolean>()
     val isFavouriteTrackLiveData: LiveData<Boolean>
         get() = _isFavouriteTrackLiveData
+
+    private val _playlistsLiveData = MutableLiveData<List<Playlist>>()
+    val playlistsLiveData: LiveData<List<Playlist>>
+        get() = _playlistsLiveData
+
+    private val _messageOfAddingTrackToPlaylistLiveData = MutableLiveData<String>()
+    val messageOfAddingTrackToPlaylistLiveData: LiveData<String>
+        get() = _messageOfAddingTrackToPlaylistLiveData
+
+    private val _resultOfAddingTrackToPlaylistLiveData = MutableLiveData<Boolean>()
+    val resultOfAddingTrackToPlaylistLiveData: LiveData<Boolean>
+        get() = _resultOfAddingTrackToPlaylistLiveData
+
+    private val playlistsWithTrack = mutableListOf<Playlist>()
+
+    init {
+        getPlaylists()
+    }
 
     fun play() {
         playerInteractor.play()
@@ -76,6 +97,45 @@ class PlayerViewModel(
     fun setIsFavouriteFlag(isFavourite: Boolean) {
         _isFavouriteTrackLiveData.value = isFavourite
     }
+
+    fun addTrackToPlaylist(track: Track, playlist: Playlist) {
+
+        if (!isPlaylistContainsTrack(playlist)) {
+            _resultOfAddingTrackToPlaylistLiveData.value = true
+            _messageOfAddingTrackToPlaylistLiveData.value =
+                "Добавлено в плейлист ${playlist.playlistName}"
+            viewModelScope.launch {
+                playlistInteractor.addTrackToPlaylist(track, playlist)
+            }
+        } else {
+            _resultOfAddingTrackToPlaylistLiveData.value = false
+            _messageOfAddingTrackToPlaylistLiveData.value =
+                "Трек уже добавлен в плейлист ${playlist.playlistName}"
+        }
+    }
+
+    fun getPlaylists() {
+        viewModelScope.launch {
+            playlistInteractor.getPlaylists()
+                .collect { playlists ->
+                    _playlistsLiveData.postValue(playlists)
+                }
+        }
+    }
+
+    fun getPlaylistsContainTrack(trackId: Long) {
+        viewModelScope.launch {
+            playlistInteractor.getTrackWithPlaylists(trackId)
+                .collect { playlists ->
+                    playlistsWithTrack.addAll(playlists)
+                }
+        }
+    }
+
+    fun isPlaylistContainsTrack(playlist: Playlist): Boolean {
+        return playlistsWithTrack.contains(playlist)
+    }
+
 
     private fun addTrackToFavourite(track: Track) {
         viewModelScope.launch {
