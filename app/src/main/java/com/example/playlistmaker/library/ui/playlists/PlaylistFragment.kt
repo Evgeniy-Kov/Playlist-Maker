@@ -69,7 +69,21 @@ class PlaylistFragment : Fragment() {
         binding.rvPlaylist.adapter = adapter
 
         adapter.onLongClickListener = TrackViewHolder.OnLongClickListener { track ->
-
+            MaterialAlertDialogBuilder(requireContext(), R.style.MaterialAlertDialog_Center)
+                .setTitle(requireActivity().getString(R.string.delete_track_from_playlist_dialog_title))
+                .setMessage(requireActivity().getString(
+                    R.string.delete_track_from_playlist_dialog_message)
+                )
+                .setNegativeButton(
+                    requireActivity().getString(R.string.delete_track_from_playlist_dialog_negative)
+                ) { dialog, which ->
+                }
+                .setPositiveButton(
+                    requireActivity().getString(R.string.delete_track_from_playlist_dialog_positive)
+                ) { dialog, which ->
+                    findNavController().navigateUp()
+                }
+                .show()
         }
 
         binding.toolbar.setNavigationOnClickListener {
