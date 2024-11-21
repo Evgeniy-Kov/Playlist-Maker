@@ -37,6 +37,7 @@
             android:background="@color/yp_light_gray"
             android:contentDescription="@string/song_cover_description"
             android:src="@drawable/placeholder_with_insets"
+            android:scaleType="centerCrop"
             app:layout_constraintBottom_toTopOf="@id/tv_playlist_name"
             app:layout_constraintDimensionRatio="h,1:1"
             app:layout_constraintEnd_toEndOf="parent"
@@ -62,7 +63,6 @@
             android:background="@color/yp_light_gray"
             android:ellipsize="end"
             android:maxLines="1"
-            android:text="Yesterday (Remastered 2009)"
             android:textAppearance="@style/FontYSDisplayBoldSize24Weight700"
             android:textColor="@color/yp_black"
             app:layout_constraintBottom_toTopOf="@id/tv_playlist_description"
@@ -78,7 +78,6 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:maxLines="1"
-            android:text="Description"
             app:layout_constraintBottom_toTopOf="@id/tv_duration"
             app:layout_constraintEnd_toStartOf="@id/base_track_description_end_border"
             app:layout_constraintStart_toEndOf="@id/base_track_description_start_border"
@@ -93,7 +92,6 @@
             android:layout_marginTop="8dp"
             android:ellipsize="end"
             android:maxLines="1"
-            android:text="300 минут"
             app:layout_constrainedWidth="true"
             app:layout_constraintEnd_toStartOf="@id/tv_dot_delimiter"
             app:layout_constraintHorizontal_bias="0"
@@ -123,15 +121,14 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:maxLines="1"
-            android:text="98 треков"
             app:layout_constraintBottom_toBottomOf="@id/tv_dot_delimiter"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/tv_dot_delimiter"
             app:layout_constraintTop_toTopOf="@id/tv_dot_delimiter"
             tools:text="98 треков" />
 
-        <ImageView
-            android:id="@+id/iv_share"
+        <ImageButton
+            android:id="@+id/button_share"
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_marginTop="24dp"
@@ -139,20 +136,22 @@
             android:layout_marginBottom="24dp"
             android:background="@color/yp_light_gray"
             android:src="@drawable/ic_share_black"
+            android:foreground="?attr/selectableItemBackground"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/iv_menu"
+            app:layout_constraintEnd_toStartOf="@id/button_menu"
             app:layout_constraintStart_toStartOf="@id/tv_duration"
             app:layout_constraintTop_toBottomOf="@id/tv_duration" />
 
-        <ImageView
-            android:id="@+id/iv_menu"
+        <ImageButton
+            android:id="@+id/button_menu"
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_marginStart="16dp"
             android:layout_marginTop="24dp"
             android:background="@color/yp_light_gray"
             android:src="@drawable/ic_menu_black"
-            app:layout_constraintStart_toEndOf="@id/iv_share"
+            android:foreground="?attr/selectableItemBackground"
+            app:layout_constraintStart_toEndOf="@id/button_share"
             app:layout_constraintTop_toBottomOf="@id/tv_duration" />
 
 
@@ -181,14 +180,13 @@
         android:visibility="gone" />
 
     <LinearLayout
-        android:id="@+id/playlists_bottom_sheet"
+        android:id="@+id/tracks_bottom_sheet"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/bottom_sheet_shape"
         android:gravity="center_horizontal"
         android:orientation="vertical"
         app:behavior_hideable="false"
-
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
         <View

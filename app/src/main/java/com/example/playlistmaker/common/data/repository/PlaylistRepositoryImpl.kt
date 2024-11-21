@@ -6,8 +6,10 @@ import com.example.playlistmaker.common.data.db.AppDatabase
 import com.example.playlistmaker.common.data.db.playlist.PlaylistEntity
 import com.example.playlistmaker.common.data.db.playlist.PlaylistTrackCrossRef
 import com.example.playlistmaker.common.data.db.playlist.PlaylistTrackEntity
+import com.example.playlistmaker.common.data.db.playlist.PlaylistWithTracksDto
 import com.example.playlistmaker.common.domain.api.PlaylistRepository
 import com.example.playlistmaker.common.domain.model.Playlist
+import com.example.playlistmaker.common.domain.model.PlaylistWithTracks
 import com.example.playlistmaker.common.domain.model.Track
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -35,10 +37,10 @@ class PlaylistRepositoryImpl(
         }
     }
 
-    override fun getPlaylistWithTracks(): Flow<List<Track>> = flow {
-        appDatabase.playlistDao().getPlaylistWithTracks()
+    override fun getPlaylistWithTracks(playlistId: Long): Flow<PlaylistWithTracks> = flow {
+        appDatabase.playlistDao().getPlaylistWithTracks(playlistId)
             .collect { playlistWithTracks ->
-                emit(convertFromPlaylistTrackEntity(playlistWithTracks.tracks))
+                emit(convertFromPlaylistWithTracksDto(playlistWithTracks))
             }
     }
 
@@ -56,6 +58,12 @@ class PlaylistRepositoryImpl(
     }
 
 
+    private fun convertFromPlaylistWithTracksDto(playlistDto: PlaylistWithTracksDto): PlaylistWithTracks {
+        return PlaylistWithTracks(
+            playlist = playlistDbConverter.map(playlistDto.playlist),
+            tracks = convertFromPlaylistTrackEntity(playlistDto.tracks)
+        )
+    }
 
     private fun convertFromPlaylistEntity(playlists: List<PlaylistEntity>): List<Playlist> {
         return playlists.map { playlistEntity -> playlistDbConverter.map(playlistEntity) }

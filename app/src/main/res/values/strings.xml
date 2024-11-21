@@ -47,4 +47,5 @@
     <string name="new_playlist_dialog_positive">Завершить</string>
     <string name="new_playlist_dialog_negative">Отмена</string>
     <string name="bottom_sheet_title">Добавить в плейлист</string>
+    <string name="playlist_is_empty">Плейлист пустой</string>
 </resources>

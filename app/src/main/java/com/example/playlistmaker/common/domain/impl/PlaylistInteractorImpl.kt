@@ -3,6 +3,7 @@ package com.example.playlistmaker.common.domain.impl
 import com.example.playlistmaker.common.domain.api.PlaylistInteractor
 import com.example.playlistmaker.common.domain.api.PlaylistRepository
 import com.example.playlistmaker.common.domain.model.Playlist
+import com.example.playlistmaker.common.domain.model.PlaylistWithTracks
 import com.example.playlistmaker.common.domain.model.Track
 import kotlinx.coroutines.flow.Flow
 
@@ -18,8 +19,8 @@ class PlaylistInteractorImpl(
         repository.addTrackToPlaylist(track, playlist)
     }
 
-    override fun getPlaylistWithTracks(): Flow<List<Track>> {
-        return repository.getPlaylistWithTracks()
+    override fun getPlaylistWithTracks(playlistId: Long): Flow<PlaylistWithTracks> {
+        return repository.getPlaylistWithTracks(playlistId)
     }
 
     override fun getTrackWithPlaylists(trackId: Long): Flow<List<Playlist>> {

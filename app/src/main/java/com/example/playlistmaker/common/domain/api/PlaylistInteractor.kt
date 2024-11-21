@@ -1,6 +1,7 @@
 package com.example.playlistmaker.common.domain.api
 
 import com.example.playlistmaker.common.domain.model.Playlist
+import com.example.playlistmaker.common.domain.model.PlaylistWithTracks
 import com.example.playlistmaker.common.domain.model.Track
 import kotlinx.coroutines.flow.Flow
 
@@ -12,7 +13,7 @@ interface PlaylistInteractor {
 
     fun getPlaylists(): Flow<List<Playlist>>
 
-    fun getPlaylistWithTracks(): Flow<List<Track>>
+    fun getPlaylistWithTracks(playlistId: Long): Flow<PlaylistWithTracks>
 
     fun getTrackWithPlaylists(trackId: Long): Flow<List<Playlist>>
 

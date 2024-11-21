@@ -24,8 +24,8 @@ interface PlaylistDao {
     fun getPlaylists(): Flow<List<PlaylistEntity>>
 
     @Transaction
-    @Query("SELECT * FROM ${DbConfig.PLAYLISTS_TABLE_NAME}")
-    fun getPlaylistWithTracks(): Flow<PlaylistWithTracksDto>
+    @Query("SELECT * FROM ${DbConfig.PLAYLISTS_TABLE_NAME} WHERE playlistId = :playlistId")
+    fun getPlaylistWithTracks(playlistId: Long): Flow<PlaylistWithTracksDto>
 
     @Transaction
     @Query("SELECT * FROM ${DbConfig.PLAYLIST_TRACK_TABLE_NAME} WHERE trackId = :trackId")
