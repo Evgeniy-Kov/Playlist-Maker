@@ -16,8 +16,10 @@ import com.example.playlistmaker.common.domain.model.PlaylistWithTracks
 import com.example.playlistmaker.common.domain.model.PlaylistWithTracks.Companion.getFormattedDuration
 import com.example.playlistmaker.common.domain.model.Track
 import com.example.playlistmaker.common.ui.TrackAdapter
+import com.example.playlistmaker.common.ui.TrackViewHolder
 import com.example.playlistmaker.databinding.FragmentPlaylistBinding
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class PlaylistFragment : Fragment() {
@@ -65,6 +67,10 @@ class PlaylistFragment : Fragment() {
         binding.constraint.viewTreeObserver.addOnGlobalLayoutListener(listener)
 
         binding.rvPlaylist.adapter = adapter
+
+        adapter.onLongClickListener = TrackViewHolder.OnLongClickListener { track ->
+
+        }
 
         binding.toolbar.setNavigationOnClickListener {
             findNavController().navigateUp()

@@ -13,10 +13,18 @@ class TrackViewHolder(
     private val binding: ViewTrackItemBinding
 ) : RecyclerView.ViewHolder(binding.root) {
 
-    fun bind(track: Track, onItemClickListener: OnItemClickListener?) {
+    fun bind(
+        track: Track,
+        onItemClickListener: OnItemClickListener?,
+        onLongClickListener: OnLongClickListener?
+    ) {
         binding.apply {
             root.setOnClickListener {
                 onItemClickListener?.onItemClick(track)
+            }
+            root.setOnLongClickListener {
+                onLongClickListener?.onLongClick(track)
+                true
             }
             tvTrackName.text = track.trackName
             tvArtistName.text = track.artistName
@@ -37,6 +45,10 @@ class TrackViewHolder(
 
     fun interface OnItemClickListener {
         fun onItemClick(track: Track)
+    }
+
+    fun interface OnLongClickListener {
+        fun onLongClick(track: Track)
     }
 
     private companion object {
