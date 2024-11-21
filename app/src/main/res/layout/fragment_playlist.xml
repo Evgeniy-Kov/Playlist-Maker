@@ -89,7 +89,7 @@
             style="@style/PlaylistDescriptionTextStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="@dimen/playlist_fragment_description_margin_vertical"
             android:ellipsize="end"
             android:maxLines="1"
             app:layout_constrainedWidth="true"
@@ -129,11 +129,9 @@
 
         <ImageButton
             android:id="@+id/button_share"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_marginTop="24dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginBottom="24dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="@dimen/playlist_fragment_buttons_margin_vertical"
             android:background="@color/yp_light_gray"
             android:src="@drawable/ic_share_black"
             android:foreground="?attr/selectableItemBackground"
@@ -144,10 +142,10 @@
 
         <ImageButton
             android:id="@+id/button_menu"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="24dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="@dimen/playlist_fragment_buttons_margin_vertical"
+            android:layout_marginStart="@dimen/playlist_fragment_menu_button_margin_start"
             android:background="@color/yp_light_gray"
             android:src="@drawable/ic_menu_black"
             android:foreground="?attr/selectableItemBackground"
@@ -202,6 +200,115 @@
             android:layout_marginTop="@dimen/bottom_sheet_rv_margin_top"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             tools:listitem="@layout/view_track_item" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/menu_bottom_sheet"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/bottom_sheet_shape"
+        android:orientation="vertical"
+        app:behavior_hideable="true"
+        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+
+        <View
+            android:layout_width="@dimen/bottom_sheet_top_line_width"
+            android:layout_height="@dimen/bottom_sheet_top_line_height"
+            android:layout_marginTop="@dimen/bottom_sheet_top_line_margin_top"
+            android:layout_gravity="center_horizontal"
+            android:background="@color/yp_light_gray" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:paddingStart="@dimen/track_item_view_padding"
+            android:paddingEnd="@dimen/track_item_view_padding"
+            android:foreground="?attr/selectableItemBackground">
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/card_view_cover"
+                android:layout_width="@dimen/track_item_view_cover_size"
+                android:layout_height="@dimen/track_item_view_cover_size"
+                android:layout_marginVertical="@dimen/view_track_item_default_margin"
+                app:cardCornerRadius="@dimen/bottom_sheet_rv_cover_corner_radius"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <ImageView
+                    android:id="@+id/iv_cover_bottom_sheet"
+                    android:layout_width="@dimen/track_item_view_cover_size"
+                    android:layout_height="@dimen/track_item_view_cover_size"
+                    android:scaleType="centerCrop"
+                    android:contentDescription="@string/song_cover_description"
+                    tools:src="@drawable/placeholder" />
+            </androidx.cardview.widget.CardView>
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/tv_playlist_name_bottom_sheet"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/view_track_item_default_margin"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textAppearance="@style/FontYSDisplayRegularSize16Weight400"
+                android:textColor="?attr/colorSecondary"
+                app:layout_constrainedWidth="true"
+                app:layout_constraintBottom_toTopOf="@id/tv_count_bottom_sheet"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0"
+                app:layout_constraintStart_toEndOf="@id/card_view_cover"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_chainStyle="packed"
+                tools:text="Summer party" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/tv_count_bottom_sheet"
+                android:textColor="?attr/colorSecondary"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/view_track_item_default_margin"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textAppearance="@style/FontYSDisplayRegularSize11Weight400"
+                app:layout_constrainedWidth="true"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0"
+                app:layout_constraintHorizontal_chainStyle="packed"
+                app:layout_constraintStart_toEndOf="@id/card_view_cover"
+                app:layout_constraintTop_toBottomOf="@id/tv_playlist_name_bottom_sheet"
+                tools:text="157 tracks" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <com.google.android.material.textview.MaterialTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/playlist_menu_bottom_sheet_tv_margin_start"
+            android:layout_marginTop="@dimen/playlist_menu_bottom_sheet_tv_margin_top"
+            android:layout_marginBottom="@dimen/playlist_menu_bottom_sheet_tv_margin_bottom"
+            style="@style/PlaylistMenuTextStyle"
+            android:text="@string/share_playlist"/>
+
+        <com.google.android.material.textview.MaterialTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/playlist_menu_bottom_sheet_tv_margin_start"
+            android:layout_marginBottom="@dimen/playlist_menu_bottom_sheet_tv_margin_bottom"
+            style="@style/PlaylistMenuTextStyle"
+            android:text="@string/edit_playlist"/>
+
+        <com.google.android.material.textview.MaterialTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/playlist_menu_bottom_sheet_tv_margin_start"
+            android:layout_marginBottom="@dimen/playlist_menu_bottom_sheet_tv_margin_bottom"
+            style="@style/PlaylistMenuTextStyle"
+            android:text="@string/delete_playlist"/>
 
     </LinearLayout>
 

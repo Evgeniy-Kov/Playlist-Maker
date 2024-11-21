@@ -33,6 +33,10 @@ class PlaylistFragment : Fragment() {
         BottomSheetBehavior.from(binding.tracksBottomSheet)
     }
 
+    private val menuBottomSheetBehavior by lazy {
+        BottomSheetBehavior.from(binding.menuBottomSheet)
+    }
+
     private val adapter = TrackAdapter()
 
     override fun onCreateView(
@@ -73,6 +77,32 @@ class PlaylistFragment : Fragment() {
             setupTracks(playlistWithTracks.tracks)
 
         }
+
+        menuBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+
+        menuBottomSheetBehavior.addBottomSheetCallback(object :
+            BottomSheetBehavior.BottomSheetCallback() {
+
+            override fun onStateChanged(bottomSheet: View, newState: Int) {
+
+                when (newState) {
+                    BottomSheetBehavior.STATE_HIDDEN -> {
+                        binding.overlay.visibility = View.GONE
+                    }
+
+                    else -> {
+                        binding.overlay.visibility = View.VISIBLE
+                    }
+                }
+            }
+
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {}
+        })
+
+        binding.buttonMenu.setOnClickListener {
+            menuBottomSheetBehavior.state = BottomSheetBehavior.STATE_HALF_EXPANDED
+        }
+
     }
 
     private fun setupPlaylistDescription(playlistWithTracks: PlaylistWithTracks) {
@@ -80,8 +110,14 @@ class PlaylistFragment : Fragment() {
         binding.tvPlaylistDescription.text = playlistWithTracks.playlist.playlistDescription
         binding.tvDuration.text = playlistWithTracks.getFormattedDuration()
         binding.tvTracksCount.text = playlistWithTracks.playlist.getFormattedCount()
+
+        binding.tvPlaylistNameBottomSheet.text = playlistWithTracks.playlist.playlistName
+        binding.tvCountBottomSheet.text = playlistWithTracks.playlist.getFormattedCount()
+
         if (playlistWithTracks.playlist.playlistCoverPath != "null") {
-            binding.ivCover.setImageURI(Uri.parse(playlistWithTracks.playlist.playlistCoverPath))
+            val uri = Uri.parse(playlistWithTracks.playlist.playlistCoverPath)
+            binding.ivCover.setImageURI(uri)
+            binding.ivCoverBottomSheet.setImageURI(uri)
         }
 
     }

@@ -48,4 +48,7 @@
     <string name="new_playlist_dialog_negative">Отмена</string>
     <string name="bottom_sheet_title">Добавить в плейлист</string>
     <string name="playlist_is_empty">Плейлист пустой</string>
+    <string name="share_playlist">Поделиться</string>
+    <string name="edit_playlist">Редактировать информацию</string>
+    <string name="delete_playlist">Удалить плейлист</string>
 </resources>

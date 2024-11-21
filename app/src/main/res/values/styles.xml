@@ -195,4 +195,9 @@
         <item name="android:textColor">@color/yp_black</item>
         <item name="android:background">@color/yp_light_gray</item>
     </style>
+
+    <style name="PlaylistMenuTextStyle">
+        <item name="android:textAppearance">@style/FontYSDisplayRegularSize16Weight400</item>
+        <item name="android:textColor">?attr/colorSecondary</item>
+    </style>
 </resources>
