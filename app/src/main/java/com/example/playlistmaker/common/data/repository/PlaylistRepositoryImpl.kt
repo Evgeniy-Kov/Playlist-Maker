@@ -37,11 +37,21 @@ class PlaylistRepositoryImpl(
         }
     }
 
+    override suspend fun deletePlaylist(playlistId: Long) {
+        appDatabase.playlistDao().deletePlaylist(playlistId)
+    }
+
+    override suspend fun deleteTrackFromPlaylist(playlistId: Long, trackId: Long) {
+        appDatabase.playlistDao().deleteTrackFromPlaylist(playlistId, trackId)
+    }
+
     override fun getPlaylistWithTracks(playlistId: Long): Flow<PlaylistWithTracks> = flow {
-        appDatabase.playlistDao().getPlaylistWithTracks(playlistId)
-            .collect { playlistWithTracks ->
-                emit(convertFromPlaylistWithTracksDto(playlistWithTracks))
-            }
+        try {
+            appDatabase.playlistDao().getPlaylistWithTracks(playlistId)
+                .collect { playlistWithTracks ->
+                    emit(convertFromPlaylistWithTracksDto(playlistWithTracks))
+                }
+        } catch (e: NullPointerException) {}
     }
 
 

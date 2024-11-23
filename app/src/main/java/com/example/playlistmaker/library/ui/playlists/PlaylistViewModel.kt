@@ -23,4 +23,16 @@ class PlaylistViewModel(
             }
         }
     }
+
+    fun deletePlaylist(playlistId: Long) {
+        viewModelScope.launch {
+            interactor.deletePlaylist(playlistId)
+        }
+    }
+
+    fun deleteTrackFromPlaylist(playlistId: Long, trackId: Long) {
+        viewModelScope.launch {
+            interactor.deleteTrackFromPlaylist(playlistId, trackId)
+        }
+    }
 }

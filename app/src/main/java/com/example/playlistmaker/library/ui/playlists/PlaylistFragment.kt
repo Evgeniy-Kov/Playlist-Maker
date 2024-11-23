@@ -81,7 +81,7 @@ class PlaylistFragment : Fragment() {
                 .setPositiveButton(
                     requireActivity().getString(R.string.delete_track_from_playlist_dialog_positive)
                 ) { dialog, which ->
-                    findNavController().navigateUp()
+                    viewModel.deleteTrackFromPlaylist(args.playlistId, track.trackId)
                 }
                 .show()
         }
@@ -136,6 +136,7 @@ class PlaylistFragment : Fragment() {
                 .setPositiveButton(
                     requireActivity().getString(R.string.delete_playlist_dialog_positive)
                 ) { dialog, which ->
+                    viewModel.deletePlaylist(args.playlistId)
                     findNavController().navigateUp()
                 }
                 .show()
