@@ -123,6 +123,23 @@ class PlaylistFragment : Fragment() {
             menuBottomSheetBehavior.state = BottomSheetBehavior.STATE_HALF_EXPANDED
         }
 
+        binding.tvDeletePlaylist.setOnClickListener {
+            MaterialAlertDialogBuilder(requireContext(), R.style.MaterialAlertDialog_Center)
+                .setTitle(requireActivity().getString(R.string.delete_playlist_dialog_title))
+                .setMessage(requireActivity().getString(
+                    R.string.delete_playlist_dialog_message)
+                )
+                .setNegativeButton(
+                    requireActivity().getString(R.string.delete_playlist_dialog_negative)
+                ) { dialog, which ->
+                }
+                .setPositiveButton(
+                    requireActivity().getString(R.string.delete_playlist_dialog_positive)
+                ) { dialog, which ->
+                    findNavController().navigateUp()
+                }
+                .show()
+        }
     }
 
     private fun setupPlaylistDescription(playlistWithTracks: PlaylistWithTracks) {

@@ -55,4 +55,8 @@
     <string name="delete_track_from_playlist_dialog_message">Хотите удалить трек?</string>
     <string name="delete_track_from_playlist_dialog_positive">Да</string>
     <string name="delete_track_from_playlist_dialog_negative">Нет</string>
+    <string name="delete_playlist_dialog_title">Удалить плейлист</string>
+    <string name="delete_playlist_dialog_message">Хотите удалить плейлист?</string>
+    <string name="delete_playlist_dialog_positive">Да</string>
+    <string name="delete_playlist_dialog_negative">Нет</string>
 </resources>

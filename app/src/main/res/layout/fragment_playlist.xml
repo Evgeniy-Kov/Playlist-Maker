@@ -286,6 +286,7 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/tv_share_playlist"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/playlist_menu_bottom_sheet_tv_margin_start"
@@ -295,6 +296,7 @@
             android:text="@string/share_playlist"/>
 
         <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/tv_edit_playlist"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/playlist_menu_bottom_sheet_tv_margin_start"
@@ -303,6 +305,7 @@
             android:text="@string/edit_playlist"/>
 
         <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/tv_delete_playlist"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/playlist_menu_bottom_sheet_tv_margin_start"
