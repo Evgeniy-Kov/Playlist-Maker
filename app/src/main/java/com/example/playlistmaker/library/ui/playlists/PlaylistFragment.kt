@@ -22,6 +22,9 @@ import com.example.playlistmaker.common.ui.TrackViewHolder
 import com.example.playlistmaker.databinding.FragmentPlaylistBinding
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class PlaylistFragment : Fragment() {
@@ -41,6 +44,19 @@ class PlaylistFragment : Fragment() {
 
     private var playlist: Playlist? = null
 
+    private val onPreDrawListener = ViewTreeObserver.OnPreDrawListener {
+        val screenHeight = binding.main.height
+        val playlistDescriptionHeight = binding.constraint.height
+
+        tracksBottomSheetBehavior?.peekHeight = screenHeight - playlistDescriptionHeight
+        GlobalScope.launch {
+            delay(1000)
+            removeOnPreDrawListener()
+        }
+
+        true
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -57,18 +73,7 @@ class PlaylistFragment : Fragment() {
 
         menuBottomSheetBehavior = BottomSheetBehavior.from(binding.menuBottomSheet)
 
-        val listener = object : ViewTreeObserver.OnGlobalLayoutListener {
-            override fun onGlobalLayout() {
-
-                val screenHeight = binding.main.height
-                val playlistDescriptionHeight = binding.constraint.height
-
-                tracksBottomSheetBehavior?.peekHeight = screenHeight - playlistDescriptionHeight
-                binding.main.viewTreeObserver.removeOnGlobalLayoutListener(this)
-            }
-        }
-
-        binding.main.viewTreeObserver.addOnGlobalLayoutListener(listener)
+        binding.main.viewTreeObserver.addOnPreDrawListener(onPreDrawListener)
 
         binding.rvPlaylist.adapter = adapter
 
@@ -162,6 +167,11 @@ class PlaylistFragment : Fragment() {
         super.onDestroyView()
         tracksBottomSheetBehavior = null
         menuBottomSheetBehavior = null
+        _binding = null
+    }
+
+    private fun removeOnPreDrawListener() {
+        binding.main.viewTreeObserver.removeOnPreDrawListener(onPreDrawListener)
     }
 
     private fun setupPlaylistDescription(playlistWithTracks: PlaylistWithTracks) {
