@@ -15,6 +15,7 @@ import androidx.core.net.toUri
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
@@ -34,6 +35,8 @@ class NewPlaylistFragment : Fragment() {
     private var imageUri: Uri? = null
 
     private val viewModel by viewModel<NewPlaylistViewModel>()
+
+    private val args by navArgs<NewPlaylistFragmentArgs>()
 
     val dialog by lazy {
         MaterialAlertDialogBuilder(requireContext(), R.style.MaterialAlertDialog_Center)
@@ -60,6 +63,22 @@ class NewPlaylistFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        val argPlaylist = args.playlist
+
+        if (argPlaylist != null) {
+            binding.etName.setText(argPlaylist.playlistName)
+            binding.etDescription.setText(argPlaylist.playlistDescription)
+            imageUri = Uri.parse(argPlaylist.playlistCoverPath)
+            binding.ivPhoto.setImageURI(Uri.parse(argPlaylist.playlistCoverPath))
+            binding.toolbar.title = requireContext().getString(R.string.edit_playlist_title)
+            binding.buttonCreate.text = requireContext().getString(R.string.button_save_text)
+            binding.buttonCreate.isEnabled = true
+        } else {
+            binding.toolbar.title = requireContext().getString(R.string.new_playlist_title)
+            binding.buttonCreate.text = requireContext().getString(R.string.button_create_text)
+
+        }
 
 
         val pickMedia =
@@ -92,13 +111,17 @@ class NewPlaylistFragment : Fragment() {
             if (uri != null) {
                 imageUri = saveImageToPrivateStorage(uri)
             }
+            val playlistId = args.playlist?.playlistId ?: 0
+            val tracksCount = args.playlist?.tracksCount ?: 0
+
             val playlist = Playlist(
-                0,
+                playlistId,
                 binding.etName.text.toString(),
                 binding.etDescription.text.toString(),
                 imageUri.toString(),
-                0
+                tracksCount
             )
+
             viewModel.addPlaylist(playlist)
             findNavController().navigateUp()
         }
@@ -107,7 +130,7 @@ class NewPlaylistFragment : Fragment() {
                 binding.buttonCreate.isEnabled = !charSequence.isNullOrBlank()
             }
         )
-        requireActivity().onBackPressedDispatcher.addCallback {
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
             onBackPressed()
         }
     }
@@ -118,12 +141,16 @@ class NewPlaylistFragment : Fragment() {
     }
 
     private fun onBackPressed() {
-        if (
-            imageUri != null
-            || binding.etName.text.toString().isNotBlank()
-            || binding.etDescription.text.toString().isNotBlank()
-        ) {
-            dialog.show()
+        if (args.playlist == null) {
+            if (
+                imageUri != null
+                || binding.etName.text.toString().isNotBlank()
+                || binding.etDescription.text.toString().isNotBlank()
+            ) {
+                dialog.show()
+            } else {
+                findNavController().navigateUp()
+            }
         } else {
             findNavController().navigateUp()
         }

@@ -6,11 +6,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
+import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.playlistmaker.R
+import com.example.playlistmaker.common.domain.model.Playlist
 import com.example.playlistmaker.common.domain.model.Playlist.Companion.getFormattedCount
 import com.example.playlistmaker.common.domain.model.PlaylistWithTracks
 import com.example.playlistmaker.common.domain.model.PlaylistWithTracks.Companion.getFormattedDuration
@@ -31,15 +33,13 @@ class PlaylistFragment : Fragment() {
 
     private val args by navArgs<PlaylistFragmentArgs>()
 
-    private val tracksBottomSheetBehavior by lazy {
-        BottomSheetBehavior.from(binding.tracksBottomSheet)
-    }
+    private var tracksBottomSheetBehavior: BottomSheetBehavior<LinearLayout>? = null
 
-    private val menuBottomSheetBehavior by lazy {
-        BottomSheetBehavior.from(binding.menuBottomSheet)
-    }
+    private var menuBottomSheetBehavior: BottomSheetBehavior<LinearLayout>? = null
 
     private val adapter = TrackAdapter()
+
+    private var playlist: Playlist? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -53,18 +53,22 @@ class PlaylistFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
 
+        tracksBottomSheetBehavior = BottomSheetBehavior.from(binding.tracksBottomSheet)
+
+        menuBottomSheetBehavior = BottomSheetBehavior.from(binding.menuBottomSheet)
+
         val listener = object : ViewTreeObserver.OnGlobalLayoutListener {
             override fun onGlobalLayout() {
 
                 val screenHeight = binding.main.height
                 val playlistDescriptionHeight = binding.constraint.height
 
-                tracksBottomSheetBehavior.setPeekHeight(screenHeight - playlistDescriptionHeight)
-                binding.constraint.viewTreeObserver.removeOnGlobalLayoutListener(this)
+                tracksBottomSheetBehavior?.peekHeight = screenHeight - playlistDescriptionHeight
+                binding.main.viewTreeObserver.removeOnGlobalLayoutListener(this)
             }
         }
 
-        binding.constraint.viewTreeObserver.addOnGlobalLayoutListener(listener)
+        binding.main.viewTreeObserver.addOnGlobalLayoutListener(listener)
 
         binding.rvPlaylist.adapter = adapter
 
@@ -86,6 +90,11 @@ class PlaylistFragment : Fragment() {
                 .show()
         }
 
+        adapter.onItemClickListener = TrackViewHolder.OnItemClickListener {
+            val direction = PlaylistFragmentDirections.actionPlaylistFragmentToPlayerFragment(it)
+            findNavController().navigate(direction)
+        }
+
         binding.toolbar.setNavigationOnClickListener {
             findNavController().navigateUp()
         }
@@ -93,14 +102,15 @@ class PlaylistFragment : Fragment() {
         viewModel.getPlaylistWithTracks(args.playlistId)
 
         viewModel.playlistWithTracksLiveData.observe(viewLifecycleOwner) { playlistWithTracks ->
+            playlist = playlistWithTracks.playlist
             setupPlaylistDescription(playlistWithTracks)
             setupTracks(playlistWithTracks.tracks)
 
         }
 
-        menuBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+        menuBottomSheetBehavior?.state = BottomSheetBehavior.STATE_HIDDEN
 
-        menuBottomSheetBehavior.addBottomSheetCallback(object :
+        menuBottomSheetBehavior?.addBottomSheetCallback(object :
             BottomSheetBehavior.BottomSheetCallback() {
 
             override fun onStateChanged(bottomSheet: View, newState: Int) {
@@ -120,7 +130,7 @@ class PlaylistFragment : Fragment() {
         })
 
         binding.buttonMenu.setOnClickListener {
-            menuBottomSheetBehavior.state = BottomSheetBehavior.STATE_HALF_EXPANDED
+            menuBottomSheetBehavior?.state = BottomSheetBehavior.STATE_HALF_EXPANDED
         }
 
         binding.tvDeletePlaylist.setOnClickListener {
@@ -141,6 +151,17 @@ class PlaylistFragment : Fragment() {
                 }
                 .show()
         }
+
+        binding.tvEditPlaylist.setOnClickListener {
+            val direction = PlaylistFragmentDirections.actionPlaylistFragmentToNewPlaylistFragment(playlist)
+            findNavController().navigate(direction)
+        }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        tracksBottomSheetBehavior = null
+        menuBottomSheetBehavior = null
     }
 
     private fun setupPlaylistDescription(playlistWithTracks: PlaylistWithTracks) {

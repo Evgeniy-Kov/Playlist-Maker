@@ -34,7 +34,7 @@ class PlaylistsFragment : Fragment() {
 
         binding.buttonNewPlaylist.setOnClickListener {
             val direction =
-                MediaLibraryFragmentDirections.actionMediaLibraryFragmentToNewPlaylistFragment()
+                MediaLibraryFragmentDirections.actionMediaLibraryFragmentToNewPlaylistFragment(null)
             findNavController().navigate(direction)
 
         }

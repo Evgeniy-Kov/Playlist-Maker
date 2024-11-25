@@ -42,6 +42,7 @@
     <string name="favourite_tracks_title">Избранные треки</string>
     <string name="playlists_title">Плейлисты</string>
     <string name="new_playlist_title">Новый плейлист</string>
+    <string name="edit_playlist_title">Редактировать плейлист</string>
     <string name="new_playlist_dialog_title">Завершить создание плейлиста?</string>
     <string name="new_playlist_dialog_message">Все несохраненные данные будут потеряны</string>
     <string name="new_playlist_dialog_positive">Завершить</string>
@@ -59,4 +60,6 @@
     <string name="delete_playlist_dialog_message">Хотите удалить плейлист?</string>
     <string name="delete_playlist_dialog_positive">Да</string>
     <string name="delete_playlist_dialog_negative">Нет</string>
+    <string name="button_create_text">Создать</string>
+    <string name="button_save_text">Сохранить</string>
 </resources>

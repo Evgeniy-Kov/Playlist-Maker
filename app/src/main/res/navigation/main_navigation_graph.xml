@@ -56,7 +56,12 @@
         android:id="@+id/newPlaylistFragment"
         android:name="com.example.playlistmaker.library.ui.playlists.NewPlaylistFragment"
         android:label="fragment_new_playlist"
-        tools:layout="@layout/fragment_new_playlist" />
+        tools:layout="@layout/fragment_new_playlist">
+        <argument
+            android:name="playlist"
+            app:argType="com.example.playlistmaker.common.domain.model.Playlist"
+            app:nullable="true"/>
+    </fragment>>
     <fragment
         android:id="@+id/playlistFragment"
         android:name="com.example.playlistmaker.library.ui.playlists.PlaylistFragment"
@@ -68,5 +73,8 @@
         <action
             android:id="@+id/action_playlistFragment_to_playerFragment"
             app:destination="@id/playerFragment" />
+        <action
+            android:id="@+id/action_playlistFragment_to_newPlaylistFragment"
+            app:destination="@id/newPlaylistFragment" />
     </fragment>
 </navigation>
