@@ -62,4 +62,7 @@
     <string name="delete_playlist_dialog_negative">Нет</string>
     <string name="button_create_text">Создать</string>
     <string name="button_save_text">Сохранить</string>
+    <string name="nothing_to_share_message">
+        В этом плейлисте нет списка треков, которым можно поделиться
+    </string>
 </resources>

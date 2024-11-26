@@ -1,5 +1,6 @@
 package com.example.playlistmaker.library.ui.playlists
 
+import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -17,6 +18,7 @@ import com.example.playlistmaker.common.domain.model.Playlist.Companion.getForma
 import com.example.playlistmaker.common.domain.model.PlaylistWithTracks
 import com.example.playlistmaker.common.domain.model.PlaylistWithTracks.Companion.getFormattedDuration
 import com.example.playlistmaker.common.domain.model.Track
+import com.example.playlistmaker.common.domain.model.Track.Companion.getFormattedTime
 import com.example.playlistmaker.common.ui.TrackAdapter
 import com.example.playlistmaker.common.ui.TrackViewHolder
 import com.example.playlistmaker.databinding.FragmentPlaylistBinding
@@ -43,6 +45,8 @@ class PlaylistFragment : Fragment() {
     private val adapter = TrackAdapter()
 
     private var playlist: Playlist? = null
+
+    private val tracks = mutableListOf<Track>()
 
     private val onPreDrawListener = ViewTreeObserver.OnPreDrawListener {
         val screenHeight = binding.main.height
@@ -108,6 +112,8 @@ class PlaylistFragment : Fragment() {
 
         viewModel.playlistWithTracksLiveData.observe(viewLifecycleOwner) { playlistWithTracks ->
             playlist = playlistWithTracks.playlist
+            tracks.clear()
+            tracks.addAll(playlistWithTracks.tracks)
             setupPlaylistDescription(playlistWithTracks)
             setupTracks(playlistWithTracks.tracks)
 
@@ -161,6 +167,14 @@ class PlaylistFragment : Fragment() {
             val direction = PlaylistFragmentDirections.actionPlaylistFragmentToNewPlaylistFragment(playlist)
             findNavController().navigate(direction)
         }
+
+        binding.buttonShare.setOnClickListener {
+            sharePlaylist()
+        }
+
+        binding.tvSharePlaylist.setOnClickListener {
+            sharePlaylist()
+        }
     }
 
     override fun onDestroyView() {
@@ -200,6 +214,43 @@ class PlaylistFragment : Fragment() {
             ).show()
         } else {
             adapter.trackList = tracks
+        }
+    }
+
+    private fun sharePlaylist() {
+        if (tracks.isEmpty()) {
+            Toast.makeText(
+                requireContext(),
+                requireContext().getString(R.string.nothing_to_share_message),
+                Toast.LENGTH_SHORT
+            ).show()
+        } else {
+            var listOfTracks = ""
+
+            for (i in 0 until tracks.size) {
+                val track = tracks[i]
+                listOfTracks += "${i + 1}. ${track.artistName} - " +
+                        "${track.trackName} (${track.getFormattedTime()})\n"
+            }
+
+            val name = "${playlist?.playlistName}\n"
+            val description = if (playlist!!.playlistDescription.isBlank()) {
+                ""
+            } else {
+                "${playlist?.playlistDescription}\n"
+            }
+            val count = "${playlist?.getFormattedCount()}\n"
+
+            val message = name + description + count + listOfTracks
+
+            val sendIntent = Intent().apply {
+                action = Intent.ACTION_SEND
+                putExtra(Intent.EXTRA_TEXT, message)
+                type = "text/plain"
+            }
+
+            val shareIntent = Intent.createChooser(sendIntent, null)
+            startActivity(shareIntent)
         }
     }
 
