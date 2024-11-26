@@ -2,8 +2,9 @@ package com.example.playlistmaker.common.data.converters
 
 import com.example.playlistmaker.common.data.db.playlist.PlaylistEntity
 import com.example.playlistmaker.common.domain.model.Playlist
+import com.google.gson.Gson
 
-class PlaylistDbConverter {
+class PlaylistDbConverter(private val gson: Gson) {
 
     fun map(playlist: Playlist): PlaylistEntity {
         return PlaylistEntity(
@@ -11,6 +12,7 @@ class PlaylistDbConverter {
             playlistName = playlist.playlistName,
             playlistDescription = playlist.playlistDescription,
             playlistCoverPath = playlist.playlistCoverPath,
+            tracksIds = gson.toJson(playlist.tracksIds),
             tracksCount = playlist.tracksCount
         )
     }
@@ -21,6 +23,7 @@ class PlaylistDbConverter {
             playlistName = entity.playlistName,
             playlistDescription = entity.playlistDescription,
             playlistCoverPath = entity.playlistCoverPath,
+            tracksIds = gson.fromJson(entity.tracksIds, Array<Long>::class.java).toList(),
             tracksCount = entity.tracksCount
         )
     }

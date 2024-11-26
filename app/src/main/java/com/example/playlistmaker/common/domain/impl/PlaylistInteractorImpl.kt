@@ -3,7 +3,6 @@ package com.example.playlistmaker.common.domain.impl
 import com.example.playlistmaker.common.domain.api.PlaylistInteractor
 import com.example.playlistmaker.common.domain.api.PlaylistRepository
 import com.example.playlistmaker.common.domain.model.Playlist
-import com.example.playlistmaker.common.domain.model.PlaylistWithTracks
 import com.example.playlistmaker.common.domain.model.Track
 import kotlinx.coroutines.flow.Flow
 
@@ -19,23 +18,23 @@ class PlaylistInteractorImpl(
         repository.addTrackToPlaylist(track, playlist)
     }
 
-    override fun getPlaylistWithTracks(playlistId: Long): Flow<PlaylistWithTracks> {
-        return repository.getPlaylistWithTracks(playlistId)
+    override fun getTracksByIds(trackIds: List<Long>): Flow<List<Track>> {
+        return repository.getTracksByIds(trackIds)
     }
 
-    override fun getTrackWithPlaylists(trackId: Long): Flow<List<Playlist>> {
-        return repository.getTrackWithPlaylists(trackId)
+    override fun getPlaylist(playlistId: Long): Flow<Playlist> {
+        return repository.getPlaylist(playlistId)
     }
 
     override fun getPlaylists(): Flow<List<Playlist>> {
         return repository.getPlaylists()
     }
 
-    override suspend fun deletePlaylist(playlistId: Long) {
-        repository.deletePlaylist(playlistId)
+    override suspend fun deletePlaylist(playlist: Playlist) {
+        repository.deletePlaylist(playlist)
     }
 
-    override suspend fun deleteTrackFromPlaylist(playlistId: Long, trackId: Long) {
-        repository.deleteTrackFromPlaylist(playlistId, trackId)
+    override suspend fun deleteTrackFromPlaylist(playlist: Playlist, trackId: Long) {
+        repository.deleteTrackFromPlaylist(playlist, trackId)
     }
 }

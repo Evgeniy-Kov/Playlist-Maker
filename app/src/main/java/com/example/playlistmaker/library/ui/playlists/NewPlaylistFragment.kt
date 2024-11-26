@@ -119,6 +119,7 @@ class NewPlaylistFragment : Fragment() {
                 binding.etName.text.toString(),
                 binding.etDescription.text.toString(),
                 imageUri.toString(),
+                emptyList(),
                 tracksCount
             )
 

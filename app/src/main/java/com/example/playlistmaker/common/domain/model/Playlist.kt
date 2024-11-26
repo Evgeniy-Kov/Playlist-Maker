@@ -9,6 +9,7 @@ data class Playlist(
     val playlistName: String,
     val playlistDescription: String,
     val playlistCoverPath: String,
+    val tracksIds: List<Long> = emptyList(),
     val tracksCount: Long
 ) : Parcelable {
     companion object {

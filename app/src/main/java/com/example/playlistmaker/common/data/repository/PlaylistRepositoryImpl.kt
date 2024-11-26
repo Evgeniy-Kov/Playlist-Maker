@@ -4,15 +4,14 @@ import com.example.playlistmaker.common.data.converters.PlaylistDbConverter
 import com.example.playlistmaker.common.data.converters.PlaylistTrackDbConverter
 import com.example.playlistmaker.common.data.db.AppDatabase
 import com.example.playlistmaker.common.data.db.playlist.PlaylistEntity
-import com.example.playlistmaker.common.data.db.playlist.PlaylistTrackCrossRef
 import com.example.playlistmaker.common.data.db.playlist.PlaylistTrackEntity
-import com.example.playlistmaker.common.data.db.playlist.PlaylistWithTracksDto
 import com.example.playlistmaker.common.domain.api.PlaylistRepository
 import com.example.playlistmaker.common.domain.model.Playlist
-import com.example.playlistmaker.common.domain.model.PlaylistWithTracks
 import com.example.playlistmaker.common.domain.model.Track
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.launch
 
 class PlaylistRepositoryImpl(
     private val appDatabase: AppDatabase,
@@ -24,11 +23,19 @@ class PlaylistRepositoryImpl(
     }
 
     override suspend fun addTrackToPlaylist(track: Track, playlist: Playlist) {
-        appDatabase.playlistDao().addTrackToDb(playlistTrackDbConverter.map(track))
-        appDatabase.playlistDao().addPlaylistTrackCrossRef(
-            PlaylistTrackCrossRef(playlist.playlistId, track.trackId)
+        val updatedPlaylist = playlist.copy(
+            tracksIds = playlist.tracksIds + listOf(track.trackId),
+            tracksCount = playlist.tracksIds.size + 1L
         )
-        addPlaylist(playlist.copy(tracksCount = playlist.tracksCount + 1))
+        appDatabase.playlistDao().addPlaylist(playlistDbConverter.map(updatedPlaylist))
+        appDatabase.playlistDao().addTrackToDb(playlistTrackDbConverter.map(track))
+
+    }
+
+    override fun getPlaylist(playlistId: Long): Flow<Playlist> = flow {
+        appDatabase.playlistDao().getPlaylist(playlistId).collect { playlist ->
+            emit(playlistDbConverter.map(playlist))
+        }
     }
 
     override fun getPlaylists(): Flow<List<Playlist>> = flow {
@@ -37,42 +44,55 @@ class PlaylistRepositoryImpl(
         }
     }
 
-    override suspend fun deletePlaylist(playlistId: Long) {
-        appDatabase.playlistDao().deletePlaylist(playlistId)
+    override fun getTracksByIds(trackIds: List<Long>): Flow<List<Track>> = flow {
+        val tracks = mutableListOf<PlaylistTrackEntity>()
+        for (id in trackIds) {
+            tracks.add(appDatabase.playlistDao().getTrackById(id))
+        }
+        emit(convertFromPlaylistTrackEntity(tracks.reversed()))
     }
 
-    override suspend fun deleteTrackFromPlaylist(playlistId: Long, trackId: Long) {
-        appDatabase.playlistDao().deleteTrackFromPlaylist(playlistId, trackId)
+    override suspend fun deletePlaylist(playlist: Playlist) {
+        val tracksIds = playlist.tracksIds
+        val deletePlaylistJob = GlobalScope.launch {
+        appDatabase.playlistDao().deletePlaylistFromDb(playlist.playlistId)
+        }
+        val deleteTracksJob = GlobalScope.launch {
+            deleteTracksWithoutRefs(tracksIds)
+        }
+        GlobalScope.launch {
+            deletePlaylistJob.join()
+            deleteTracksJob.join()
+        }
+
     }
 
-    override fun getPlaylistWithTracks(playlistId: Long): Flow<PlaylistWithTracks> = flow {
-        try {
-            appDatabase.playlistDao().getPlaylistWithTracks(playlistId)
-                .collect { playlistWithTracks ->
-                    emit(convertFromPlaylistWithTracksDto(playlistWithTracks))
+    private suspend fun deleteTracksWithoutRefs(tracksIds: List<Long>) {
+        appDatabase.playlistDao().getPlaylists().collect { playlists ->
+            for (trackId in tracksIds) {
+                var hasRef = false
+                for (playlist in playlists) {
+                    if (playlist.tracksIds.contains(trackId.toString())) {
+                        hasRef = true
+                        break
+                    }
                 }
-        } catch (e: NullPointerException) {}
-    }
-
-
-    override fun getTrackWithPlaylists(trackId: Long): Flow<List<Playlist>> = flow {
-        appDatabase.playlistDao().getTrackWithPlaylists(trackId)
-            .collect { trackWithPlaylists ->
-                val playlists: List<Playlist> = if (trackWithPlaylists == null) {
-                    emptyList()
-                } else {
-                    convertFromPlaylistEntity(trackWithPlaylists.playlists)
+                if (!hasRef) {
+                    appDatabase.playlistDao().deleteTrackFromDb(trackId)
                 }
-                emit(playlists)
             }
+        }
     }
 
-
-    private fun convertFromPlaylistWithTracksDto(playlistDto: PlaylistWithTracksDto): PlaylistWithTracks {
-        return PlaylistWithTracks(
-            playlist = playlistDbConverter.map(playlistDto.playlist),
-            tracks = convertFromPlaylistTrackEntity(playlistDto.tracks)
+    override suspend fun deleteTrackFromPlaylist(playlist: Playlist, trackId: Long) {
+        val ids = playlist.tracksIds.toMutableList()
+        ids.remove(trackId)
+        val updatedPlaylist = playlist.copy(
+            tracksIds = ids,
+            tracksCount = playlist.tracksIds.size - 1L
         )
+        addPlaylist(updatedPlaylist)
+        deleteTracksWithoutRefs(listOf(trackId))
     }
 
     private fun convertFromPlaylistEntity(playlists: List<PlaylistEntity>): List<Playlist> {

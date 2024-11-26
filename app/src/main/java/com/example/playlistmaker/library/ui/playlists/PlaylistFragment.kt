@@ -15,8 +15,6 @@ import androidx.navigation.fragment.navArgs
 import com.example.playlistmaker.R
 import com.example.playlistmaker.common.domain.model.Playlist
 import com.example.playlistmaker.common.domain.model.Playlist.Companion.getFormattedCount
-import com.example.playlistmaker.common.domain.model.PlaylistWithTracks
-import com.example.playlistmaker.common.domain.model.PlaylistWithTracks.Companion.getFormattedDuration
 import com.example.playlistmaker.common.domain.model.Track
 import com.example.playlistmaker.common.domain.model.Track.Companion.getFormattedTime
 import com.example.playlistmaker.common.ui.TrackAdapter
@@ -28,6 +26,7 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import java.util.concurrent.TimeUnit
 
 class PlaylistFragment : Fragment() {
 
@@ -84,8 +83,10 @@ class PlaylistFragment : Fragment() {
         adapter.onLongClickListener = TrackViewHolder.OnLongClickListener { track ->
             MaterialAlertDialogBuilder(requireContext(), R.style.MaterialAlertDialog_Center)
                 .setTitle(requireActivity().getString(R.string.delete_track_from_playlist_dialog_title))
-                .setMessage(requireActivity().getString(
-                    R.string.delete_track_from_playlist_dialog_message)
+                .setMessage(
+                    requireActivity().getString(
+                        R.string.delete_track_from_playlist_dialog_message
+                    )
                 )
                 .setNegativeButton(
                     requireActivity().getString(R.string.delete_track_from_playlist_dialog_negative)
@@ -94,7 +95,7 @@ class PlaylistFragment : Fragment() {
                 .setPositiveButton(
                     requireActivity().getString(R.string.delete_track_from_playlist_dialog_positive)
                 ) { dialog, which ->
-                    viewModel.deleteTrackFromPlaylist(args.playlistId, track.trackId)
+                    viewModel.deleteTrackFromPlaylist(playlist!!, track.trackId)
                 }
                 .show()
         }
@@ -108,15 +109,20 @@ class PlaylistFragment : Fragment() {
             findNavController().navigateUp()
         }
 
-        viewModel.getPlaylistWithTracks(args.playlistId)
+        viewModel.getPlaylist(args.playlistId)
 
-        viewModel.playlistWithTracksLiveData.observe(viewLifecycleOwner) { playlistWithTracks ->
-            playlist = playlistWithTracks.playlist
-            tracks.clear()
-            tracks.addAll(playlistWithTracks.tracks)
-            setupPlaylistDescription(playlistWithTracks)
-            setupTracks(playlistWithTracks.tracks)
+        viewModel.playlistLiveData.observe(viewLifecycleOwner) { playlist ->
+            this.playlist = playlist
+            viewModel.getTracksByIds(playlist.tracksIds)
 
+        }
+
+
+        viewModel.tracksLiveData.observe(viewLifecycleOwner) { tracks ->
+            this.tracks.clear()
+            this.tracks.addAll(tracks)
+            setupPlaylistDescription(playlist!!)
+            setupTracks(tracks)
         }
 
         menuBottomSheetBehavior?.state = BottomSheetBehavior.STATE_HIDDEN
@@ -147,8 +153,10 @@ class PlaylistFragment : Fragment() {
         binding.tvDeletePlaylist.setOnClickListener {
             MaterialAlertDialogBuilder(requireContext(), R.style.MaterialAlertDialog_Center)
                 .setTitle(requireActivity().getString(R.string.delete_playlist_dialog_title))
-                .setMessage(requireActivity().getString(
-                    R.string.delete_playlist_dialog_message)
+                .setMessage(
+                    requireActivity().getString(
+                        R.string.delete_playlist_dialog_message
+                    )
                 )
                 .setNegativeButton(
                     requireActivity().getString(R.string.delete_playlist_dialog_negative)
@@ -157,14 +165,15 @@ class PlaylistFragment : Fragment() {
                 .setPositiveButton(
                     requireActivity().getString(R.string.delete_playlist_dialog_positive)
                 ) { dialog, which ->
-                    viewModel.deletePlaylist(args.playlistId)
+                    viewModel.deletePlaylist(playlist!!)
                     findNavController().navigateUp()
                 }
                 .show()
         }
 
         binding.tvEditPlaylist.setOnClickListener {
-            val direction = PlaylistFragmentDirections.actionPlaylistFragmentToNewPlaylistFragment(playlist)
+            val direction =
+                PlaylistFragmentDirections.actionPlaylistFragmentToNewPlaylistFragment(playlist)
             findNavController().navigate(direction)
         }
 
@@ -185,20 +194,21 @@ class PlaylistFragment : Fragment() {
     }
 
     private fun removeOnPreDrawListener() {
+        _binding ?: return
         binding.main.viewTreeObserver.removeOnPreDrawListener(onPreDrawListener)
     }
 
-    private fun setupPlaylistDescription(playlistWithTracks: PlaylistWithTracks) {
-        binding.tvPlaylistName.text = playlistWithTracks.playlist.playlistName
-        binding.tvPlaylistDescription.text = playlistWithTracks.playlist.playlistDescription
-        binding.tvDuration.text = playlistWithTracks.getFormattedDuration()
-        binding.tvTracksCount.text = playlistWithTracks.playlist.getFormattedCount()
+    private fun setupPlaylistDescription(playlist: Playlist) {
+        binding.tvPlaylistName.text = playlist.playlistName
+        binding.tvPlaylistDescription.text = playlist.playlistDescription
+        binding.tvDuration.text = getFormattedDuration(tracks)
+        binding.tvTracksCount.text = playlist.getFormattedCount()
 
-        binding.tvPlaylistNameBottomSheet.text = playlistWithTracks.playlist.playlistName
-        binding.tvCountBottomSheet.text = playlistWithTracks.playlist.getFormattedCount()
-
-        if (playlistWithTracks.playlist.playlistCoverPath != "null") {
-            val uri = Uri.parse(playlistWithTracks.playlist.playlistCoverPath)
+        binding.tvPlaylistNameBottomSheet.text = playlist.playlistName
+        val formattedCount = playlist.getFormattedCount()
+        binding.tvCountBottomSheet.text = formattedCount
+        if (playlist.playlistCoverPath != "null") {
+            val uri = Uri.parse(playlist.playlistCoverPath)
             binding.ivCover.setImageURI(uri)
             binding.ivCoverBottomSheet.setImageURI(uri)
         }
@@ -212,9 +222,8 @@ class PlaylistFragment : Fragment() {
                 requireContext().getString(R.string.playlist_is_empty),
                 Toast.LENGTH_SHORT
             ).show()
-        } else {
-            adapter.trackList = tracks
         }
+        adapter.trackList = tracks
     }
 
     private fun sharePlaylist() {
@@ -252,6 +261,35 @@ class PlaylistFragment : Fragment() {
             val shareIntent = Intent.createChooser(sendIntent, null)
             startActivity(shareIntent)
         }
+    }
+
+    private fun getFormattedDuration(tracks: List<Track>): String {
+        var result = ""
+        var duration = 0L
+        for (track in tracks) {
+            duration += track.trackTimeMillis.toLong()
+        }
+        duration = TimeUnit.MILLISECONDS.toMinutes(duration)
+
+        val beforeLastDigit = duration % 100 / 10
+        if (beforeLastDigit == 1L) {
+            result = "минут"
+        } else {
+            when (duration % 10) {
+                1L -> {
+                    result = "минута"
+                }
+
+                2L, 3L, 4L -> {
+                    result = "минуты"
+                }
+
+                else -> {
+                    result = "минут"
+                }
+            }
+        }
+        return "${duration} $result"
     }
 
 }

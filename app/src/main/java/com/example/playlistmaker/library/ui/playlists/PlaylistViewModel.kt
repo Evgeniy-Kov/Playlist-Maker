@@ -5,34 +5,48 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.common.domain.api.PlaylistInteractor
-import com.example.playlistmaker.common.domain.model.PlaylistWithTracks
+import com.example.playlistmaker.common.domain.model.Playlist
+import com.example.playlistmaker.common.domain.model.Track
 import kotlinx.coroutines.launch
 
 class PlaylistViewModel(
     private val interactor: PlaylistInteractor
 ) : ViewModel() {
 
-    private val _playlistWithTracksLiveData = MutableLiveData<PlaylistWithTracks>()
-    val playlistWithTracksLiveData: LiveData<PlaylistWithTracks>
-        get() = _playlistWithTracksLiveData
+    private val _playlistLiveData = MutableLiveData<Playlist>()
+    val playlistLiveData: LiveData<Playlist>
+        get() = _playlistLiveData
 
-    fun getPlaylistWithTracks(playlistId: Long) {
+    private val _tracksLiveData = MutableLiveData<List<Track>>()
+    val tracksLiveData: LiveData<List<Track>>
+        get() = _tracksLiveData
+
+
+    fun getPlaylist(playlistId: Long) {
         viewModelScope.launch {
-            interactor.getPlaylistWithTracks(playlistId).collect { playlistWithTracks ->
-                _playlistWithTracksLiveData.postValue(playlistWithTracks)
+            interactor.getPlaylist(playlistId).collect { playlist ->
+                _playlistLiveData.value = playlist
             }
         }
     }
 
-    fun deletePlaylist(playlistId: Long) {
+    fun getTracksByIds(tracksIds: List<Long>) {
         viewModelScope.launch {
-            interactor.deletePlaylist(playlistId)
+            interactor.getTracksByIds(tracksIds).collect { tracks ->
+                _tracksLiveData.postValue(tracks)
+            }
         }
     }
 
-    fun deleteTrackFromPlaylist(playlistId: Long, trackId: Long) {
+    fun deletePlaylist(playlist: Playlist) {
         viewModelScope.launch {
-            interactor.deleteTrackFromPlaylist(playlistId, trackId)
+            interactor.deletePlaylist(playlist)
+        }
+    }
+
+    fun deleteTrackFromPlaylist(playlist: Playlist, trackId: Long) {
+        viewModelScope.launch {
+            interactor.deleteTrackFromPlaylist(playlist, trackId)
         }
     }
 }

@@ -1,7 +1,6 @@
 package com.example.playlistmaker.common.domain.api
 
 import com.example.playlistmaker.common.domain.model.Playlist
-import com.example.playlistmaker.common.domain.model.PlaylistWithTracks
 import com.example.playlistmaker.common.domain.model.Track
 import kotlinx.coroutines.flow.Flow
 
@@ -11,14 +10,14 @@ interface PlaylistInteractor {
 
     suspend fun addTrackToPlaylist(track: Track, playlist: Playlist)
 
+    fun getPlaylist(playlistId: Long): Flow<Playlist>
+
     fun getPlaylists(): Flow<List<Playlist>>
 
-    suspend fun deletePlaylist(playlistId: Long)
+    fun getTracksByIds(trackIds: List<Long>): Flow<List<Track>>
 
-    suspend fun deleteTrackFromPlaylist(playlistId: Long, trackId: Long)
+    suspend fun deletePlaylist(playlist: Playlist)
 
-    fun getPlaylistWithTracks(playlistId: Long): Flow<PlaylistWithTracks>
-
-    fun getTrackWithPlaylists(trackId: Long): Flow<List<Playlist>>
+    suspend fun deleteTrackFromPlaylist(playlist: Playlist, trackId: Long)
 
 }

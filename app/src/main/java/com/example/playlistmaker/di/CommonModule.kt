@@ -36,7 +36,7 @@ val commonModule = module {
     }
 
     factory {
-        PlaylistDbConverter()
+        PlaylistDbConverter(get())
     }
 
     factory {
