@@ -241,7 +241,6 @@
                     android:id="@+id/iv_cover_bottom_sheet"
                     android:layout_width="@dimen/track_item_view_cover_size"
                     android:layout_height="@dimen/track_item_view_cover_size"
-                    android:scaleType="centerCrop"
                     android:contentDescription="@string/song_cover_description"
                     tools:src="@drawable/placeholder" />
             </androidx.cardview.widget.CardView>

@@ -12,6 +12,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.bumptech.glide.Glide
 import com.example.playlistmaker.R
 import com.example.playlistmaker.common.domain.model.Playlist
 import com.example.playlistmaker.common.domain.model.Playlist.Companion.getFormattedCount
@@ -210,8 +211,12 @@ class PlaylistFragment : Fragment() {
         if (playlist.playlistCoverPath != "null") {
             val uri = Uri.parse(playlist.playlistCoverPath)
             binding.ivCover.setImageURI(uri)
-            binding.ivCoverBottomSheet.setImageURI(uri)
         }
+        Glide.with(requireContext())
+            .load(playlist.playlistCoverPath)
+            .placeholder(R.drawable.placeholder)
+            .centerCrop()
+            .into(binding.ivCoverBottomSheet)
 
     }
 

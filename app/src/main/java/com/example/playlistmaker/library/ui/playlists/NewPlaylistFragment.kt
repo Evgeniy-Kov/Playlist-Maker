@@ -69,8 +69,10 @@ class NewPlaylistFragment : Fragment() {
         if (argPlaylist != null) {
             binding.etName.setText(argPlaylist.playlistName)
             binding.etDescription.setText(argPlaylist.playlistDescription)
-            imageUri = Uri.parse(argPlaylist.playlistCoverPath)
-            binding.ivPhoto.setImageURI(Uri.parse(argPlaylist.playlistCoverPath))
+            if (argPlaylist.playlistCoverPath != "null") {
+                imageUri = Uri.parse(argPlaylist.playlistCoverPath)
+                binding.ivPhoto.setImageURI(Uri.parse(argPlaylist.playlistCoverPath))
+            }
             binding.toolbar.title = requireContext().getString(R.string.edit_playlist_title)
             binding.buttonCreate.text = requireContext().getString(R.string.button_save_text)
             binding.buttonCreate.isEnabled = true
