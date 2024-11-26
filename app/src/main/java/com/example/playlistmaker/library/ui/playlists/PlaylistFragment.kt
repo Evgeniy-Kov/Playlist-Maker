@@ -152,6 +152,7 @@ class PlaylistFragment : Fragment() {
         }
 
         binding.tvDeletePlaylist.setOnClickListener {
+            menuBottomSheetBehavior?.state = BottomSheetBehavior.STATE_HIDDEN
             MaterialAlertDialogBuilder(requireContext(), R.style.MaterialAlertDialog_Center)
                 .setTitle(requireActivity().getString(R.string.delete_playlist_dialog_title))
                 .setMessage(
@@ -183,6 +184,7 @@ class PlaylistFragment : Fragment() {
         }
 
         binding.tvSharePlaylist.setOnClickListener {
+            menuBottomSheetBehavior?.state = BottomSheetBehavior.STATE_HIDDEN
             sharePlaylist()
         }
     }
