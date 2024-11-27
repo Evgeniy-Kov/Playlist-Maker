@@ -8,10 +8,9 @@ import com.example.playlistmaker.common.data.db.playlist.PlaylistTrackEntity
 import com.example.playlistmaker.common.domain.api.PlaylistRepository
 import com.example.playlistmaker.common.domain.model.Playlist
 import com.example.playlistmaker.common.domain.model.Track
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.launch
 
 class PlaylistRepositoryImpl(
     private val appDatabase: AppDatabase,
@@ -34,7 +33,9 @@ class PlaylistRepositoryImpl(
 
     override fun getPlaylist(playlistId: Long): Flow<Playlist> = flow {
         appDatabase.playlistDao().getPlaylist(playlistId).collect { playlist ->
-            emit(playlistDbConverter.map(playlist))
+            try {
+                emit(playlistDbConverter.map(playlist))
+            } catch (e: NullPointerException) { }
         }
     }
 
@@ -54,32 +55,22 @@ class PlaylistRepositoryImpl(
 
     override suspend fun deletePlaylist(playlist: Playlist) {
         val tracksIds = playlist.tracksIds
-        val deletePlaylistJob = GlobalScope.launch {
         appDatabase.playlistDao().deletePlaylistFromDb(playlist.playlistId)
-        }
-        val deleteTracksJob = GlobalScope.launch {
-            deleteTracksWithoutRefs(tracksIds)
-        }
-        GlobalScope.launch {
-            deletePlaylistJob.join()
-            deleteTracksJob.join()
-        }
-
+        deleteTracksWithoutRefs(tracksIds)
     }
 
     private suspend fun deleteTracksWithoutRefs(tracksIds: List<Long>) {
-        appDatabase.playlistDao().getPlaylists().collect { playlists ->
-            for (trackId in tracksIds) {
-                var hasRef = false
-                for (playlist in playlists) {
-                    if (playlist.tracksIds.contains(trackId.toString())) {
-                        hasRef = true
-                        break
-                    }
+        val playlists = appDatabase.playlistDao().getPlaylists().first()
+        for (trackId in tracksIds) {
+            var hasRef = false
+            for (playlist in playlists) {
+                if (playlist.tracksIds.contains(trackId.toString())) {
+                    hasRef = true
+                    break
                 }
-                if (!hasRef) {
-                    appDatabase.playlistDao().deleteTrackFromDb(trackId)
-                }
+            }
+            if (!hasRef) {
+                appDatabase.playlistDao().deleteTrackFromDb(trackId)
             }
         }
     }

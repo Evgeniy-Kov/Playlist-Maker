@@ -7,6 +7,9 @@ import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.common.domain.api.PlaylistInteractor
 import com.example.playlistmaker.common.domain.model.Playlist
 import com.example.playlistmaker.common.domain.model.Track
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 
 class PlaylistViewModel(
@@ -39,8 +42,8 @@ class PlaylistViewModel(
     }
 
     fun deletePlaylist(playlist: Playlist) {
-        viewModelScope.launch {
-            interactor.deletePlaylist(playlist)
+        CoroutineScope(SupervisorJob()).launch(Dispatchers.IO) {
+                interactor.deletePlaylist(playlist)
         }
     }
 
