@@ -110,7 +110,7 @@ class NewPlaylistFragment : Fragment() {
 
         binding.buttonCreate.setOnClickListener {
             val uri = imageUri
-            if (uri != null) {
+            if (uri != null && imageUri != argPlaylist?.playlistCoverPath?.toUri()) {
                 imageUri = saveImageToPrivateStorage(uri)
             }
             val playlistId = args.playlist?.playlistId ?: 0
