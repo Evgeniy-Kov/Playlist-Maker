@@ -61,4 +61,6 @@
     <dimen name="playlist_menu_bottom_sheet_tv_margin_start">16dp</dimen>
     <dimen name="playlist_menu_bottom_sheet_tv_margin_bottom">24dp</dimen>
     <dimen name="playlist_menu_bottom_sheet_tv_margin_top">32dp</dimen>
+    <dimen name="playlists_rv_padding_start">16dp</dimen>
+    <dimen name="playlists_rv_padding_end">8dp</dimen>
 </resources>

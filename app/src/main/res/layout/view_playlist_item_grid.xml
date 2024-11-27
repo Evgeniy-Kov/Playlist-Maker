@@ -5,13 +5,17 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="center_horizontal"
+    android:layout_marginEnd="8dp"
+    android:layout_marginBottom="16dp"
     android:foreground="?attr/selectableItemBackground">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/card_view_cover"
-        android:layout_width="@dimen/view_playlist_item_grid_cover_size"
-        android:layout_height="@dimen/view_playlist_item_grid_cover_size"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:contentPadding="-3dp"
         app:cardCornerRadius="@dimen/view_playlist_item_grid_cover_corner_radius"
+        app:layout_constraintDimensionRatio="h,1:1"
         app:layout_constraintBottom_toTopOf="@id/tv_playlist_name"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -19,8 +23,8 @@
 
         <ImageView
             android:id="@+id/iv_cover"
-            android:layout_width="@dimen/view_playlist_item_grid_cover_size"
-            android:layout_height="@dimen/view_playlist_item_grid_cover_size"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:layout_marginBottom="@dimen/view_playlist_item_grid_cover_margin_bottom"
             android:scaleType="centerCrop"
             android:contentDescription="@string/song_cover_description"
