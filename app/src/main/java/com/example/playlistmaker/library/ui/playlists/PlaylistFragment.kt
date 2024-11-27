@@ -10,6 +10,7 @@ import android.view.ViewTreeObserver
 import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
@@ -23,7 +24,6 @@ import com.example.playlistmaker.common.ui.TrackViewHolder
 import com.example.playlistmaker.databinding.FragmentPlaylistBinding
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -49,11 +49,12 @@ class PlaylistFragment : Fragment() {
     private val tracks = mutableListOf<Track>()
 
     private val onPreDrawListener = ViewTreeObserver.OnPreDrawListener {
+        _binding ?: return@OnPreDrawListener true
         val screenHeight = binding.main.height
         val playlistDescriptionHeight = binding.constraint.height
 
         tracksBottomSheetBehavior?.peekHeight = screenHeight - playlistDescriptionHeight
-        GlobalScope.launch {
+        lifecycleScope.launch {
             delay(1000)
             removeOnPreDrawListener()
         }
