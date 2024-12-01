@@ -21,9 +21,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/playlists_fragment_rv_margin_top"
-        app:spanCount="2"
+        android:paddingStart="@dimen/playlists_rv_padding_start"
+        android:paddingEnd="@dimen/playlists_rv_padding_end"
         app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-        tools:listitem="@layout/view_playlist_item_grid"/>
+        app:spanCount="2"
+        tools:listitem="@layout/view_playlist_item_grid" />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/tv_nothing_found"

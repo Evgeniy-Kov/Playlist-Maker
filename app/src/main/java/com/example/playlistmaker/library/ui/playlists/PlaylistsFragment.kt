@@ -34,12 +34,10 @@ class PlaylistsFragment : Fragment() {
 
         binding.buttonNewPlaylist.setOnClickListener {
             val direction =
-                MediaLibraryFragmentDirections.actionMediaLibraryFragmentToNewPlaylistFragment()
+                MediaLibraryFragmentDirections.actionMediaLibraryFragmentToNewPlaylistFragment(null)
             findNavController().navigate(direction)
 
         }
-
-
 
         viewModel.screenStateLiveData.observe(viewLifecycleOwner) { state ->
             when (state) {
@@ -52,6 +50,14 @@ class PlaylistsFragment : Fragment() {
                     showPlaceholder()
                 }
             }
+        }
+
+        playlistAdapter.onItemClickListener = PlaylistViewHolder.OnItemClickListener { playlist ->
+            val direction =
+                MediaLibraryFragmentDirections.actionMediaLibraryFragmentToPlaylistFragment(
+                    playlist.playlistId
+                )
+            findNavController().navigate(direction)
         }
     }
 

@@ -40,7 +40,7 @@ class PlayerViewModel(
     val resultOfAddingTrackToPlaylistLiveData: LiveData<Boolean>
         get() = _resultOfAddingTrackToPlaylistLiveData
 
-    private val playlistsWithTrack = mutableListOf<Playlist>()
+    private val listOfPlaylists = mutableListOf<Playlist>()
 
     init {
         getPlaylists()
@@ -100,7 +100,7 @@ class PlayerViewModel(
 
     fun addTrackToPlaylist(track: Track, playlist: Playlist) {
 
-        if (!isPlaylistContainsTrack(playlist)) {
+        if (!isPlaylistContainsTrack(playlist, track)) {
             _resultOfAddingTrackToPlaylistLiveData.value = true
             _messageOfAddingTrackToPlaylistLiveData.value =
                 "Добавлено в плейлист ${playlist.playlistName}"
@@ -125,15 +125,15 @@ class PlayerViewModel(
 
     fun getPlaylistsContainTrack(trackId: Long) {
         viewModelScope.launch {
-            playlistInteractor.getTrackWithPlaylists(trackId)
+            playlistInteractor.getPlaylists()
                 .collect { playlists ->
-                    playlistsWithTrack.addAll(playlists)
+                    listOfPlaylists.addAll(playlists)
                 }
         }
     }
 
-    fun isPlaylistContainsTrack(playlist: Playlist): Boolean {
-        return playlistsWithTrack.contains(playlist)
+    fun isPlaylistContainsTrack(playlist: Playlist, track: Track): Boolean {
+        return playlist.tracksIds.contains(track.trackId)
     }
 
 

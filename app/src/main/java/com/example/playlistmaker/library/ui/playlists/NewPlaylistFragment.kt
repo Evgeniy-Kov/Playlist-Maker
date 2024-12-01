@@ -8,6 +8,7 @@ import android.os.Environment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.activity.addCallback
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -15,8 +16,12 @@ import androidx.core.net.toUri
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.MultiTransformation
+import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.bumptech.glide.request.RequestOptions
 import com.example.playlistmaker.R
 import com.example.playlistmaker.common.domain.model.Playlist
 import com.example.playlistmaker.databinding.FragmentNewPlaylistBinding
@@ -34,6 +39,8 @@ class NewPlaylistFragment : Fragment() {
     private var imageUri: Uri? = null
 
     private val viewModel by viewModel<NewPlaylistViewModel>()
+
+    private val args by navArgs<NewPlaylistFragmentArgs>()
 
     val dialog by lazy {
         MaterialAlertDialogBuilder(requireContext(), R.style.MaterialAlertDialog_Center)
@@ -61,21 +68,30 @@ class NewPlaylistFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val argPlaylist = args.playlist
+
+        if (argPlaylist != null) {
+            binding.etName.setText(argPlaylist.playlistName)
+            binding.etDescription.setText(argPlaylist.playlistDescription)
+            if (argPlaylist.playlistCoverPath != "null") {
+                imageUri = Uri.parse(argPlaylist.playlistCoverPath)
+                setImageToView(Uri.parse(argPlaylist.playlistCoverPath))
+            }
+            binding.toolbar.title = requireContext().getString(R.string.edit_playlist_title)
+            binding.buttonCreate.text = requireContext().getString(R.string.button_save_text)
+            binding.buttonCreate.isEnabled = true
+        } else {
+            binding.toolbar.title = requireContext().getString(R.string.new_playlist_title)
+            binding.buttonCreate.text = requireContext().getString(R.string.button_create_text)
+
+        }
+
 
         val pickMedia =
             registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
                 if (uri != null) {
                     imageUri = uri
-                    Glide.with(requireContext())
-                        .load(uri)
-                        .placeholder(R.drawable.placeholder)
-                        .centerCrop()
-                        .transform(
-                            RoundedCorners(
-                                requireContext().convertDpToPx(COVER_CORNER_RADIUS_IN_DP)
-                            )
-                        )
-                        .into(binding.ivPhoto)
+                    setImageToView(uri)
                 }
             }
 
@@ -89,16 +105,21 @@ class NewPlaylistFragment : Fragment() {
 
         binding.buttonCreate.setOnClickListener {
             val uri = imageUri
-            if (uri != null) {
+            if (uri != null && imageUri != argPlaylist?.playlistCoverPath?.toUri()) {
                 imageUri = saveImageToPrivateStorage(uri)
             }
+            val playlistId = args.playlist?.playlistId ?: 0
+            val tracksCount = args.playlist?.tracksCount ?: 0
+
             val playlist = Playlist(
-                0,
+                playlistId,
                 binding.etName.text.toString(),
                 binding.etDescription.text.toString(),
                 imageUri.toString(),
-                0
+                emptyList(),
+                tracksCount
             )
+
             viewModel.addPlaylist(playlist)
             findNavController().navigateUp()
         }
@@ -107,7 +128,7 @@ class NewPlaylistFragment : Fragment() {
                 binding.buttonCreate.isEnabled = !charSequence.isNullOrBlank()
             }
         )
-        requireActivity().onBackPressedDispatcher.addCallback {
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
             onBackPressed()
         }
     }
@@ -118,18 +139,22 @@ class NewPlaylistFragment : Fragment() {
     }
 
     private fun onBackPressed() {
-        if (
-            imageUri != null
-            || binding.etName.text.toString().isNotBlank()
-            || binding.etDescription.text.toString().isNotBlank()
-        ) {
-            dialog.show()
+        if (args.playlist == null) {
+            if (
+                imageUri != null
+                || binding.etName.text.toString().isNotBlank()
+                || binding.etDescription.text.toString().isNotBlank()
+            ) {
+                dialog.show()
+            } else {
+                findNavController().navigateUp()
+            }
         } else {
             findNavController().navigateUp()
         }
     }
 
-    fun saveImageToPrivateStorage(uri: Uri): Uri {
+    private fun saveImageToPrivateStorage(uri: Uri): Uri {
         val filePath = File(
             requireActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES),
             "playlistsImages"
@@ -149,6 +174,26 @@ class NewPlaylistFragment : Fragment() {
             .compress(Bitmap.CompressFormat.JPEG, 30, outputStream)
 
         return file.toUri()
+    }
+
+    private fun setImageToView(uri: Uri) {
+        binding.ivPhoto.scaleType = ImageView.ScaleType.CENTER_CROP
+
+        Glide.with(this)
+            .load(uri)
+            .apply(
+                RequestOptions().transform(
+                    MultiTransformation(
+                        CenterCrop(),
+                        RoundedCorners(
+                            requireContext().convertDpToPx(
+                                COVER_CORNER_RADIUS_IN_DP
+                            )
+                        )
+                    )
+                )
+            )
+            .into(binding.ivPhoto)
     }
 
     private companion object {

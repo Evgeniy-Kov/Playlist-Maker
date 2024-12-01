@@ -94,7 +94,7 @@ class PlayerFragment : Fragment() {
 
         binding.buttonNewPlaylist.setOnClickListener {
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
-            val direction = PlayerFragmentDirections.actionPlayerFragmentToNewPlaylistFragment()
+            val direction = PlayerFragmentDirections.actionPlayerFragmentToNewPlaylistFragment(null)
             findNavController().navigate(direction)
         }
     }

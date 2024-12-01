@@ -1,12 +1,17 @@
 package com.example.playlistmaker.common.domain.model
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+
+@Parcelize
 data class Playlist(
     val playlistId: Long,
     val playlistName: String,
     val playlistDescription: String,
     val playlistCoverPath: String,
+    val tracksIds: List<Long> = emptyList(),
     val tracksCount: Long
-) {
+) : Parcelable {
     companion object {
         fun Playlist.getFormattedCount(): String {
             var result = ""

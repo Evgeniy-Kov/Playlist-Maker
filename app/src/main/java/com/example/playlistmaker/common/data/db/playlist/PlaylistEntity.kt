@@ -11,5 +11,6 @@ data class PlaylistEntity(
     val playlistName: String,
     val playlistDescription: String,
     val playlistCoverPath: String,
+    val tracksIds: String,
     val tracksCount: Long
 )

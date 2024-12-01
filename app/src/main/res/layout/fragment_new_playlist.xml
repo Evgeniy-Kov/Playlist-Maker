@@ -93,7 +93,6 @@
         app:cornerRadius="@dimen/fragment_new_playlist_button_corner_radius"
         android:textAllCaps="false"
         android:textColor="@color/yp_white"
-        android:text="Создать"
         android:enabled="false"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

@@ -4,7 +4,6 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import androidx.room.Transaction
 import com.example.playlistmaker.common.data.db.DbConfig
 import kotlinx.coroutines.flow.Flow
 
@@ -17,17 +16,22 @@ interface PlaylistDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun addTrackToDb(track: PlaylistTrackEntity)
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun addPlaylistTrackCrossRef(model: PlaylistTrackCrossRef)
+    @Query("SELECT * FROM ${DbConfig.PLAYLISTS_TABLE_NAME} WHERE playlistId = :playlistId")
+    fun getPlaylist(playlistId: Long): Flow<PlaylistEntity>
 
     @Query("SELECT * FROM ${DbConfig.PLAYLISTS_TABLE_NAME}")
     fun getPlaylists(): Flow<List<PlaylistEntity>>
 
-    @Transaction
-    @Query("SELECT * FROM ${DbConfig.PLAYLISTS_TABLE_NAME}")
-    fun getPlaylistWithTracks(): Flow<PlaylistWithTracksDto>
+    @Query("SELECT * FROM ${DbConfig.PLAYLIST_TRACK_TABLE_NAME} WHERE trackId IN (:trackIds)")
+    fun getTracksByIds(trackIds: List<Long>): Flow<List<PlaylistTrackEntity>>
 
-    @Transaction
     @Query("SELECT * FROM ${DbConfig.PLAYLIST_TRACK_TABLE_NAME} WHERE trackId = :trackId")
-    fun getTrackWithPlaylists(trackId: Long): Flow<TrackWithPlaylistsDto>
+    suspend fun getTrackById(trackId: Long): PlaylistTrackEntity
+
+    @Query("DELETE FROM ${DbConfig.PLAYLISTS_TABLE_NAME} WHERE playlistId = :playlistId")
+    suspend fun deletePlaylistFromDb(playlistId: Long)
+
+    @Query("DELETE FROM ${DbConfig.PLAYLIST_TRACK_TABLE_NAME} WHERE trackId = :trackId")
+    suspend fun deleteTrackFromDb(trackId: Long)
+
 }

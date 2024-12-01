@@ -42,9 +42,27 @@
     <string name="favourite_tracks_title">Избранные треки</string>
     <string name="playlists_title">Плейлисты</string>
     <string name="new_playlist_title">Новый плейлист</string>
+    <string name="edit_playlist_title">Редактировать плейлист</string>
     <string name="new_playlist_dialog_title">Завершить создание плейлиста?</string>
     <string name="new_playlist_dialog_message">Все несохраненные данные будут потеряны</string>
     <string name="new_playlist_dialog_positive">Завершить</string>
     <string name="new_playlist_dialog_negative">Отмена</string>
     <string name="bottom_sheet_title">Добавить в плейлист</string>
+    <string name="playlist_is_empty">Плейлист пустой</string>
+    <string name="share_playlist">Поделиться</string>
+    <string name="edit_playlist">Редактировать информацию</string>
+    <string name="delete_playlist">Удалить плейлист</string>
+    <string name="delete_track_from_playlist_dialog_title">Удалить трек</string>
+    <string name="delete_track_from_playlist_dialog_message">Хотите удалить трек?</string>
+    <string name="delete_track_from_playlist_dialog_positive">Да</string>
+    <string name="delete_track_from_playlist_dialog_negative">Нет</string>
+    <string name="delete_playlist_dialog_title">Удалить плейлист</string>
+    <string name="delete_playlist_dialog_message">Хотите удалить плейлист?</string>
+    <string name="delete_playlist_dialog_positive">Да</string>
+    <string name="delete_playlist_dialog_negative">Нет</string>
+    <string name="button_create_text">Создать</string>
+    <string name="button_save_text">Сохранить</string>
+    <string name="nothing_to_share_message">
+        В этом плейлисте нет списка треков, которым можно поделиться
+    </string>
 </resources>
